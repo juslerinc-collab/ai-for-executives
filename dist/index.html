@@ -655,8 +655,8 @@ a{color:inherit}
       <div class="drawer" id="lab1-hebel">
         <div class="drawer-inner">
           <div class="leverrow"><b>Zielgruppe</b><div class="lp">„Erklären Sie mir [Thema], als müsste ich es in drei Sätzen einer skeptischen Kollegin im Stiftungsrat/Vorstand weitergeben.“</div></div>
-          <div class="leverrow"><b>Tiefe</b><div class="lp">„Erklären Sie mir [Thema] so, dass ich in einem Fachgespräch in der beruflichen Vorsorge mitreden kann, ohne dass mir die Grundlagen erklärt werden.“</div></div>
-          <div class="leverrow"><b>Analogie</b><div class="lp">„Erklären Sie mir [Thema] anhand eines Vergleichs aus der beruflichen Vorsorge.“</div></div>
+          <div class="leverrow"><b>Tiefe</b><div class="lp">„Erklären Sie mir [Thema] so, dass ich in einem Fachgespräch in der berufliche Vorsorge/Pensionskassen mitreden kann, ohne dass mir die Grundlagen erklärt werden.“</div></div>
+          <div class="leverrow"><b>Analogie</b><div class="lp">„Erklären Sie mir [Thema] anhand eines Vergleichs aus der berufliche Vorsorge/Pensionskassen.“</div></div>
           <div class="leverrow"><b>Format</b><div class="lp">„Fassen Sie [Thema] in drei Punkten zusammen, die ich mir vor einem Termin mit dem Stiftungsrat/Vorstand merken kann.“</div></div>
           <div class="leverrow"><b>Prüfbarkeit</b><div class="lp">„Erklären Sie mir [Thema] und nennen Sie die zwei wichtigsten Fakten, die ich im Zweifel selbst nachprüfen sollte.“</div></div>
         </div>
@@ -680,7 +680,7 @@ a{color:inherit}
     <div class="glass-lt lab-card">
       <div class="lab-task">Standardaufgabe — oder Ihr eigenes leeres Blatt, das Sie schon vor sich herschieben.</div>
       <div class="prompt">
-        <span class="prompt-text">Schreiben Sie eine Auftragsbestätigung an eine neue Kundschaft in der beruflichen Vorsorge — professionell, aber persönlich, wie bei Seeds Consulting üblich. Inklusive grobem Kostenrahmen als einfache Tabelle im Text, zwei bis drei Positionen, keine Details.</span>
+        <span class="prompt-text">Schreiben Sie eine Auftragsbestätigung an eine neue Kundschaft in der berufliche Vorsorge/Pensionskassen — professionell, aber persönlich, wie bei Seeds Consulting üblich. Inklusive grobem Kostenrahmen als einfache Tabelle im Text, zwei bis drei Positionen, keine Details.</span>
         <button class="copybtn" type="button">Kopieren</button>
       </div>
       <div class="worauf">Der Kostenrahmen bleibt einfacher Text/Tabelle in der Mail — kein echtes Excel, das wäre
@@ -798,6 +798,21 @@ const SEED = {
 };
 
 
+// Shared by every "export this as a file" action (backlog JSON, Session 0
+// JSON, take-home handout) — the same Blob/anchor dance, once.
+function downloadFile(content, filename, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+
 // Pure, DOM-free state module for Session 0 ("Ihr Profil") capture.
 // See .scratch/exec-learning-page/issues/18-session-zero-whiteboard.md for the
 // resolved copy this module encodes.
@@ -905,14 +920,18 @@ function exportSession0(state) {
 // the export payload shape) into a DOM-free module per spec.md's testing section.
 
 const CATEGORIES = [
-  { key: "erklaren", label: "Erklären" },
-  { key: "aufsetzen", label: "Aufsetzen" },
-  { key: "aufbereiten", label: "Aufbereiten" },
-  { key: "hinterfragen", label: "Hinterfragen" },
+  { key: "erklaren", label: "Erklären", color: "#1E2FDB" },
+  { key: "aufsetzen", label: "Aufsetzen", color: "#1E9E6B" },
+  { key: "aufbereiten", label: "Aufbereiten", color: "#C77A1E" },
+  { key: "hinterfragen", label: "Hinterfragen", color: "#B3299B" },
 ];
 
 function catLabel(cat) {
   return CATEGORIES.find((c) => c.key === cat).label;
+}
+
+function catColor(cat) {
+  return CATEGORIES.find((c) => c.key === cat).color;
 }
 
 let uidCounter = 0;
@@ -1382,15 +1401,11 @@ try {
   document.querySelector(".export-btn").onclick = () => {
     const payload = exportSession0(state);
     const slug = (state.person.vorname || "session0").toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${slug}-session0-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(
+      JSON.stringify(payload, null, 2),
+      `${slug}-session0-${new Date().toISOString().slice(0, 10)}.json`,
+      "application/json",
+    );
   };
 
   /* ---------------- closer popup -> Session 1 ---------------- */
@@ -1630,9 +1645,6 @@ try {
       plot.appendChild(dot);
     });
   }
-  function catColor(cat) {
-    return { erklaren: "#1E2FDB", aufsetzen: "#1E9E6B", aufbereiten: "#C77A1E", hinterfragen: "#B3299B" }[cat];
-  }
 
   function makeDraggable(dot, card, plot) {
     dot.onpointerdown = (e) => {
@@ -1705,15 +1717,11 @@ try {
 
   root.querySelector("#downloadJSON").onclick = () => {
     const payload = exportBacklog(state);
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `use-case-backlog-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(
+      JSON.stringify(payload, null, 2),
+      `use-case-backlog-${new Date().toISOString().slice(0, 10)}.json`,
+      "application/json",
+    );
   };
 
   render();
@@ -1782,15 +1790,7 @@ Ihr Use-Case-Backlog aus heute bleibt bestehen und wird in Sitzung 2 vervollstä
 Generiert am ${new Date().toISOString().slice(0, 10)}.
 `;
 
-    const blob = new Blob([md], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "take-home-sitzung-1.md";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(md, "take-home-sitzung-1.md", "text/markdown");
   };
 })();
 

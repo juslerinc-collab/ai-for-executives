@@ -26,6 +26,7 @@ const content = readAll("content", [".html"]);
 
 const jsFileOrder = [
   "seed-config.js",
+  "download-helper.js",
   "session0-state.js",
   "backlog-state.js",
   "rail-position.js",
@@ -65,6 +66,15 @@ const assets = assetsDataUri();
 let contentWithAssets = content;
 for (const [name, dataUri] of Object.entries(assets)) {
   contentWithAssets = contentWithAssets.replaceAll(`{{ASSET:${name}}}`, dataUri);
+}
+
+// Per-client seed block (spec.md's {{Rolle}}/{{Branche}}/{{Publikum}}/{{Firma}}
+// mechanism): substitute at build time from build/src/seed-config.js so a new
+// client only ever means editing that one file, never the lesson content.
+const seedSrc = readFileSync(path.join(here, "src/seed-config.js"), "utf8");
+const SEED = new Function(`${seedSrc}\nreturn SEED;`)();
+for (const key of ["Rolle", "Branche", "Publikum", "Firma"]) {
+  contentWithAssets = contentWithAssets.replaceAll(`{{${key}}}`, SEED[key]);
 }
 
 const html = `<!doctype html>

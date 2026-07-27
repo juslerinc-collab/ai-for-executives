@@ -94,15 +94,11 @@
   document.querySelector(".export-btn").onclick = () => {
     const payload = exportSession0(state);
     const slug = (state.person.vorname || "session0").toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${slug}-session0-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(
+      JSON.stringify(payload, null, 2),
+      `${slug}-session0-${new Date().toISOString().slice(0, 10)}.json`,
+      "application/json",
+    );
   };
 
   /* ---------------- closer popup -> Session 1 ---------------- */

@@ -178,9 +178,6 @@
       plot.appendChild(dot);
     });
   }
-  function catColor(cat) {
-    return { erklaren: "#1E2FDB", aufsetzen: "#1E9E6B", aufbereiten: "#C77A1E", hinterfragen: "#B3299B" }[cat];
-  }
 
   function makeDraggable(dot, card, plot) {
     dot.onpointerdown = (e) => {
@@ -253,15 +250,11 @@
 
   root.querySelector("#downloadJSON").onclick = () => {
     const payload = exportBacklog(state);
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `use-case-backlog-${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(
+      JSON.stringify(payload, null, 2),
+      `use-case-backlog-${new Date().toISOString().slice(0, 10)}.json`,
+      "application/json",
+    );
   };
 
   render();

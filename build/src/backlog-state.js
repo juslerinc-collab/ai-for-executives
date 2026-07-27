@@ -5,14 +5,18 @@
 // the export payload shape) into a DOM-free module per spec.md's testing section.
 
 export const CATEGORIES = [
-  { key: "erklaren", label: "Erklären" },
-  { key: "aufsetzen", label: "Aufsetzen" },
-  { key: "aufbereiten", label: "Aufbereiten" },
-  { key: "hinterfragen", label: "Hinterfragen" },
+  { key: "erklaren", label: "Erklären", color: "#1E2FDB" },
+  { key: "aufsetzen", label: "Aufsetzen", color: "#1E9E6B" },
+  { key: "aufbereiten", label: "Aufbereiten", color: "#C77A1E" },
+  { key: "hinterfragen", label: "Hinterfragen", color: "#B3299B" },
 ];
 
 export function catLabel(cat) {
   return CATEGORIES.find((c) => c.key === cat).label;
+}
+
+export function catColor(cat) {
+  return CATEGORIES.find((c) => c.key === cat).color;
 }
 
 let uidCounter = 0;

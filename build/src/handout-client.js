@@ -58,14 +58,6 @@ Ihr Use-Case-Backlog aus heute bleibt bestehen und wird in Sitzung 2 vervollstä
 Generiert am ${new Date().toISOString().slice(0, 10)}.
 `;
 
-    const blob = new Blob([md], { type: "text/markdown" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "take-home-sitzung-1.md";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadFile(md, "take-home-sitzung-1.md", "text/markdown");
   };
 })();
