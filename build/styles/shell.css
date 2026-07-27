@@ -153,6 +153,18 @@ a{color:inherit}
 /* ---------- illustration figures ---------- */
 .illu{width:100%;max-width:340px;margin:20px auto 0;display:block}
 
+/* ---------- opening hero (title screen) ---------- */
+.hero-title{align-items:center}
+.hero-grid{display:flex;align-items:center;gap:64px}
+.hero-copy{flex:1 1 480px;min-width:0}
+.hero-h1{font-size:clamp(34px,4.6vw,58px);margin-bottom:22px}
+.hero-illu{flex:0 0 380px;width:380px;max-width:38vw;display:block}
+.hero-kicker{margin-top:34px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ice)}
+@media (max-width:860px){
+  .hero-grid{flex-direction:column-reverse;gap:36px;text-align:left}
+  .hero-illu{width:220px;max-width:60vw;flex-basis:auto}
+}
+
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
