@@ -15,8 +15,8 @@
     const zielAnswers = (s0?.ziel || []).map((a) => a.answer).filter((a) => a && a !== "•");
 
     const uebung1 = alltagAnswers[0]
-      ? `Nehmen Sie sich Ihre Antwort auf „Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?" vor:\n\n${alltagAnswers[0]}\n\nBriefen Sie Claude dazu genau wie in Lab 1 (Erklären) oder Lab 2 (Aufsetzen) — je nachdem, ob Sie zuerst verstehen oder zuerst aufsetzen wollen.`
-      : `Nehmen Sie eine wiederkehrende Aufgabe aus Ihrem Alltag und briefen Sie Claude dazu wie in Lab 1 oder Lab 2.`;
+      ? `Nehmen Sie sich Ihre Antwort auf „Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?" vor:\n\n${alltagAnswers[0]}\n\nInstruieren Sie Claude dazu genau wie in Lab 1 (Erklären) oder Lab 2 (Aufsetzen) — je nachdem, ob Sie zuerst verstehen oder zuerst aufsetzen wollen.`
+      : `Nehmen Sie eine wiederkehrende Aufgabe aus Ihrem Alltag und instruieren Sie Claude dazu wie in Lab 1 oder Lab 2.`;
 
     const uebung2 = zielAnswers[0]
       ? `Ihr Ziel war: „${zielAnswers[0]}" — probieren Sie diese Woche eine Anwendung von Erklären oder Aufsetzen, die genau darauf einzahlt.`
@@ -27,7 +27,7 @@
 ## Kurz zusammengefasst
 
 Sie haben heute zwei der vier Schritte geübt: **Erklären** (Sie halten nur ein Thema, das Sie nicht kennen)
-und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie briefen wie eine neue
+und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie eine neue
 Kollegin — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
 weitergeben.
 
@@ -36,7 +36,7 @@ weitergeben.
 1. Was ist der Unterschied zwischen Erklären und Aufsetzen — woran erkennen Sie, welcher Schritt gerade gefragt ist?
 2. Warum klingt Claude manchmal selbstsicher, obwohl die Antwort falsch ist?
 3. Was tun Sie, um eine Zahl zu prüfen, die Ihnen zurückkommt?
-4. Was ändert ein gutes Briefing gegenüber einem faulen — nennen Sie zwei Hebel.
+4. Was ändert eine gute Instruktion gegenüber einer faulen — nennen Sie zwei Hebel.
 5. Wann gehört eine Aufgabe eher zu KI, wann zu Automatisierung, wann bleibt sie bei Ihnen?
 
 ## Ihre Übungen

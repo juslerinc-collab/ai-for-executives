@@ -260,7 +260,8 @@ a{color:inherit}
 #nav:hover ~ #slides, #nav.pinned ~ #slides{padding-left:var(--nav-open)}
 #slides{padding-left:var(--nav);transition:padding-left .28s cubic-bezier(.2,.7,.3,1)}
 
-#rail{position:absolute;inset:0;left:0;width:var(--nav)}
+#rail{position:absolute;inset:0;left:0;width:var(--nav);transition:opacity .15s}
+#nav:hover #rail, #nav.pinned #rail{opacity:0;pointer-events:none}
 .railDot{
   position:absolute;left:0;width:var(--nav);display:flex;align-items:center;gap:14px;
   padding-left:38px;cursor:pointer;
@@ -270,9 +271,6 @@ a{color:inherit}
 .railDot.now .dot{background:var(--ultra);width:11px;height:11px;box-shadow:0 0 0 4px rgba(30,47,219,.18)}
 .railDot.locked .dot{background:var(--rule);opacity:.4}
 .railDot.locked{cursor:default;pointer-events:none}
-.railDot .lbl{font-size:11px;font-weight:600;color:var(--ink-soft);opacity:0;transition:opacity .15s;white-space:nowrap}
-#nav:hover .railDot .lbl, #nav.pinned .railDot .lbl{opacity:1}
-.railDot.locked .lbl{opacity:.34 !important}
 
 #menu{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .2s}
 #nav:hover #menu, #nav.pinned #menu{opacity:1;pointer-events:auto}
@@ -385,11 +383,11 @@ a{color:inherit}
       </div>
 
       <div class="pane active" data-pane="ueber">
-        <div class="field"><label>Vorname</label><input type="text" data-person="vorname" placeholder="Doris"></div>
-        <div class="field"><label>Rolle / Position</label><input type="text" data-person="rolle" placeholder="Beraterin"></div>
-        <div class="field"><label>Unternehmen</label><input type="text" data-person="unternehmen" placeholder="Musterfirma AG"></div>
-        <div class="field"><label>Webseite</label><input type="text" data-person="webseite" placeholder="musterfirma.ch"></div>
-        <div class="field"><label>Kurzbeschreibung Firma</label><input type="text" data-person="kurzbeschreibung" placeholder="Boutique-Beratung, berufliche Vorsorge"></div>
+        <div class="field"><label>Vorname</label><input type="text" data-person="vorname"></div>
+        <div class="field"><label>Rolle / Position</label><input type="text" data-person="rolle"></div>
+        <div class="field"><label>Unternehmen</label><input type="text" data-person="unternehmen"></div>
+        <div class="field"><label>Webseite</label><input type="text" data-person="webseite"></div>
+        <div class="field"><label>Kurzbeschreibung Firma</label><input type="text" data-person="kurzbeschreibung"></div>
       </div>
 
       <div class="pane" data-pane="reifegrad">
@@ -418,7 +416,7 @@ a{color:inherit}
 <div class="closer navy-bg deep" id="closer">
   <div class="glass closer-card">
     <h2>Das Ziel ist klar. Jetzt beginnt der Weg.</h2>
-    <p>Sie wissen jetzt, wo Sie stehen. Als Nächstes: was das Werkzeug wirklich kann — und wie Sie es briefen.</p>
+    <p>Sie wissen jetzt, wo Sie stehen. Als Nächstes: was das Werkzeug wirklich kann — und wie Sie es instruieren.</p>
     <div class="closer-actions">
       <button class="btn" id="closerGo">Los geht's mit Sitzung 1</button>
       <span class="back" id="closerBack">Zurück</span>
@@ -427,7 +425,7 @@ a{color:inherit}
 </div>
 
 
-<section class="beat wide navy-bg" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Ein Protokoll, drei Empfänger" data-locked="false" data-surface="navy">
+<section class="beat wide navy-bg" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Ein Protokoll, drei Empfänger" data-locked="false" data-surface="navy">
   <div class="beat-inner">
     <div class="eyebrow">Showcase · 3 Min.</div>
     <h1>Ein Protokoll, drei <span class="k">Empfänger</span>.</h1>
@@ -473,7 +471,7 @@ a{color:inherit}
 </section>
 
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Intro" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Intro" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">AI in a nutshell</div>
     <h1>Der Assistent, den Sie sich schon immer <span class="k">gewünscht</span> haben.</h1>
@@ -485,7 +483,7 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — KI, ML, LLM" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — KI, ML, LLM" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">a · Container-Diagramm</div>
     <h1>KI ⊃ ML ⊃ <span class="k">LLM</span></h1>
@@ -498,7 +496,7 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Context is king" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Context is king" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">b · Prinzip 1</div>
     <h1>Context is <span class="k">king</span>.</h1>
@@ -513,7 +511,7 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Confidently wrong" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Confidently wrong" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">c · Prinzip 2</div>
     <h1>Selbstsicher falsch ist ein <span class="k">Mechanismus</span>, kein Charakterfehler.</h1>
@@ -526,22 +524,22 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Ein besseres Briefing" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Eine bessere Instruktion" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">d · Prinzip 3</div>
-    <h1>Briefen Sie wie eine neue <span class="k">Kollegin</span>.</h1>
+    <h1>Instruieren Sie wie eine neue <span class="k">Kollegin</span>.</h1>
     <p class="lede">Eine Aufgabe, vier Durchläufe: <em>„eine Einladung zu einem internen Workshop schreiben.“</em></p>
     <div class="outs">
       <div class="glass out"><div class="out-label">1 · Faul</div><p><em>„Schreib eine Einladung zu einem Workshop.“</em></p></div>
       <div class="glass out"><div class="out-label">2 · Mit Kontext</div><p><em>„Schreiben Sie eine Einladung zu einem internen Workshop zum Thema [X] für [Zielgruppe], am [Datum], Dauer [Y] Stunden — Ziel ist [Z].“</em></p></div>
       <div class="glass out"><div class="out-label">3 · Mit Beispiel</div><p><em>Wie 2, plus: „Hier ist eine frühere Einladung, die gut ankam: [Beispieltext] — orientieren Sie sich am Ton.“</em></p></div>
-      <div class="glass out"><div class="out-label">4 · Claude briefen lassen</div><p><em>„Ich möchte eine Einladung zu einem internen Workshop schreiben. Wie sollte ich Sie am besten briefen, damit das Ergebnis gut wird?“</em></p></div>
+      <div class="glass out"><div class="out-label">4 · Claude instruieren lassen</div><p><em>„Ich möchte eine Einladung zu einem internen Workshop schreiben. Wie sollte ich Sie am besten instruieren, damit das Ergebnis gut wird?“</em></p></div>
     </div>
     <p class="regie-say">„Sie müssen die perfekte Anfrage nicht selbst kennen — fragen Sie danach.“</p>
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Schichten" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Schichten" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">e · Prinzip 4</div>
     <h1>Ein <span class="k">Produkt</span>, gebaut auf einem Modell — nicht das Modell selbst.</h1>
@@ -554,7 +552,7 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Nutshell — Projekte in Claude" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Projekte in Claude" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">f · Projekte</div>
     <h1>Ein Arbeitsbereich mit eigenem <span class="k">Gedächtnis</span>.</h1>
@@ -565,7 +563,7 @@ a{color:inherit}
   </div>
 </section>
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Gehört das überhaupt hierher?" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Gehört das überhaupt hierher?" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">g · Die Grenze vor der Grenze</div>
     <h1>Gehört das überhaupt <span class="k">hierher</span>?</h1>
@@ -583,7 +581,7 @@ a{color:inherit}
 </section>
 
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Die vier Schritte" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Die vier Schritte" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">Wrap-up</div>
     <h1>Die vier <span class="k">Schritte</span>.</h1>
@@ -601,7 +599,7 @@ a{color:inherit}
       <div class="glass-lt stepcard">
         <h3>Aufsetzen</h3>
         <div class="holding">Sie halten: nichts. Leeres Blatt.</div>
-        <div class="boundary">Erster Entwurf ja, Endfassung nein. Zwei Kolleginnen mit demselben Briefing
+        <div class="boundary">Erster Entwurf ja, Endfassung nein. Zwei Kolleginnen mit derselben Instruktion
         bekommen denselben Text.</div>
         <div class="gegen">Die letzte Version schreiben immer Sie. Eigenes Beispiel mitgeben, sonst klingt es
         wie bei allen.</div>
@@ -628,7 +626,7 @@ a{color:inherit}
 </section>
 
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Lab 1 — Erklären" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Lab 1 — Erklären" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">Lab 1 · Erklären · 10 Min.</div>
     <h1>Erklären Sie mir <span class="k">Claude</span>.</h1>
@@ -653,7 +651,7 @@ a{color:inherit}
         </div>
       </div>
 
-      <button class="drawerbtn" data-drawer="lab1-hebel" type="button"><span class="chev">›</span> Hebel — was ein Briefing stärker macht</button>
+      <button class="drawerbtn" data-drawer="lab1-hebel" type="button"><span class="chev">›</span> Hebel — was eine Instruktion stärker macht</button>
       <div class="drawer" id="lab1-hebel">
         <div class="drawer-inner">
           <div class="leverrow"><b>Zielgruppe</b><div class="lp">„Erklären Sie mir [Thema], als müsste ich es in drei Sätzen einer skeptischen Kollegin im Stiftungsrat/Vorstand weitergeben.“</div></div>
@@ -674,7 +672,7 @@ a{color:inherit}
 </section>
 
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Lab 2 — Aufsetzen" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Lab 2 — Aufsetzen" data-locked="false">
   <div class="beat-inner">
     <div class="eyebrow">Lab 2 · Aufsetzen · 12 Min.</div>
     <h1>Das leere <span class="k">Blatt</span>.</h1>
@@ -694,12 +692,12 @@ a{color:inherit}
           <div class="altrow"><span>Die Absage, die Sie seit Tagen vor sich herschieben (E-Mail)<br><em style="color:var(--ink-soft)">„Schreiben Sie eine freundliche, aber klare Absage an [Anbieter/Bewerberin] … kurz, ohne lange Begründung, aber nicht kalt.“</em></span></div>
           <div class="altrow"><span>Ein erster Entwurf für die Vorstandsvorlage (Dokument)<br><em style="color:var(--ink-soft)">„Schreiben Sie einen ersten Entwurf für eine Vorstandsvorlage zu [Thema] — Ausgangslage, Empfehlung, nächste Schritte, eine halbe Seite.“</em></span></div>
           <div class="altrow"><span>Die Agenda für ein schwieriges Gespräch (Struktur/Liste)<br><em style="color:var(--ink-soft)">„Erstellen Sie eine Agenda für ein Gespräch mit [Person/Team] … die drei wichtigsten Punkte, plus ein Vorschlag, wie ich es eröffne.“</em></span></div>
-          <div class="altrow"><span>Ein Bild-Briefing für ein erstes visuelles Konzept<br><em style="color:var(--ink-soft)">„Beschreiben Sie mir ein Bildkonzept für [Anlass] — Stil, Farbwelt, was im Vordergrund steht, damit ich es briefen kann.“</em></span></div>
+          <div class="altrow"><span>Eine Bild-Instruktion für ein erstes visuelles Konzept<br><em style="color:var(--ink-soft)">„Beschreiben Sie mir ein Bildkonzept für [Anlass] — Stil, Farbwelt, was im Vordergrund steht, damit ich es instruieren kann.“</em></span></div>
           <div class="altrow"><span>Das Grusswort, das jemand von Ihnen erwartet (Rede/Text)<br><em style="color:var(--ink-soft)">„Schreiben Sie ein kurzes Grusswort für [Anlass] — persönlich, nicht länger als eine Minute vorgelesen.“</em></span></div>
         </div>
       </div>
 
-      <button class="drawerbtn" data-drawer="lab2-hebel" type="button"><span class="chev">›</span> Hebel — was ein Briefing stärker macht</button>
+      <button class="drawerbtn" data-drawer="lab2-hebel" type="button"><span class="chev">›</span> Hebel — was eine Instruktion stärker macht</button>
       <div class="drawer" id="lab2-hebel">
         <div class="drawer-inner">
           <div class="leverrow"><b>Ton & Zielgruppe</b><div class="lp">„… professionell, aber persönlich, wie bei Seeds Consulting üblich.“</div></div>
@@ -722,7 +720,7 @@ a{color:inherit}
 </section>
 
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie briefe ich es?" data-sub="Board, Lauf 1" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Board, Lauf 1" data-locked="false">
   <div class="beat-inner" id="board">
     <div class="eyebrow">Board · Lauf 1 · 12 Min.</div>
     <h1>Ihr Use-Case-<span class="k">Backlog</span>.</h1>
@@ -818,7 +816,7 @@ const REIFEGRAD_LEVELS = [
   {
     n: 3,
     name: "Regelmäßig, aber ohne Methode",
-    desc: "Sie nutzen es im Alltag für wiederkehrende Aufgaben, intuitiv — kein wiederverwendbares Briefing, keine bewusste Unterscheidung der vier Schritte.",
+    desc: "Sie nutzen es im Alltag für wiederkehrende Aufgaben, intuitiv — keine wiederverwendbare Instruktion, keine bewusste Unterscheidung der vier Schritte.",
   },
   {
     n: 4,
@@ -1140,7 +1138,8 @@ try {
       el.className = cls;
       const y = window.innerHeight * top + (BEATS.length > 1 ? (window.innerHeight * span * i) / (BEATS.length - 1) : 0);
       el.style.top = y + "px";
-      el.innerHTML = `<span class="dot"></span><span class="lbl">${b.dataset.sub || b.dataset.chapter}</span>`;
+      el.innerHTML = `<span class="dot"></span>`;
+      el.title = b.dataset.sub || b.dataset.chapter;
       if (!locked) el.onclick = () => jump(i);
       rail.appendChild(el);
     });
@@ -1740,8 +1739,8 @@ try {
     const zielAnswers = (s0?.ziel || []).map((a) => a.answer).filter((a) => a && a !== "•");
 
     const uebung1 = alltagAnswers[0]
-      ? `Nehmen Sie sich Ihre Antwort auf „Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?" vor:\n\n${alltagAnswers[0]}\n\nBriefen Sie Claude dazu genau wie in Lab 1 (Erklären) oder Lab 2 (Aufsetzen) — je nachdem, ob Sie zuerst verstehen oder zuerst aufsetzen wollen.`
-      : `Nehmen Sie eine wiederkehrende Aufgabe aus Ihrem Alltag und briefen Sie Claude dazu wie in Lab 1 oder Lab 2.`;
+      ? `Nehmen Sie sich Ihre Antwort auf „Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?" vor:\n\n${alltagAnswers[0]}\n\nInstruieren Sie Claude dazu genau wie in Lab 1 (Erklären) oder Lab 2 (Aufsetzen) — je nachdem, ob Sie zuerst verstehen oder zuerst aufsetzen wollen.`
+      : `Nehmen Sie eine wiederkehrende Aufgabe aus Ihrem Alltag und instruieren Sie Claude dazu wie in Lab 1 oder Lab 2.`;
 
     const uebung2 = zielAnswers[0]
       ? `Ihr Ziel war: „${zielAnswers[0]}" — probieren Sie diese Woche eine Anwendung von Erklären oder Aufsetzen, die genau darauf einzahlt.`
@@ -1752,7 +1751,7 @@ try {
 ## Kurz zusammengefasst
 
 Sie haben heute zwei der vier Schritte geübt: **Erklären** (Sie halten nur ein Thema, das Sie nicht kennen)
-und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie briefen wie eine neue
+und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie eine neue
 Kollegin — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
 weitergeben.
 
@@ -1761,7 +1760,7 @@ weitergeben.
 1. Was ist der Unterschied zwischen Erklären und Aufsetzen — woran erkennen Sie, welcher Schritt gerade gefragt ist?
 2. Warum klingt Claude manchmal selbstsicher, obwohl die Antwort falsch ist?
 3. Was tun Sie, um eine Zahl zu prüfen, die Ihnen zurückkommt?
-4. Was ändert ein gutes Briefing gegenüber einem faulen — nennen Sie zwei Hebel.
+4. Was ändert eine gute Instruktion gegenüber einer faulen — nennen Sie zwei Hebel.
 5. Wann gehört eine Aufgabe eher zu KI, wann zu Automatisierung, wann bleibt sie bei Ihnen?
 
 ## Ihre Übungen

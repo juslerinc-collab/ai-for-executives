@@ -76,7 +76,8 @@ a{color:inherit}
 #nav:hover ~ #slides, #nav.pinned ~ #slides{padding-left:var(--nav-open)}
 #slides{padding-left:var(--nav);transition:padding-left .28s cubic-bezier(.2,.7,.3,1)}
 
-#rail{position:absolute;inset:0;left:0;width:var(--nav)}
+#rail{position:absolute;inset:0;left:0;width:var(--nav);transition:opacity .15s}
+#nav:hover #rail, #nav.pinned #rail{opacity:0;pointer-events:none}
 .railDot{
   position:absolute;left:0;width:var(--nav);display:flex;align-items:center;gap:14px;
   padding-left:38px;cursor:pointer;
@@ -86,9 +87,6 @@ a{color:inherit}
 .railDot.now .dot{background:var(--ultra);width:11px;height:11px;box-shadow:0 0 0 4px rgba(30,47,219,.18)}
 .railDot.locked .dot{background:var(--rule);opacity:.4}
 .railDot.locked{cursor:default;pointer-events:none}
-.railDot .lbl{font-size:11px;font-weight:600;color:var(--ink-soft);opacity:0;transition:opacity .15s;white-space:nowrap}
-#nav:hover .railDot .lbl, #nav.pinned .railDot .lbl{opacity:1}
-.railDot.locked .lbl{opacity:.34 !important}
 
 #menu{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .2s}
 #nav:hover #menu, #nav.pinned #menu{opacity:1;pointer-events:auto}

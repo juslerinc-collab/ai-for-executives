@@ -34,7 +34,8 @@
       el.className = cls;
       const y = window.innerHeight * top + (BEATS.length > 1 ? (window.innerHeight * span * i) / (BEATS.length - 1) : 0);
       el.style.top = y + "px";
-      el.innerHTML = `<span class="dot"></span><span class="lbl">${b.dataset.sub || b.dataset.chapter}</span>`;
+      el.innerHTML = `<span class="dot"></span>`;
+      el.title = b.dataset.sub || b.dataset.chapter;
       if (!locked) el.onclick = () => jump(i);
       rail.appendChild(el);
     });

@@ -16,7 +16,7 @@ export const REIFEGRAD_LEVELS = [
   {
     n: 3,
     name: "Regelmäßig, aber ohne Methode",
-    desc: "Sie nutzen es im Alltag für wiederkehrende Aufgaben, intuitiv — kein wiederverwendbares Briefing, keine bewusste Unterscheidung der vier Schritte.",
+    desc: "Sie nutzen es im Alltag für wiederkehrende Aufgaben, intuitiv — keine wiederverwendbare Instruktion, keine bewusste Unterscheidung der vier Schritte.",
   },
   {
     n: 4,
