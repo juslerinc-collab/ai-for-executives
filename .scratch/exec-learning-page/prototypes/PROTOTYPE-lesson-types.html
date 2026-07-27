@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Lesson-Level Design Pass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+   Ticket 20: does one instance of each lesson type — Showcase,
+   Theorie-Beat, Labor-Beat — actually fit at scroll-snap density,
+   on the shell locked in PROTOTYPE-nav-rail.html (v4)?
+   Reuses that file's shell verbatim (rail, hover-menu, scroll-sync)
+   and only swaps in real content for three beats plus:
+   · keyboard nav (↑/↓ and ←/→ move between beats, ignored while
+     an input/textarea is focused)
+   · a Beispiele/Hebel drawer pattern for the lab beat, since the
+     ticket's real question is whether task+prompt+Beispiele+Hebel+
+     debrief fits ONE screen — answer tested here: it does NOT,
+     not flat. Beispiele and Hebel are default-collapsed drawers;
+     only task, prompt, "worauf achten" and the debrief field are
+     on-screen by default. See note at bottom of file.
+   CONTENT SOURCES: issues/03 (b. Context is king), issues/04
+   (Lab 1 — Erklären, Answer section), issues/01 (the showcase,
+   "Ein Protokoll, drei Empfänger").
+   ============================================================ */
+
+:root{
+  --ink:#0A1330; --ink-soft:#4B5573; --acc:#1E2FDB; --acc-2:#2A3CF0;
+  --tint:#E4EBFB; --rule:#D7DBE6;
+  --nav:104px; --nav-open:330px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;height:100%}
+body{font-family:"Schibsted Grotesk",-apple-system,system-ui,sans-serif;color:var(--ink);
+  -webkit-font-smoothing:antialiased;height:100%;
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.16) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.13) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.15) 0%, transparent 66%),
+    radial-gradient(40% 36% at 34% 96%, rgba(30,47,219,.10) 0%, transparent 60%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  background-attachment:fixed}
+body::-webkit-scrollbar{width:0}
+h1{font-family:Archivo,"Schibsted Grotesk",sans-serif;font-weight:800;letter-spacing:-.036em;line-height:1.02}
+
+/* ---------- oben rechts ---------- */
+#mark{position:fixed;top:44px;right:56px;z-index:70;text-align:right;pointer-events:none}
+#mark .brand{font-family:Archivo;font-weight:800;font-size:15px;letter-spacing:-.03em;display:block}
+#mark .brand em{font-style:normal;color:var(--acc)}
+#mark .ch{display:block;margin-top:5px;font-size:12.5px;font-weight:300;color:var(--ink-soft)}
+
+/* ---------- Sprossen: das ist der Fortschrittsanzeiger ---------- */
+#nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav);z-index:60;
+  transition:width .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover{width:var(--nav-open)}
+#nav::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .24s ease;
+  background:linear-gradient(90deg, rgba(255,255,255,.74) 0%, rgba(255,255,255,.54) 62%, rgba(255,255,255,0) 100%)}
+#nav:hover::after{opacity:1}
+
+#rail{position:absolute;left:0;top:0;bottom:0;width:var(--nav);z-index:2}
+#rail::before{content:"";position:absolute;left:50px;top:12%;bottom:12%;width:2px;background:var(--rule)}
+.node{position:absolute;left:45px;width:12px;height:12px;border-radius:50%;background:var(--rule);
+  transition:background .2s, box-shadow .2s, transform .2s, opacity .2s;cursor:pointer}
+.node.done{background:var(--acc);opacity:.30}
+.node.now{background:var(--acc);opacity:1;box-shadow:0 0 0 5px var(--tint);transform:scale(1.14)}
+.node.locked{background:var(--rule);opacity:.42;cursor:default}
+.node:not(.locked):hover{background:var(--acc-2);opacity:1}
+.slabel{position:absolute;left:24px;font-family:Archivo;font-weight:800;font-size:9.5px;
+  letter-spacing:.1em;color:var(--ink-soft);opacity:.5}
+
+/* ---------- Menü: alle Sub-Kapitel, immer da, nur summoned via hover ---------- */
+#menu{position:absolute;left:var(--nav);top:0;bottom:0;z-index:3;
+  width:calc(var(--nav-open) - var(--nav));padding:52px 22px 52px 2px;
+  overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s ease .05s}
+#nav:hover #menu{opacity:1;pointer-events:auto}
+#menu::-webkit-scrollbar{width:0}
+.sesshead{font-family:Archivo;font-weight:800;font-size:14px;letter-spacing:-.02em;margin-bottom:9px}
+.chap{display:flex;align-items:baseline;gap:9px;padding:6px 0;cursor:pointer;
+  font-size:13.5px;font-weight:400;color:var(--ink-soft);transition:color .14s}
+.chap:hover{color:var(--acc)}
+.chap.active{color:var(--ink);font-weight:600}
+.chap .cn{font-size:9.5px;font-weight:600;color:var(--acc);min-width:14px;opacity:.75}
+
+/* ---------- die Beats ---------- */
+#slides{padding-left:var(--nav);transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover ~ #slides{padding-left:var(--nav-open)}
+.beat{min-height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
+  display:flex;flex-direction:column;justify-content:center;padding:64px 72px 64px 76px}
+.beat .eye{font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:20px}
+.beat h1{font-size:clamp(32px,3.8vw,52px);max-width:20ch;margin-bottom:20px}
+.k{color:var(--acc)}
+.beat p{font-size:17px;font-weight:300;line-height:1.6;max-width:58ch;color:var(--ink-soft)}
+.beat p+p{margin-top:12px}
+
+/* ---------- glass card, content components only ---------- */
+.card{background:rgba(255,255,255,.56);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.7);border-radius:18px;padding:22px 26px;margin-top:22px;max-width:62ch}
+.card .lbl{font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.prompt{font-family:"Schibsted Grotesk";font-size:15.5px;font-weight:400;color:var(--ink);
+  background:rgba(30,47,219,.06);border-radius:10px;padding:14px 16px;line-height:1.55}
+.copybtn{margin-top:10px;font-size:12px;font-weight:600;color:var(--acc);background:none;border:none;
+  cursor:pointer;padding:0;font-family:inherit;letter-spacing:.02em}
+.copybtn:hover{color:var(--acc-2)}
+.watch{font-size:13px;color:var(--ink-soft);margin-top:10px;font-style:italic}
+
+/* ---------- Beispiele/Hebel drawer: hidden by default ---------- */
+.drawer-btn{margin-top:16px;font-size:12.5px;font-weight:600;color:var(--ink-soft);background:rgba(255,255,255,.5);
+  border:1px solid var(--rule);border-radius:999px;padding:7px 16px;cursor:pointer;font-family:inherit;
+  display:inline-flex;align-items:center;gap:6px}
+.drawer-btn:hover{color:var(--acc);border-color:var(--acc)}
+.drawer-btn .car{transition:transform .18s}
+.drawer-btn.open .car{transform:rotate(180deg)}
+.drawer{max-height:0;overflow:hidden;transition:max-height .28s ease;max-width:62ch}
+.drawer.open{max-height:480px;overflow-y:auto}
+.drow{padding:9px 0;border-bottom:1px solid var(--rule);font-size:13px;color:var(--ink-soft)}
+.drow b{color:var(--ink);font-weight:600}
+
+/* ---------- debrief field ---------- */
+.debrief{margin-top:24px;max-width:62ch}
+.debrief label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:8px}
+.debrief input{width:100%;font-family:inherit;font-size:16px;font-weight:400;color:var(--ink);
+  background:none;border:none;border-bottom:2px solid var(--rule);padding:6px 2px;outline:none;transition:border-color .18s}
+.debrief input:focus{border-color:var(--acc)}
+
+/* ---------- showcase: three-output preview ---------- */
+.outs{display:flex;gap:14px;margin-top:22px;flex-wrap:wrap}
+.out{flex:1;min-width:160px;background:rgba(255,255,255,.56);backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:16px 18px}
+.out .t{font-family:Archivo;font-weight:800;font-size:12.5px;letter-spacing:-.01em;margin-bottom:6px}
+.out .d{font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+
+/* ---------- kbd hint ---------- */
+#kbd{position:fixed;bottom:28px;right:56px;z-index:70;font-size:11px;color:var(--ink-soft);
+  display:flex;align-items:center;gap:6px;opacity:.6}
+#kbd kbd{font-family:Archivo;font-size:10px;font-weight:700;background:rgba(255,255,255,.6);
+  border:1px solid var(--rule);border-radius:5px;padding:2px 6px}
+</style>
+</head>
+<body>
+
+<div id="mark">
+  <span class="brand">AI for <em>Executives</em></span>
+  <span class="ch" id="markch"></span>
+</div>
+
+<nav id="nav">
+  <div id="rail"></div>
+  <div id="menu"></div>
+</nav>
+
+<div id="kbd"><kbd>↑</kbd><kbd>↓</kbd> oder <kbd>←</kbd><kbd>→</kbd> zum nächsten Beat</div>
+
+<div id="slides">
+
+  <section class="beat" id="b-0" data-i="0">
+    <div class="eye">Prolog · Showcase</div>
+    <h1>Ein Protokoll, <span class="k">drei Empfänger</span>.</h1>
+    <p>Ein ganz normales Protokoll — Ihre Stiftungsratssitzung vom 11.06., neun Traktanden, gut drei Seiten, Entscheide und Diskussion durcheinander. Sie führen jetzt vor, wie aus diesem einen Dokument drei fertige Texte werden. Kein Vortrag — Sie tippen, es entsteht live.</p>
+    <div class="outs">
+      <div class="out"><div class="t">Essenz</div><div class="d">Die Entscheide, in fünf Zeilen, für Sie selbst.</div></div>
+      <div class="out"><div class="t">Mail</div><div class="d">Dieselben Entscheide, als Nachricht ans Sekretariat.</div></div>
+      <div class="out"><div class="t">Für die Versicherten</div><div class="d">Dieselben Entscheide, ohne Fachjargon, für den Jahresbericht.</div></div>
+    </div>
+    <p style="margin-top:20px;font-size:13px;font-style:italic">Drei Minuten. Ihre eigenen drei Arbeitsschritte, retroactiv benannt: das war schon <em>Aufbereiten</em>.</p>
+  </section>
+
+  <section class="beat" id="b-1" data-i="1">
+    <div class="eye">AI in a nutshell · Prinzip 1</div>
+    <h1>Context is <span class="k">König</span>.</h1>
+    <p>Sie kennt nur, was gerade im Gespräch steht — wie ein Arbeitsgedächtnis, nicht wie ein Archiv. Was nicht erwähnt wird, existiert für sie nicht. Je länger das Gespräch läuft, desto mehr können frühe Details verblassen (context rot) — deshalb wichtige Punkte notfalls wiederholen.</p>
+    <div class="card">
+      <div class="lbl">Live geprüft</div>
+      <p style="font-size:14.5px;margin:0">„Laut Anthropic verarbeiten aktuelle Modelle bis zu 1 Million Tokens Kontext." — <span id="cite-state" style="font-weight:600">ungeprüft</span></p>
+      <button class="copybtn" onclick="document.getElementById('cite-state').textContent='an der Quelle bestätigt ✓'; document.getElementById('cite-state').style.color='var(--acc)'">An der Quelle prüfen →</button>
+    </div>
+  </section>
+
+  <section class="beat" id="b-2" data-i="2">
+    <div class="eye">Labor 1 · Erklären — 10 Min</div>
+    <h1>Erklären Sie mir <span class="k">Claude</span>.</h1>
+    <p>Erst faul gefragt, dann mit einer Anforderung Ihrer Wahl — Publikum, Tiefe oder Format. Der spürbare Sprung ist der Punkt.</p>
+
+    <div class="card">
+      <div class="lbl">Copy-ready Prompt</div>
+      <div class="prompt" id="promptbox">„Erklären Sie mir Claude."</div>
+      <button class="copybtn" onclick="navigator.clipboard.writeText(document.getElementById('promptbox').textContent)">In Zwischenablage kopieren</button>
+      <div class="watch">Worauf achten: wie viel besser wird die Antwort allein durch eine zusätzliche Anforderung?</div>
+    </div>
+
+    <button class="drawer-btn" id="dbtn-bsp" onclick="toggleDrawer('bsp')">
+      <span class="car">▾</span> Beispiele — falls der Raum gerade leer ist
+    </button>
+    <div class="drawer" id="drawer-bsp">
+      <div class="drow"><b>Begriff aus einem Bericht:</b> „Erklären Sie mir [Begriff] aus dem Bericht, ohne dass ich nachfragen muss, was er bedeutet."</div>
+      <div class="drow"><b>Thema für nächste Woche:</b> „Erklären Sie mir [Thema], damit ich nächste Woche im Gespräch mitreden kann."</div>
+      <div class="drow"><b>Die Technologie, über die alle reden:</b> „Erklären Sie mir [Technologie] in einfachen Worten."</div>
+      <div class="drow"><b>Ein neuer Markt/eine neue Regelung:</b> „Erklären Sie mir [Markt/Regelung] — was ändert sich dadurch für mich?"</div>
+      <div class="drow"><b>Ein Bereich, den Sie beurteilen sollen:</b> „Erklären Sie mir [Bereich], den ich beurteilen soll, obwohl ich ihn nie selbst verantwortet habe."</div>
+    </div>
+
+    <button class="drawer-btn" id="dbtn-heb" onclick="toggleDrawer('heb')">
+      <span class="car">▾</span> Fünf Hebel, auf Ihr Thema angewendet
+    </button>
+    <div class="drawer" id="drawer-heb">
+      <div class="drow"><b>Zielgruppe:</b> „…als müsste ich es einer skeptischen Kollegin weitergeben."</div>
+      <div class="drow"><b>Tiefe:</b> „…so, dass ich in einem Fachgespräch mitreden kann."</div>
+      <div class="drow"><b>Analogie:</b> „…anhand eines Vergleichs aus der Branche."</div>
+      <div class="drow"><b>Format:</b> „…in drei Punkten, die ich mir merken kann."</div>
+      <div class="drow"><b>Prüfbarkeit:</b> „…und nennen Sie die zwei wichtigsten Fakten, die ich selbst nachprüfen sollte."</div>
+    </div>
+
+    <div class="debrief">
+      <label>Wo hätte Ihnen das zuletzt geholfen?</label>
+      <input type="text" placeholder="Ihre Antwort wird zur Board-Karte">
+    </div>
+  </section>
+
+</div>
+
+<script>
+const CH=["Prolog","AI in a nutshell","Labor: Erklären"];
+const BEATS=[...document.querySelectorAll(".beat")];
+let cur=0;
+
+function toggleDrawer(name){
+  const d=document.getElementById("drawer-"+name), b=document.getElementById("dbtn-"+name);
+  d.classList.toggle("open"); b.classList.toggle("open");
+}
+
+function drawRail(){
+  const rail=document.getElementById("rail"); rail.innerHTML="";
+  const H=window.innerHeight, top=H*0.12, span=H*0.76, gap=BEATS.length>1?span/(BEATS.length-1):0;
+  BEATS.forEach((b,i)=>{
+    const y=top+i*gap;
+    const d=document.createElement("div");
+    d.className="node"+(i<cur?" done":"")+(i===cur?" now":"");
+    d.style.top=y+"px"; d.title=CH[i];
+    d.onclick=()=>jump(i);
+    rail.appendChild(d);
+  });
+}
+function drawMenu(){
+  const menu=document.getElementById("menu"); menu.innerHTML="";
+  const box=document.createElement("div");
+  box.innerHTML=`<div class="sesshead">Session 1</div>`;
+  CH.forEach((t,i)=>{
+    const row=document.createElement("div");
+    row.className="chap"+(i===cur?" active":"");
+    row.innerHTML=`<span class="cn">${String(i+1).padStart(2,"0")}</span>${t}`;
+    row.onclick=()=>jump(i);
+    box.appendChild(row);
+  });
+  menu.appendChild(box);
+}
+function drawMark(){ document.getElementById("markch").textContent="Session 1 · "+CH[cur]; }
+function jump(i){ BEATS[i].scrollIntoView({behavior:"smooth",block:"start"}); }
+function refresh(){ drawRail(); drawMenu(); drawMark(); }
+refresh();
+
+let raf=null;
+function syncToScroll(){
+  raf=null;
+  const H=window.innerHeight;
+  const mid=document.scrollingElement.scrollTop+H/2;
+  let active=0;
+  BEATS.forEach((b,i)=>{ if(b.offsetTop<=mid) active=i; });
+  if(active===cur) return;
+  cur=active; refresh();
+}
+window.addEventListener("scroll",()=>{if(!raf) raf=requestAnimationFrame(syncToScroll);},{passive:true});
+window.addEventListener("resize",()=>{drawRail();syncToScroll();});
+
+/* ---------- Tastaturnavigation ---------- */
+window.addEventListener("keydown",e=>{
+  const t=document.activeElement, tag=t&&t.tagName;
+  if(tag==="INPUT"||tag==="TEXTAREA"||(t&&t.isContentEditable)) return;
+  if(["ArrowDown","ArrowRight"].includes(e.key)){ e.preventDefault(); jump(Math.min(cur+1,BEATS.length-1)); }
+  if(["ArrowUp","ArrowLeft"].includes(e.key)){ e.preventDefault(); jump(Math.max(cur-1,0)); }
+});
+</script>
+</body>
+</html>

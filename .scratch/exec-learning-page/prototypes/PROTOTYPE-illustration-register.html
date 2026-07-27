@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Illustrations-Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+
+   QUESTION: does a transparent-background illustration system
+   survive on BOTH surfaces (Papier + Navy) — and which register
+   is right? Four registers at ?i=a|b|c|d, floating bar bottom.
+
+   Every variant renders the SAME subject (kleine Figur + über-
+   grosse Taste auf einer Riesentastatur) TWICE — once on paper,
+   once on navy — so the mid-tone rule is directly testable.
+   Same asset, no per-surface recolouring. If it needs two
+   versions, it has failed the test.
+
+   Palette + type inherited from PROTOTYPE-type-and-glass.html.
+
+   BEFUND (nach einem Durchlauf über A, C, D):
+   Die "Mittelton-Regel" hält NICHT in der Fassung, in der sie
+   vorgeschlagen wurde. Von den drei Kandidaten überlebt nur EINE
+   Farbe beide Flächen:
+     · #1526A8 Ultramarin-tief — nur Papier. Auf Navy ~1,6:1, tot.
+     · #B3CCF4 Eisblau         — nur Navy. Auf Papier fast weg.
+     · #1E2FDB Ultramarin      — BEIDE. Dunkel genug fürs Papier
+       (~8,5:1), gesättigt genug, um sich vom Navy zu lösen.
+   A scheitert also auf Navy, C spiegelbildlich auf Papier, D am
+   deutlichsten von allen. Eine wirklich flächenneutrale Illustration
+   muss ihre Form über #1E2FDB tragen; Eisblau darf nur schmücken,
+   nie die Kontur sein.
+
+   Der Editorial-Register (B/E) scheitert an etwas anderem, nicht an
+   der Farbe: das Generat sitzt farblich exakt richtig, aber sein
+   Schlagschatten liegt auf dem Grund. Freigestellt (B) bleibt ein
+   loses navy Dreieck stehen — auf Papier ein sichtbarer Fehler. Mit
+   Grund (E) stimmt das Bild, aber der graue Block ist auf beiden
+   Flächen ein Fremdkörper und damit die verbotene dritte Fläche.
+   Fazit: dieser Register ist mit "transparent" nicht vereinbar. Er
+   wäre nur als vollflächiges Bild zu haben — also genau einmal, für
+   das Opening, und nicht als Spot-System.
+
+   ENTSCHIEDEN 2026-07-26 → G. Siehe docs/adr/0001-illustration-system.md.
+   G kombiniert Aufbau + Eisflächen aus A mit Linie + Löchern aus F
+   und trägt die Form durchgehend in #1E2FDB. Diese Datei ist ab
+   jetzt Primärquelle, nicht Wegwerfcode: sie ist der Beleg für die
+   drei Regeln UND der Prüfstand für neue Assets — neues Bild in den
+   .art-Slot, beide Flächen durchschalten.
+
+   Die SVGs sind Formstudien, keine Produktions-Assets — und die
+   letzte Handzeichnung in diesem Projekt. ALLE echten Illustrationen
+   entstehen ausnahmslos über die media-gen-Skill; Prompt-Vorlage
+   steht im ADR. Ist ein Ergebnis zu schwach, folgt ein besserer
+   Prompt, nie ein Stift.
+
+   Lucide bleibt unverändert daneben bestehen (1.5, ohne Füllung,
+   eine Familie). Zwei Instrumente mit Absicht: Icons beschriften,
+   Illustrationen tragen einen Gedanken. Gemeinsam ist nur die
+   Palette.
+
+   Deep-Links ?i=a…g funktionieren nur beim direkten Öffnen im
+   Browser — die Preview-Pane serviert file:// als Snapshot und wirft
+   den Query-String weg. Die Pfeile/Cursortasten gehen immer.
+   ============================================================ */
+
+:root{
+  --paper:#F4F5F7; --ink:#0A1330; --ink-soft:#4B5573;
+  --ultra:#1E2FDB; --ultra-deep:#1526A8;
+  --ice:#B3CCF4; --ice-tint:#E4EBFB; --rule:#DDE0E8;
+  --fh:"Archivo"; --fb:"Inter";
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb),-apple-system,system-ui,sans-serif;background:#20242E;color:var(--ink);
+  padding-bottom:104px;-webkit-font-smoothing:antialiased}
+h1,h2{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;letter-spacing:-.036em;line-height:1.00}
+
+/* ---------- the two surfaces ---------- */
+.slide{position:relative;padding:60px 60px 64px 258px;min-height:500px;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:48px;align-items:center}
+.slide.paper{
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.16) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.13) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.15) 0%, transparent 66%),
+    linear-gradient(158deg,#F9FAFC 0%,#F3F4F8 48%,#E7EBF4 100%);
+}
+.slide.navy{
+  color:#fff;
+  background:
+    radial-gradient(60% 54% at 24% 24%,#16226B 0%,transparent 64%),
+    radial-gradient(46% 42% at 78% 30%,#1B2A82 0%,transparent 62%),
+    radial-gradient(72% 64% at 54% 86%,#04091F 0%,transparent 70%),
+    #08102A;
+}
+
+/* ---------- ladder rail ---------- */
+.rail{position:absolute;left:56px;top:76px;width:2px;height:210px;background:var(--rule)}
+.navy .rail{background:rgba(255,255,255,.26)}
+.rung{position:absolute;left:-5px;width:12px;height:12px;border-radius:50%;background:var(--rule)}
+.navy .rung{background:rgba(255,255,255,.3)}
+.rung.done{background:var(--ultra);opacity:.38}
+.navy .rung.done{background:#fff;opacity:.55}
+.rung.now{background:var(--ultra);box-shadow:0 0 0 5px var(--ice-tint)}
+.navy .rung.now{background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.28)}
+.rail-label{position:absolute;left:24px;top:-5px;white-space:nowrap;font-size:11px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ultra)}
+.navy .rail-label{color:#fff}
+
+/* ---------- type ---------- */
+.eyebrow{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:500;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:24px}
+.navy .eyebrow{color:rgba(255,255,255,.78)}
+.eyebrow svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+h2{font-size:clamp(30px,3.4vw,46px);max-width:15ch;margin-bottom:22px}
+.k{color:var(--ultra)}
+.navy .k{color:var(--ice)}
+p.lede{font-size:17px;font-weight:300;line-height:1.62;max-width:44ch;color:var(--ink-soft)}
+.navy p.lede{color:rgba(255,255,255,.86)}
+
+/* ---------- the illustration slot ----------
+   NO per-surface CSS. Whatever sits here has to survive both. */
+.art{width:100%;display:flex;align-items:center;justify-content:center}
+.art svg{width:100%;height:auto;max-width:400px;display:block}
+.art img{width:100%;max-width:400px;height:auto;display:block}
+.art .missing{width:100%;max-width:400px;aspect-ratio:1;border:1.5px dashed var(--ice);
+  border-radius:14px;display:grid;place-items:center;text-align:center;padding:28px;
+  font-size:13px;font-weight:300;line-height:1.6;color:var(--ink-soft)}
+.navy .art .missing{color:var(--ice);border-color:rgba(179,204,244,.5)}
+
+/* ---------- surface tag ---------- */
+.tag{position:absolute;right:18px;top:16px;font-size:10px;font-weight:600;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-soft);opacity:.5}
+.navy .tag{color:#fff}
+
+/* ---------- switcher — deliberately NOT part of the design ---------- */
+.bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:99;
+  display:flex;align-items:center;gap:4px;background:#111;color:#fff;border-radius:999px;
+  padding:6px;box-shadow:0 10px 34px rgba(0,0,0,.45);font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.bar button{background:#2A2A2A;color:#fff;border:0;width:32px;height:32px;border-radius:999px;
+  cursor:pointer;font-size:15px;line-height:1}
+.bar button:hover{background:#3D3D3D}
+.bar .lbl{padding:0 16px;white-space:nowrap;letter-spacing:.02em}
+.bar .lbl b{font-weight:700}
+.note{max-width:920px;margin:0 auto;padding:26px 32px;color:#C9CEDA;font-size:13.5px;
+  font-weight:300;line-height:1.7}
+.note b{color:#fff;font-weight:600}
+.note code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--ice)}
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+<div class="note" id="note"></div>
+
+<div class="bar">
+  <button id="prev" aria-label="vorher">←</button>
+  <span class="lbl" id="lbl"></span>
+  <button id="next" aria-label="weiter">→</button>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   The four registers. Each `art` is ONE asset, dropped unmodified
+   onto both surfaces. --ultra-deep #1526A8 for line, --ice #B3CCF4
+   for fill planes: the mid-tone rule under test.
+   ------------------------------------------------------------------ */
+
+const L = '#1526A8';   // linework  — ultramarine deep
+const F = '#B3CCF4';   // fill plane — ice blue
+const A = '#1E2FDB';   // accent    — ultramarine
+
+/* Classic 2:1 isometric matrix. Grid is 5 x 3, pitch 40, key 34,
+   so the board lands centred in a 360 x 300 viewBox. */
+const ISO  = 'matrix(0.866,0.5,-0.866,0.5,145,70)';
+const LIFT = 'translate(0,-104)';      /* the raised key, in screen space */
+
+/* the slot the raised key came from */
+const GAP_X = 80, GAP_Y = 40;
+
+function keys(render){
+  let o = '';
+  for (let r = 0; r < 3; r++)
+    for (let c = 0; c < 5; c++){
+      if (c * 40 === GAP_X && r * 40 === GAP_Y) continue;
+      o += render(c * 40, r * 40);
+    }
+  return o;
+}
+
+/* A person, in screen space, standing on the board at (110,147) and
+   reaching up-right toward the raised key at (180,52). Deliberately
+   geometric — it has to survive at 90px tall on a slide. */
+function figure(mode){
+  if (mode === 'solid') return `
+    <g transform="translate(92,168)" fill="${A}">
+      <circle cx="0" cy="-47" r="7.5"/>
+      <path d="M-5.5 -39 h11 l3.5 22 h-6 l-2.5 -11 -2.5 11 h-6 z"/>
+      <path d="M4 -36 l16 -17 3.5 3.5 -16 17 z"/>
+      <path d="M-4.5 -36 l-9 12 -4 -3 9 -12 z"/>
+      <path d="M-5 -17 l-7 17 4.5 2 8 -17 z"/>
+      <path d="M5 -17 l8 16 -4.5 2.5 -8 -16 z"/>
+    </g>`;
+  return `
+    <g transform="translate(92,168)">
+      <circle cx="0" cy="-47" r="7.5" fill="${F}"/>
+      <path d="M0 -39 v20"/>
+      <path d="M0 -35 l20 -19"/>
+      <path d="M0 -35 l-11 12"/>
+      <path d="M0 -19 l-9 19"/>
+      <path d="M0 -19 l10 18"/>
+    </g>`;
+}
+
+/* ---- doodle helpers, for F ----
+   A deterministic wobble so the line looks drawn rather than plotted.
+   Same seed = same shape on every reload; this is a prototype, not art. */
+function wob(seed){
+  let s = seed;
+  return n => { s = (s * 9301 + 49297) % 233280; return (s / 233280 - .5) * n; };
+}
+
+/* one hand-drawn key: four corners nudged off true, edges bowed.
+   Amplitudes are deliberately large — at slide size a subtle wobble
+   just reads as a rendering artefact rather than as a drawn line. */
+function dkey(x, y, w, h, seed, fill){
+  const r = wob(seed), W = 5.5, B = 4.5;
+  const p = [
+    [x + r(W),         y + r(W)],
+    [x + w + r(W),     y - 2.5 + r(W)],
+    [x + w - 4 + r(W), y + h + r(W)],
+    [x - 3 + r(W),     y + h - 3 + r(W)]
+  ];
+  let d = `M${p[0][0].toFixed(1)} ${p[0][1].toFixed(1)}`;
+  for (let i = 0; i < 4; i++){
+    const a = p[i], b = p[(i + 1) % 4];
+    d += ` Q${((a[0]+b[0])/2 + r(B)).toFixed(1)} ${((a[1]+b[1])/2 + r(B)).toFixed(1)}` +
+         ` ${b[0].toFixed(1)} ${b[1].toFixed(1)}`;
+  }
+  return `<path d="${d}Z" fill="${fill || 'none'}" stroke-width="${(4.6 + r(1.6)).toFixed(1)}"/>`;
+}
+
+/* ---- helpers for G ----
+   A's isometric grid, but the wobble is applied in SCREEN space after
+   the projection, not before it. Wobbling in grid space and then
+   shearing the result gives a lopsided, mechanical-looking line. */
+function iso(gx, gy, dy){ return [0.866 * (gx - gy) + 145, 0.5 * (gx + gy) + 70 + (dy || 0)]; }
+
+function wkey(gx, gy, seed, opt = {}){
+  const r = wob(seed), W = 3.2, B = 2.8, dy = opt.dy || 0;
+  const c = [iso(gx, gy, dy), iso(gx + 34, gy, dy),
+             iso(gx + 34, gy + 34, dy), iso(gx, gy + 34, dy)]
+            .map(p => [p[0] + r(W), p[1] + r(W)]);
+  let d = `M${c[0][0].toFixed(1)} ${c[0][1].toFixed(1)}`;
+  for (let i = 0; i < 4; i++){
+    const a = c[i], b = c[(i + 1) % 4];
+    d += ` Q${((a[0]+b[0])/2 + r(B)).toFixed(1)} ${((a[1]+b[1])/2 + r(B)).toFixed(1)}` +
+         ` ${b[0].toFixed(1)} ${b[1].toFixed(1)}`;
+  }
+  return `<path d="${d}Z" fill="${opt.fill || 'none'}" ` +
+         `stroke-width="${(3.4 + r(1.2)).toFixed(1)}"` +
+         (opt.dash ? ' stroke-dasharray="7 6" stroke-opacity=".6"' : '') + '/>';
+}
+
+const VARIANTS = {
+
+  /* ============ A — Lucide grown up ============
+     Same stroke language as the icon set, scaled up, with ice fill
+     planes behind the line. Nothing near white or black. */
+  a: {
+    name: 'Lucide grown up',
+    verdict: 'BEFUND: fällt auf Navy durch. Die Eisflächen tragen, aber die Kontur in Ultramarin-tief #1526A8 verschwindet gegen #08102A (~1,6:1) — die Tasten werden zu konturlosen Flecken. #1526A8 ist kein echter Mittelton, sondern nur auf Papier dunkel genug.',
+    art: `
+<svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="${L}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+    <g transform="${ISO}">
+      ${keys((x,y)=>`<rect x="${x}" y="${y}" width="34" height="34" rx="7" fill="${F}"/>`)}
+      <rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="7"
+            fill="${F}" fill-opacity=".35" stroke-dasharray="4 5" stroke-opacity=".55"/>
+    </g>
+    <g transform="${LIFT}">
+      <g transform="${ISO}">
+        <rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="7" fill="${F}"/>
+      </g>
+    </g>
+    <path d="M180 64 v96" stroke-dasharray="3 5" stroke-opacity=".45"/>
+    ${figure('line')}
+  </g>
+</svg>`
+  },
+
+  /* ============ B — Editorial conceptual ============
+     The reference register: flat poster shapes, grain, long shadow,
+     a human figure at scale. Generated, not hand-authored. */
+  b: {
+    name: 'Editorial, freigestellt',
+    verdict: 'BEFUND: der Freistell-Test. 54 % des Frames sind weggeschnitten. Die Figur und die Tastatur überleben — der lange Schlagschatten nicht: er lag auf dem grauen Grund und hängt jetzt als loses navy Dreieck in der Luft. Auf Papier liest er sich als Fehler, auf Navy verschwindet er halb. Freistellen kostet diesen Register genau das, was ihn ausmacht.',
+    art: `<img src="assets/editorial-cutout.png" alt="Editorial-Illustration, freigestellt">`
+  },
+
+  /* ============ E — Editorial mit eigenem Grund ============
+     Derselbe Generat, ungeschnitten. Die ehrliche Fassung des
+     Registers — und damit eine dritte Fläche. */
+  e: {
+    name: 'Editorial mit eigenem Grund',
+    verdict: 'BEFUND: funktioniert — verstösst aber gegen eine bereits getroffene Entscheidung. Mit Grund ist der Schatten wieder da und der Register trägt auf beiden Flächen gleich gut, weil er seine eigene Fläche mitbringt. Genau das ist das Problem: Ticket 15 hat "zwei Flächen, nie drei" festgelegt. Dieses Bild ist die dritte.',
+    art: `<img src="assets/editorial-ground.png" alt="Editorial-Illustration mit eigenem Grund">`
+  },
+
+  /* ============ F — Gezeichnet (Doodle) ============
+     Der Register aus dem Kaffeetassen-Blatt: wackelige Tuschelinie,
+     keine Grautöne, Vollflächen statt Schattierung. Monochrom von
+     Natur aus — also komplett in #1E2FDB gezeichnet, der einzigen
+     Farbe, die A/C/D überlebt hat.
+
+     Der Trick an der Taste: der Return-Pfeil ist keine helle Fläche,
+     sondern ein LOCH (fill-rule evenodd). Er zeigt, was hinter ihm
+     liegt — auf Papier Papier, auf Navy Navy. Damit braucht die
+     Illustration nirgends ein Weiss. */
+  f: {
+    name: 'Gezeichnet (Doodle)',
+    verdict: 'BEFUND: der erste Kandidat, der auf beiden Flächen unverändert trägt. Weil der Stil ohnehin einfarbig ist, gibt es keine Kontur-Fläche-Aufteilung, die auseinanderfallen kann — und das ausgestanzte Loch im Pfeil ersetzt jedes Weiss. Offene Frage ist nicht mehr die Lesbarkeit, sondern der Ton: wackelige Handzeichnung gegen Archivo 800 und eine Vorstandsvorlage.',
+    art: `
+<svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="${A}" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- die schwebende Taste, gross und voll. Der Return-Pfeil ist ein
+         LOCH (evenodd), keine helle Fläche — deshalb braucht das Bild
+         nirgends ein Weiss und funktioniert auf beiden Flächen. -->
+    <path fill="${A}" fill-rule="evenodd" stroke-width="5"
+      d="M146 30 Q228 22 306 30 Q314 66 306 106 Q226 114 142 106 Q134 68 146 30 Z
+         M180 66 L202 45 L202 57 L250 57 L250 36 L264 36 L264 78 L202 78 L202 90 Z"/>
+
+    <!-- die Reihe darunter; dritte Taste ist die Lücke, zweite voll -->
+    ${dkey(24, 210, 72, 46, 11)}
+    ${dkey(104, 210, 72, 46, 73, A)}
+    <g stroke-dasharray="9 8" stroke-opacity=".6">${dkey(184, 210, 72, 46, 31)}</g>
+    ${dkey(264, 210, 72, 46, 47)}
+
+    <!-- die Figur, gross genug dass die Linie als gezeichnet liest -->
+    <path fill="${A}" stroke-width="4"
+      d="M95 116 Q112 116 112 133 Q112 150 95 150 Q78 150 78 133 Q78 116 95 116 Z"/>
+    <path fill="${A}" stroke-width="4"
+      d="M85 152 Q95 148 105 152 L111 196 Q95 201 79 196 Z"/>
+    <path stroke-width="6" d="M105 159 Q129 143 147 118"/>
+    <path stroke-width="6" d="M84 161 Q70 174 74 190"/>
+    <path stroke-width="6" d="M87 198 Q84 206 84 212"/>
+    <path stroke-width="6" d="M104 198 Q108 206 108 212"/>
+  </g>
+</svg>`
+  },
+
+  /* ============ G — Gezeichnete Axonometrie ============
+     Die Kombination: Aufbau und Eisflächen aus A, Linie und Löcher
+     aus F, Form durchgehend in #1E2FDB.
+
+     Damit erfüllt sie alle drei Befunde gleichzeitig:
+       · #1E2FDB trägt die Form  -> überlebt beide Flächen (aus A/C/D)
+       · Eisblau nur als Füllung -> darf ruhig verschwinden (aus C)
+       · Weiss wird zum Loch     -> braucht keinen eigenen Grund (aus F)
+     Der Wobble sitzt bewusst NACH der Projektion, sonst schert die
+     Iso-Matrix die Handschrift schief. */
+  g: {
+    name: 'Gezeichnete Axonometrie (A + F)',
+    verdict: 'BEFUND: hält auf beiden Flächen und behält die Präzision. Die Kontur trägt die Form in #1E2FDB, Eisblau füllt nur — es darf auf Papier fast verschwinden, ohne dass das Bild zerfällt. Die gehobene Taste ist voll und stanzt ihren Pfeil aus, statt ihn hell zu füllen. Nächster Schritt ist keine Farbfrage mehr, sondern Handwerk: die Linie gehört von Hand gezogen, nicht aus einer Wobble-Funktion.',
+    art: (() => {
+      let board = '';
+      for (let r = 0; r < 3; r++)
+        for (let c = 0; c < 5; c++){
+          const gx = c * 40, gy = r * 40;
+          if (gx === GAP_X && gy === GAP_Y) continue;
+          board += wkey(gx, gy, 13 + r * 31 + c * 7, { fill: F });
+        }
+      return `
+<svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="${A}" stroke-linecap="round" stroke-linejoin="round">
+    ${board}
+    ${wkey(GAP_X, GAP_Y, 101, { dash: true })}
+
+    <!-- Leader von der Lücke zur gehobenen Taste -->
+    <path d="M180 64 Q183 112 180 160" stroke-dasharray="3 6" stroke-opacity=".45" stroke-width="2.4"/>
+
+    <!-- die gehobene Taste: voll, Pfeil als Loch -->
+    <path fill="${A}" fill-rule="evenodd" stroke-width="3.6"
+      d="M150 43 Q166 24 180 26 Q196 30 209 43 Q194 61 180 60 Q163 58 150 43 Z
+         M168 44 L176 38 L176 42 L190 42 L190 36 L195 36 L195 48 L176 48 L176 52 Z"/>
+
+    <!-- die Figur, gleiche Hand wie F -->
+    <path fill="${A}" stroke-width="3"
+      d="M92 114 Q102 114 102 124 Q102 134 92 134 Q82 134 82 124 Q82 114 92 114 Z"/>
+    <path fill="${A}" stroke-width="3"
+      d="M85 136 Q92 133 99 136 L103 164 Q92 168 81 164 Z"/>
+    <path stroke-width="4.4" d="M99 141 Q118 131 133 116"/>
+    <path stroke-width="4.4" d="M84 143 Q75 151 77 161"/>
+    <path stroke-width="4.4" d="M87 166 Q85 173 85 178"/>
+    <path stroke-width="4.4" d="M98 166 Q101 173 101 178"/>
+  </g>
+</svg>`;
+    })()
+  },
+
+  /* ============ C — Ice silhouette ============
+     No linework at all. Solid mid-tone planes, poster logic.
+     Structurally the opposite bet from A. */
+  c: {
+    name: 'Eis-Silhouette (ohne Linie)',
+    verdict: 'BEFUND: fällt auf Papier durch — spiegelbildlich zu A. Auf Navy leuchten die Eisflächen, auf #F4F5F7 sind sie fast weg. Was auf beiden Flächen trägt, ist allein das Ultramarin #1E2FDB (Taste + Figur): dunkel genug fürs Papier, gesättigt genug fürs Navy.',
+    art: `
+<svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+  <g transform="${ISO}">
+    ${keys((x,y)=>`<rect x="${x}" y="${y}" width="34" height="34" rx="6" fill="${F}"/>`)}
+    <rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="6" fill="${A}" fill-opacity=".2"/>
+  </g>
+  <g transform="${LIFT}">
+    <g transform="${ISO}">
+      <rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="6" fill="${A}"/>
+    </g>
+  </g>
+  ${figure('solid')}
+</svg>`
+  },
+
+  /* ============ D — Technische Axonometrie ============
+     Artefact only, no figure. Thin line, no fill at all —
+     the most conservative reading of the icon set. */
+  d: {
+    name: 'Technische Axonometrie',
+    verdict: 'BEFUND: der klarste Durchfall. Nur Linie, keine Fläche — auf Papier präzise, auf Navy praktisch unsichtbar. Beweist, dass die Lucide-Logik sich nicht einfach hochskalieren lässt: Icons dürfen umgefärbt werden, ein freigestelltes Bild nicht.',
+    art: `
+<svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="${L}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+    <g transform="${ISO}">
+      ${keys((x,y)=>`<rect x="${x}" y="${y}" width="34" height="34" rx="4"/>`)}
+      <rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="4"
+            stroke-dasharray="3 4" stroke-opacity=".45"/>
+      <path d="M-16 -16 h232 M-16 -16 v152" stroke-opacity=".3"/>
+    </g>
+    <g transform="${LIFT}">
+      <g transform="${ISO}"><rect x="${GAP_X}" y="${GAP_Y}" width="34" height="34" rx="4"/></g>
+    </g>
+    <path d="M180 62 v98" stroke-dasharray="3 5" stroke-opacity=".55"/>
+    <path d="M174 62 h12 M174 160 h12" stroke-opacity=".55"/>
+  </g>
+</svg>`
+  }
+};
+
+const ORDER = ['a','b','c','d','e','f','g'];
+
+const EYEBROW = `<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h7"/></svg>`;
+
+function slide(surface, art){
+  return `
+<section class="slide ${surface}">
+  <span class="tag">${surface === 'paper' ? 'Papier #F4F5F7' : 'Navy #08102A'}</span>
+  <div class="rail">
+    <span class="rung done" style="top:0"></span>
+    <span class="rung done" style="top:66px"></span>
+    <span class="rung now" style="top:132px"><span class="rail-label">Wiederverwenden</span></span>
+    <span class="rung" style="top:198px"></span>
+  </div>
+  <div>
+    <div class="eyebrow">${EYEBROW} Stufe 3 von 4</div>
+    <h2>Die Taste, die du <span class="k">nicht</span> mehr selbst drückst</h2>
+    <p class="lede">Ein Handgriff, den Sie zweimal gemacht haben, ist ein Handgriff, den Sie
+    beschreiben können. Ab der dritten Wiederholung gehört er nicht mehr Ihnen.</p>
+  </div>
+  <div class="art">${art}</div>
+</section>`;
+}
+
+/* State lives here, not in the URL — history.replaceState throws on
+   file:// in some browsers, and the preview pane serves this as a
+   static snapshot. The URL is kept in sync best-effort so a variant
+   is still linkable when opened normally. */
+let current = (new URLSearchParams(location.search).get('i') || 'g').toLowerCase();
+if (!ORDER.includes(current)) current = 'a';
+
+function render(){
+  const v = VARIANTS[current];
+  document.getElementById('stage').innerHTML =
+    slide('paper', v.art) + slide('navy', v.art);
+  document.getElementById('lbl').innerHTML =
+    `<b>${current.toUpperCase()}</b> — ${v.name}`;
+  document.getElementById('note').innerHTML =
+    `<b>${current.toUpperCase()} · ${v.name}.</b> ${v.verdict}
+     <br><br>Identisches Asset auf beiden Flächen, kein Recolour, kein
+     <code>filter:</code>. Wenn es zwei Fassungen bräuchte, hat es den Test nicht bestanden.`;
+  try { history.replaceState(null, '', '?i=' + current); } catch (_) {}
+}
+
+function go(step){
+  current = ORDER[(ORDER.indexOf(current) + step + ORDER.length) % ORDER.length];
+  render();
+}
+
+document.getElementById('prev').onclick = () => go(-1);
+document.getElementById('next').onclick = () => go(1);
+addEventListener('keydown', e => {
+  if (/^(INPUT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+  if (e.key === 'ArrowLeft')  go(-1);
+  if (e.key === 'ArrowRight') go(1);
+});
+
+render();
+</script>
+</body>
+</html>

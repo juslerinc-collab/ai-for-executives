@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Backlog &amp; Matrix v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+   v3: reaction to v2 — the three doors are now one compact,
+   spreadsheet-narrow inventory table (Labor / Menü / Frei rows),
+   dragged down into the backlog to "use" them (click still works
+   as a fallback). Persönlich/Organisational is no longer a
+   filtered view — it's just a tag on the card, set in the row
+   detail, shown inline. Matrix keeps the repeat-flag size
+   difference from v2; category colour is still there pending a
+   decision on whether it should be something else.
+   Palette/type from PROTOTYPE-session-zero-whiteboard.html.
+   No persistence — state resets on reload.
+   ============================================================ */
+:root{
+  --paper:#F4F5F7; --ink:#0A1330; --ink-soft:#4B5573;
+  --ultra:#1E2FDB; --ultra-deep:#1526A8;
+  --ice:#B3CCF4; --ice-tint:#E4EBFB; --rule:#DDE0E8;
+  --fh:"Archivo"; --fb:"Schibsted Grotesk";
+  --good:#1E9E6B; --warn:#C77A1E;
+}
+*{box-sizing:border-box}
+body{margin:0;padding-bottom:60px;font-family:var(--fb),-apple-system,system-ui,sans-serif;color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.14) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.11) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.13) 0%, transparent 66%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  background-attachment:fixed;min-height:100vh}
+h1,h2,h3{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+button{font-family:inherit}
+
+.glass{
+  background:linear-gradient(140deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.42) 52%, rgba(179,204,244,.28) 100%);
+  -webkit-backdrop-filter:blur(20px) saturate(170%); backdrop-filter:blur(20px) saturate(170%);
+  border:1px solid rgba(255,255,255,.85); border-radius:16px;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 14px 34px rgba(10,19,48,.08);
+}
+
+.stage{padding:44px 48px 40px;max-width:1360px;margin:0 auto}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ultra);margin-bottom:8px}
+.top h1{font-size:clamp(24px,2.6vw,32px)}
+.top .k{color:var(--ultra)}
+.lede{font-size:14.5px;font-weight:300;line-height:1.6;color:var(--ink-soft);max-width:74ch;margin:10px 0 30px}
+
+.cat-erklaren{background:#1E2FDB}.cat-aufsetzen{background:#1E9E6B}.cat-aufbereiten{background:#C77A1E}.cat-hinterfragen{background:#B3299B}
+.catdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+
+.badge-src{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:6px;opacity:.75;flex-shrink:0}
+.badge-src.lab{background:rgba(30,47,219,.12);color:var(--ultra-deep)}
+.badge-src.menu{background:rgba(30,158,107,.12);color:#146B49}
+.badge-src.free{background:rgba(199,122,30,.14);color:#8F5511}
+
+.lenstag{font-size:9.5px;font-weight:700;letter-spacing:.03em;padding:2px 7px;border-radius:6px;flex-shrink:0}
+.lenstag.personal{background:rgba(30,47,219,.10);color:var(--ultra-deep)}
+.lenstag.organizational{background:rgba(75,85,115,.14);color:var(--ink-soft)}
+
+.section{margin-bottom:34px}
+.section h2{font-size:15px;letter-spacing:-.01em;margin-bottom:12px}
+.section .hint{font-size:12px;font-weight:300;color:var(--ink-soft);margin:-6px 0 14px}
+
+.btn{all:unset;cursor:pointer;padding:9px 16px;border-radius:10px;font-size:12.5px;font-weight:600;
+  background:var(--ultra);color:#fff;transition:.15s}
+.btn:hover{background:var(--ultra-deep)}
+.btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid var(--rule)}
+.btn.ghost:hover{background:#fff}
+
+/* ---------- inventory table: one spreadsheet-narrow list ---------- */
+.inv{padding:6px 0}
+.inv-group-label{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);
+  padding:10px 16px 4px}
+.srcrow{display:grid;grid-template-columns:12px 46px 1fr 14px;align-items:center;gap:10px;
+  padding:5px 16px;font-size:12px;line-height:1.3;cursor:grab;border-radius:6px}
+.srcrow:hover{background:rgba(30,47,219,.06)}
+.srcrow.dragging{opacity:.35}
+.srcrow .handle{color:var(--ink-soft);opacity:.4;font-size:11px;text-align:right}
+.inv-empty{padding:6px 16px 10px;font-size:11px;color:var(--ink-soft);font-weight:300}
+.inv-add{display:flex;gap:6px;padding:8px 16px 14px}
+.inv-add input{flex:1;min-width:0;border:1px solid var(--rule);border-radius:8px;padding:7px 9px;font-size:12px;font-family:inherit;outline:none;background:#fff}
+
+/* ---------- backlog + matrix split ---------- */
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:start}
+.backlog{display:flex;flex-direction:column;gap:8px;max-height:560px;overflow-y:auto;padding:14px;transition:background .15s}
+.backlog.dropready{background:rgba(30,47,219,.07)}
+.backlog-empty{font-size:12px;color:var(--ink-soft);font-weight:300;padding:10px 4px}
+.row{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.55);border:1px solid transparent;cursor:pointer;transition:.12s}
+.row:hover{background:rgba(255,255,255,.85)}
+.row.open{background:#fff;border-color:var(--rule)}
+.rowhead{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.rowhead .rt{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;min-width:0;flex:1}
+.rownum{flex-shrink:0;width:19px;height:19px;border-radius:50%;background:var(--ink);color:#fff;
+  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.rowhead .rt .ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.rowscore{font-size:11px;font-weight:700;color:var(--ultra-deep);background:var(--ice-tint);padding:3px 8px;border-radius:7px;flex-shrink:0}
+.detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
+.row.open .detail{display:block}
+.sliderline{display:grid;grid-template-columns:74px 1fr 22px;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:var(--ink-soft)}
+.sliderline input[type=range]{width:100%;accent-color:var(--ultra)}
+.flagrow{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.flagbtn{all:unset;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--rule);color:var(--ink-soft)}
+.flagbtn.active{background:var(--ultra);color:#fff;border-color:var(--ultra)}
+.repbtn{all:unset;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--rule);color:var(--ink-soft)}
+.repbtn.active{background:#146B49;color:#fff;border-color:#146B49}
+.delbtn{all:unset;cursor:pointer;padding:6px 9px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--warn);margin-left:auto}
+.delbtn:hover{background:rgba(199,122,30,.12)}
+
+/* ---------- matrix, styled like variant A ---------- */
+.matrixwrap{position:relative;height:520px;padding:20px}
+.axis-y{position:absolute;left:6px;top:16px;bottom:38px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--ink-soft);writing-mode:vertical-rl;text-orientation:mixed}
+.axis-x{position:absolute;left:38px;right:16px;bottom:4px;text-align:center;font-size:13px;font-weight:700;color:var(--ink-soft)}
+.plot{position:absolute;left:38px;right:16px;top:16px;bottom:38px;border-left:1.5px solid var(--rule);border-bottom:1.5px solid var(--rule)}
+.plot::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--rule);opacity:.6}
+.plot::after{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--rule);opacity:.6}
+.qtag{position:absolute;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);opacity:.55}
+.qtag.tl{top:8px;left:10px}.qtag.tr{top:8px;right:10px;text-align:right}
+.qtag.bl{bottom:8px;left:10px}.qtag.br{bottom:8px;right:10px;text-align:right}
+.dot{position:absolute;transform:translate(-50%,50%);border-radius:50%;touch-action:none;
+  box-shadow:0 3px 8px rgba(10,19,48,.22);border:2px solid #fff;cursor:grab;transition:left .18s,bottom .18s;
+  display:flex;align-items:center;justify-content:center}
+.dot.dragging{cursor:grabbing;transition:none;z-index:5}
+.dotnum{font-size:10px;font-weight:700;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.dot .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;
+  font-weight:600;background:var(--ink);color:#fff;padding:4px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:.12s}
+.dot:hover .tip{opacity:1}
+.dot.highlight{box-shadow:0 0 0 3px rgba(30,47,219,.32),0 3px 8px rgba(10,19,48,.22)}
+
+/* ---------- export preview ---------- */
+#exportOverlay{position:fixed;inset:0;background:rgba(10,19,48,.55);z-index:200;display:none;
+  align-items:flex-start;justify-content:center;padding:40px;overflow-y:auto}
+#exportOverlay.show{display:flex}
+.sheet{background:#fff;width:940px;max-width:100%;padding:48px;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.sheet h2{font-size:20px;margin-bottom:4px}
+.sheet .subtle{font-size:12px;color:var(--ink-soft);margin-bottom:24px}
+.sheet table{width:100%;border-collapse:collapse;margin-bottom:28px}
+.sheet th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1.5px solid #222;padding:6px 8px}
+.sheet td{font-size:12.5px;padding:7px 8px;border-bottom:1px solid #e4e4e8}
+.sheet td.num{font-weight:700;width:26px}
+.sheet-close{position:absolute;top:16px;right:20px}
+.sheetwrap{position:relative}
+.exp-split{display:grid;grid-template-columns:1fr 340px;gap:30px;align-items:start}
+.exp-matrix{position:relative;height:340px;border:1.5px solid #222}
+.exp-matrix .em-x{position:absolute;left:0;right:0;top:50%;height:1px;background:#ccc}
+.exp-matrix .em-y{position:absolute;top:0;bottom:0;left:50%;width:1px;background:#ccc}
+.exp-matrix .em-tag{position:absolute;font-size:8px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#999;
+  max-width:44%;line-height:1.25;white-space:normal}
+.exp-matrix .em-tag.tl{top:6px;left:7px}.exp-matrix .em-tag.tr{top:6px;right:7px;text-align:right}
+.exp-matrix .em-tag.bl{bottom:6px;left:7px}.exp-matrix .em-tag.br{bottom:6px;right:7px;text-align:right}
+.exp-matrix .em-axis-x{position:absolute;left:0;right:0;bottom:-18px;text-align:center;font-size:8.5px;font-weight:700;letter-spacing:.04em;color:#666}
+.exp-matrix .em-axis-y{position:absolute;top:0;bottom:0;left:-16px;display:flex;align-items:center;font-size:8.5px;font-weight:700;letter-spacing:.04em;color:#666;writing-mode:vertical-rl;transform:rotate(180deg)}
+.em-num{position:absolute;transform:translate(-50%,50%);width:19px;height:19px;border-radius:50%;
+  background:#fff;border:1.5px solid #222;color:#222;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center}
+
+.exportbar{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:100;display:flex;gap:10px}
+.exportbar .toggle{all:unset;cursor:pointer;font-size:12px;font-weight:600;padding:11px 20px;border-radius:999px;
+  background:var(--ink);color:#fff;box-shadow:0 20px 44px rgba(10,19,48,.38)}
+.exportbar .toggle.ghost{background:#fff;color:var(--ink);border:1px solid var(--rule)}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="top">
+    <div class="eyebrow">Prototyp v3 · Backlog &amp; Matrix</div>
+    <h1>Ihr <span class="k">Use-Case-Backlog</span></h1>
+  </div>
+  <p class="lede">Verfügbare Use Cases — aus dem Labor, aus dem Ideen-Menü, oder frei eingetragen — als eine schmale Tabelle. Zeile nach unten in den Backlog ziehen, um sie zu benutzen (Klick geht auch). Persönlich/Organisational ist nur noch ein Tag pro Karte, keine eigene Ansicht.</p>
+
+  <div class="section">
+    <h2>Verfügbare Use Cases</h2>
+    <p class="hint">Ziehen Sie eine Zeile nach unten in den Backlog.</p>
+    <div class="glass inv" id="inv"></div>
+  </div>
+
+  <div class="section">
+    <h2>Backlog &amp; Matrix</h2>
+    <p class="hint">Karte anklicken für Impact/Aufwand-Regler, Tag und Wiederholungs-Flag. Die Matrix rechts zeigt jeden Use Case an genau der Stelle, die die Regler ergeben.</p>
+    <div class="split">
+      <div class="glass backlog" id="backlog"></div>
+      <div class="glass matrixwrap">
+        <div class="axis-y">IMPACT</div>
+        <div class="axis-x">AUFWAND</div>
+        <div class="plot" id="plot">
+          <span class="qtag tl">Schnelle Erfolge</span>
+          <span class="qtag tr">Große Wetten</span>
+          <span class="qtag bl">Nebenbei</span>
+          <span class="qtag br">Zurückstellen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="exportOverlay">
+  <div class="sheetwrap">
+    <button class="btn ghost sheet-close" onclick="closeExport()">Schließen</button>
+    <div class="sheet" id="sheetContent"></div>
+  </div>
+</div>
+
+<div class="exportbar">
+  <button class="toggle ghost" onclick="downloadJSON()">JSON herunterladen</button>
+  <button class="toggle" onclick="openExport()">Export-Vorschau</button>
+</div>
+
+<script>
+const CATS = [
+  {key:'erklaren', label:'Erklären'},
+  {key:'aufsetzen', label:'Aufsetzen'},
+  {key:'aufbereiten', label:'Aufbereiten'},
+  {key:'hinterfragen', label:'Hinterfragen'},
+];
+function catLabel(cat){ return CATS.find(k=>k.key===cat).label; }
+function catColor(cat){
+  return {erklaren:'#1E2FDB',aufsetzen:'#1E9E6B',aufbereiten:'#C77A1E',hinterfragen:'#B3299B'}[cat];
+}
+
+let uid = 0;
+function mkItem(title, cat, source, extra){
+  uid++;
+  return Object.assign({id:'c'+uid, title, cat, source, lens:'personal', impact:3, effort:3, repeat:false}, extra||{});
+}
+
+function seedStaging(){
+  return [
+    mkItem('Claude erklären, warum unser Reporting so lange dauert','erklaren','lab'),
+    mkItem('Kundenanfrage in einfacher Sprache zusammenfassen','erklaren','lab'),
+    mkItem('Eine Analogie für Kunden finden','erklaren','menu'),
+    mkItem('Sich schnell in ein neues Thema einarbeiten','erklaren','menu'),
+    mkItem('Eine Meeting-Agenda vorbereiten','aufsetzen','menu'),
+    mkItem('Einen ersten Foliensatz gliedern','aufsetzen','menu'),
+    mkItem('Tabelle aus Rohdaten strukturieren','aufbereiten','menu'),
+    mkItem('Angebot in eine Vorlage übertragen','aufbereiten','menu'),
+    mkItem('Eine Strategie auf Lücken prüfen','hinterfragen','menu'),
+    mkItem('Risiken in einem Plan identifizieren','hinterfragen','menu'),
+  ];
+}
+function seedCards(){
+  return [
+    mkItem('Auftragsbestätigungs-E-Mail mit Kostenschätzung','aufsetzen','lab',{lens:'organizational',impact:3,effort:2}),
+    mkItem('Protokoll aus Vorstandssitzung erstellen','aufbereiten','free',{lens:'organizational',impact:5,effort:4,repeat:true}),
+    mkItem('Wöchentliches Reporting an den Vorstand','erklaren','menu',{lens:'organizational',impact:4,effort:3,repeat:true}),
+  ];
+}
+
+let state = { staging: seedStaging(), cards: seedCards(), openRow: null, dragId: null };
+
+function render(){
+  renderInventory();
+  renderBacklog();
+  renderMatrix();
+}
+
+/* ---------------- inventory (one narrow table, three grouped bands) ---------------- */
+const SRC_LABEL = {lab:'Aus dem Labor', menu:'Ideen-Menü', free:'Eigener Use Case'};
+function renderInventory(){
+  const inv = document.getElementById('inv');
+  inv.innerHTML = '';
+  ['lab','menu','free'].forEach(src=>{
+    const label = document.createElement('div');
+    label.className='inv-group-label';
+    label.textContent = SRC_LABEL[src];
+    inv.appendChild(label);
+    const items = state.staging.filter(i=>i.source===src);
+    if(items.length===0){
+      const e = document.createElement('div');
+      e.className='inv-empty';
+      e.textContent = src==='free' ? 'Noch nichts eingetragen.' : 'Nichts Offenes mehr.';
+      inv.appendChild(e);
+    }
+    items.forEach(item=> inv.appendChild(srcRow(item)));
+    if(src==='free'){
+      const add = document.createElement('div');
+      add.className='inv-add';
+      add.innerHTML = `<input id="freeInput" placeholder="Use Case eintippen …" onkeydown="if(event.key==='Enter')addFree()"><button class="btn ghost" onclick="addFree()">+</button>`;
+      inv.appendChild(add);
+    }
+  });
+}
+function srcRow(item){
+  const row = document.createElement('div');
+  row.className = 'srcrow';
+  row.draggable = true;
+  row.innerHTML = `<span class="catdot cat-${item.cat}"></span><span class="badge-src ${item.source}">${item.source}</span><span>${item.title}</span><span class="handle">⠿</span>`;
+  row.onclick = ()=> useItem(item.id);
+  row.ondragstart = (e)=>{ state.dragId = item.id; row.classList.add('dragging'); e.dataTransfer.setData('text/plain', item.id); };
+  row.ondragend = ()=>{ row.classList.remove('dragging'); state.dragId = null; };
+  return row;
+}
+function addFree(){
+  const inp = document.getElementById('freeInput');
+  if(!inp.value.trim()) return;
+  state.staging.push(mkItem(inp.value.trim(), 'erklaren', 'free'));
+  render();
+}
+function useItem(id){
+  const idx = state.staging.findIndex(i=>i.id===id);
+  if(idx===-1) return;
+  const [item] = state.staging.splice(idx,1);
+  state.cards.push(item);
+  render();
+}
+
+/* ---------------- numbering shared by backlog list and matrix ---------------- */
+function numberedCards(){
+  return state.cards.slice().sort((a,b)=>(b.impact-a.impact)||(a.effort-b.effort));
+}
+
+/* ---------------- backlog (drop target) ---------------- */
+function renderBacklog(){
+  const backlog = document.getElementById('backlog');
+  backlog.ondragover = (e)=>{ e.preventDefault(); backlog.classList.add('dropready'); };
+  backlog.ondragleave = ()=> backlog.classList.remove('dropready');
+  backlog.ondrop = (e)=>{
+    e.preventDefault();
+    backlog.classList.remove('dropready');
+    const id = e.dataTransfer.getData('text/plain') || state.dragId;
+    if(id) useItem(id);
+  };
+  backlog.innerHTML='';
+  const cards = numberedCards();
+  if(cards.length===0){
+    const e = document.createElement('div');
+    e.className='backlog-empty';
+    e.textContent = 'Noch keine Use Cases im Backlog — eine Zeile oben hierher ziehen.';
+    backlog.appendChild(e);
+    return;
+  }
+  cards.forEach((c,i)=>{
+    const row = document.createElement('div');
+    row.className='row'+(state.openRow===c.id?' open':'');
+    row.innerHTML = `
+      <div class="rowhead">
+        <div class="rt"><span class="rownum">${i+1}</span><span class="lenstag ${c.lens}">${c.lens==='organizational'?'Organisational':'Persönlich'}</span><span class="ttl">${c.title}${c.repeat?' 🔁':''}</span></div>
+        <div class="rowscore">${c.impact}/${c.effort}</div>
+      </div>
+      <div class="detail">
+        <div class="sliderline"><span>Impact</span><input type="range" min="1" max="5" value="${c.impact}" oninput="setSlider('${c.id}','impact',this.value)"><b>${c.impact}</b></div>
+        <div class="sliderline"><span>Aufwand</span><input type="range" min="1" max="5" value="${c.effort}" oninput="setSlider('${c.id}','effort',this.value)"><b>${c.effort}</b></div>
+        <div class="flagrow">
+          <button class="flagbtn ${c.lens==='personal'?'active':''}" onclick="event.stopPropagation();setLens('${c.id}','personal')">Tag: Persönlich</button>
+          <button class="flagbtn ${c.lens==='organizational'?'active':''}" onclick="event.stopPropagation();setLens('${c.id}','organizational')">Tag: Organisational</button>
+          <button class="repbtn ${c.repeat?'active':''}" onclick="event.stopPropagation();toggleRepeat('${c.id}')">🔁 wiederkehrend</button>
+          <button class="delbtn" onclick="event.stopPropagation();removeCard('${c.id}')">Entfernen</button>
+        </div>
+      </div>`;
+    row.querySelector('.rowhead').onclick = ()=>{ state.openRow = state.openRow===c.id?null:c.id; render(); };
+    backlog.appendChild(row);
+  });
+}
+function setSlider(id, field, val){ state.cards.find(c=>c.id===id)[field] = +val; render(); }
+function setLens(id, lens){ state.cards.find(c=>c.id===id).lens = lens; render(); }
+function toggleRepeat(id){ const c = state.cards.find(c=>c.id===id); c.repeat = !c.repeat; render(); }
+function removeCard(id){ state.cards = state.cards.filter(c=>c.id!==id); render(); }
+
+/* ---------------- matrix, axis-labelled like variant A, bubbles draggable ---------------- */
+function fanOffsets(cards){
+  // cards sharing the same impact/effort cell get nudged apart in a small ring
+  // so they stay visible side by side instead of stacking exactly on top of each other.
+  const groups = {};
+  cards.forEach(c=>{
+    const key = c.impact+'-'+c.effort;
+    (groups[key] = groups[key]||[]).push(c);
+  });
+  const offsets = new Map();
+  Object.values(groups).forEach(group=>{
+    if(group.length===1){ offsets.set(group[0].id, {dx:0,dy:0}); return; }
+    const radius = 3.2;
+    group.forEach((c,idx)=>{
+      const angle = (idx/group.length)*2*Math.PI;
+      offsets.set(c.id, {dx:Math.cos(angle)*radius, dy:Math.sin(angle)*radius});
+    });
+  });
+  return offsets;
+}
+function renderMatrix(){
+  const plot = document.getElementById('plot');
+  plot.querySelectorAll('.dot').forEach(d=>d.remove());
+  const cards = numberedCards();
+  const offsets = fanOffsets(cards);
+  cards.forEach((c,i)=>{
+    const dot = document.createElement('div');
+    dot.className = 'dot'+(state.openRow===c.id?' highlight':'');
+    const size = c.repeat ? 26 : 20;
+    dot.style.width = size+'px'; dot.style.height = size+'px';
+    const off = offsets.get(c.id);
+    const x = Math.max(0,Math.min(100, (c.effort-1)/4*94+3 + off.dx));
+    const y = Math.max(0,Math.min(100, (c.impact-1)/4*94+3 + off.dy));
+    dot.style.left = x+'%';
+    dot.style.bottom = y+'%';
+    dot.style.background = catColor(c.cat);
+    dot.innerHTML = `<span class="dotnum">${i+1}</span><span class="tip">${c.title}${c.repeat?' · wiederkehrend':''}</span>`;
+    makeDraggable(dot, c, plot);
+    plot.appendChild(dot);
+  });
+}
+function makeDraggable(dot, card, plot){
+  dot.onpointerdown = (e)=>{
+    e.preventDefault();
+    const startX = e.clientX, startY = e.clientY;
+    let moved = false;
+    dot.classList.add('dragging');
+    const move = (ev)=>{
+      if(Math.abs(ev.clientX-startX)>3 || Math.abs(ev.clientY-startY)>3) moved = true;
+      const r = plot.getBoundingClientRect();
+      let x = ((ev.clientX - r.left)/r.width)*100;
+      let y = (1-(ev.clientY - r.top)/r.height)*100;
+      x = Math.max(0,Math.min(100,x)); y = Math.max(0,Math.min(100,y));
+      const effort = Math.round((x-3)/94*4)+1;
+      const impact = Math.round((y-3)/94*4)+1;
+      card.effort = Math.max(1,Math.min(5,effort));
+      card.impact = Math.max(1,Math.min(5,impact));
+      dot.style.left = ((card.effort-1)/4*94+3)+'%';
+      dot.style.bottom = ((card.impact-1)/4*94+3)+'%';
+    };
+    const up = ()=>{
+      dot.classList.remove('dragging');
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      if(moved) render(); else { state.openRow = card.id; render(); }
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+}
+
+/* ---------------- export preview: numbered list <-> numbered matrix ---------------- */
+function openExport(){
+  const cards = state.cards.slice().sort((a,b)=>(b.impact-a.impact)||(a.effort-b.effort));
+  const rows = cards.map((c,i)=>`<tr><td class="num">${i+1}</td><td>${c.title}</td><td>${catLabel(c.cat)}</td>
+    <td>${c.lens==='organizational'?'Organisational':'Persönlich'}</td>
+    <td>${c.impact}/${c.effort}</td><td>${c.repeat?'wiederkehrend':'—'}</td></tr>`).join('');
+  const expOffsets = fanOffsets(cards);
+  const dots = cards.map((c,i)=>{
+    const off = expOffsets.get(c.id);
+    const x = Math.max(0,Math.min(100,(c.effort-1)/4*80+10+off.dx));
+    const y = Math.max(0,Math.min(100,(c.impact-1)/4*78+12+off.dy));
+    return `<div class="em-num" style="left:${x}%;bottom:${y}%">${i+1}</div>`;
+  }).join('');
+  document.getElementById('sheetContent').innerHTML = `
+    <h2>Ihr Use-Case-Backlog</h2>
+    <div class="subtle">Export-Vorschau · Druckversion · ${cards.length} Use Cases · Nummer verbindet Liste und Matrix</div>
+    <div class="exp-split">
+      <table>
+        <tr><th>#</th><th>Use Case</th><th>Kategorie</th><th>Tag</th><th>Impact/Aufwand</th><th>Flag</th></tr>
+        ${rows || '<tr><td colspan="6">Noch keine Use Cases.</td></tr>'}
+      </table>
+      <div>
+        <div class="exp-matrix">
+          <div class="em-x"></div><div class="em-y"></div>
+          <span class="em-tag tl">Schnelle Erfolge</span><span class="em-tag tr">Große Wetten</span>
+          <span class="em-tag bl">Nebenbei</span><span class="em-tag br">Zurückstellen</span>
+          <span class="em-axis-x">AUFWAND</span><span class="em-axis-y">IMPACT</span>
+          ${dots}
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('exportOverlay').classList.add('show');
+}
+function closeExport(){ document.getElementById('exportOverlay').classList.remove('show'); }
+
+/* ---------------- JSON download — the record of truth, no backend ---------------- */
+function downloadJSON(){
+  const payload = { savedAt: new Date().toISOString(), cards: state.cards, staging: state.staging };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'use-case-backlog.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+render();
+</script>
+</body>
+</html>

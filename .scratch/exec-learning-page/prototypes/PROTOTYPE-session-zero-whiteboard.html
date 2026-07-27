@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Session 0: Wo stehen wir heute?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@300;400;500;600&family=Inter:wght@300;400&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+   Answers ticket 18. Round 2: the three-variant switcher is
+   retired — the user picked Variant 2 (Dossier/Reiter) and asked
+   for changes on top of it. This file is now that single, refined
+   design, not a switcher. Palette/type/glass reused verbatim from
+   PROTOTYPE-type-and-glass.html (reference, confirmed — ticket 15).
+   Changes this round: a Person tab (name/role/company), the name
+   echoed top-right of the card like a customer-card header, per-
+   question dedicated fields instead of one shared textarea, and
+   the maturity ladder redrawn as an ascending staircase. Still
+   four levels — a fifth "power user" tier was considered and
+   explicitly rejected by the user.
+   ============================================================ */
+:root{
+  --paper:#F4F5F7; --ink:#0A1330; --ink-soft:#4B5573;
+  --ultra:#1E2FDB; --ultra-deep:#1526A8;
+  --ice:#B3CCF4; --ice-tint:#E4EBFB; --rule:#DDE0E8;
+  --fh:"Archivo"; --fb:"Schibsted Grotesk";
+  --nav:104px; --nav-open:330px;
+}
+*{box-sizing:border-box}
+body{margin:0;padding-bottom:40px;font-family:var(--fb),-apple-system,system-ui,sans-serif;color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.16) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.13) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.15) 0%, transparent 66%),
+    radial-gradient(40% 36% at 34% 96%, rgba(30,47,219,.10) 0%, transparent 60%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  background-attachment:fixed;min-height:100vh}
+h1,h2,h3{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;letter-spacing:-.036em;line-height:1.02;margin:0}
+
+/* ---------- top mark: plain, minimal, no shape ---------- */
+#mark{position:fixed;top:34px;right:48px;z-index:80;text-align:right;pointer-events:none}
+#mark .brand{font-family:var(--fh);font-weight:700;font-size:12.5px;letter-spacing:-.02em;display:block;color:var(--ink)}
+#mark .brand em{font-style:normal;color:var(--ultra)}
+#mark .ch{display:block;margin-top:3px;font-size:10.5px;font-weight:300;letter-spacing:.01em;color:var(--ink-soft)}
+
+/* ---------- left rail, matching PROTOTYPE-nav-rail.html ---------- */
+#nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav);z-index:60;
+  transition:width .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover{width:var(--nav-open)}
+#nav::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .24s ease;
+  background:linear-gradient(90deg, rgba(255,255,255,.74) 0%, rgba(255,255,255,.54) 62%, rgba(255,255,255,0) 100%)}
+#nav:hover::after{opacity:1}
+#rail{position:absolute;left:0;top:0;bottom:0;width:var(--nav);z-index:2}
+#rail::before{content:"";position:absolute;left:50px;top:16%;bottom:16%;width:2px;background:var(--rule)}
+.node{position:absolute;left:45px;width:12px;height:12px;border-radius:50%;background:var(--rule);
+  transition:background .2s, box-shadow .2s, transform .2s, opacity .2s;cursor:default}
+.node.now{background:var(--ultra);opacity:1;box-shadow:0 0 0 5px var(--ice-tint);transform:scale(1.14)}
+.node.locked{background:var(--rule);opacity:.42}
+.slabel{position:absolute;left:24px;font-family:var(--fh);font-weight:800;font-size:9.5px;
+  letter-spacing:.1em;color:var(--ink-soft);opacity:.5}
+#menu{position:absolute;left:var(--nav);top:0;bottom:0;z-index:3;
+  width:calc(var(--nav-open) - var(--nav));padding:56px 22px 52px 2px;
+  overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s ease .05s}
+#nav:hover #menu{opacity:1;pointer-events:auto}
+.sess + .sess{margin-top:26px}
+.sesshead{font-family:var(--fh);font-weight:800;font-size:14px;letter-spacing:-.02em;margin-bottom:9px}
+.sess.locked{opacity:.4}
+.lockmsg{font-size:10.5px;color:var(--ink-soft);margin-bottom:9px;display:block}
+.chap{display:flex;align-items:baseline;gap:9px;padding:6px 0;font-size:13.5px;font-weight:400;color:var(--ink-soft)}
+.chap.active{color:var(--ink);font-weight:600}
+.chap .cn{font-size:9.5px;font-weight:600;color:var(--ultra);min-width:14px;opacity:.75}
+
+.stage{transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover ~ .stage{padding-left:calc(var(--nav-open) + 8px)}
+
+/* ---------- glass ---------- */
+.glass-lt{
+  background:linear-gradient(140deg, rgba(255,255,255,.78) 0%, rgba(255,255,255,.38) 52%, rgba(179,204,244,.30) 100%);
+  -webkit-backdrop-filter:blur(22px) saturate(170%); backdrop-filter:blur(22px) saturate(170%);
+  border:1px solid rgba(255,255,255,.85); border-radius:20px;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 18px 44px rgba(10,19,48,.08);
+}
+.ico{width:20px;height:20px;fill:none;stroke:var(--ultra);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block;flex-shrink:0}
+
+/* ---------- stage ---------- */
+.stage{padding:64px 80px 40px 176px;max-width:1200px}
+.stage h1{font-size:clamp(30px,3.6vw,44px);max-width:24ch;margin-bottom:12px}
+.k{color:var(--ultra)}
+.stage>p.lede{font-size:16px;font-weight:300;line-height:1.6;max-width:60ch;color:var(--ink-soft);margin:0 0 40px}
+
+/* ---------- the dossier card ---------- */
+.card{max-width:900px;padding:0;position:relative}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:26px 32px 0}
+.card-name{text-align:right}
+.card-name .who{font-family:var(--fh);font-weight:800;font-size:17px;letter-spacing:-.02em;color:var(--ink)}
+.card-name .who.empty{color:#9AA2BB;font-weight:400;font-style:italic;font-size:14px}
+.card-name .sub{font-size:12px;font-weight:300;color:var(--ink-soft);margin-top:2px}
+.card-eyebrow{font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ultra)}
+
+.tabs{display:flex;gap:4px;padding:18px 26px 0}
+.tab{all:unset;cursor:pointer;padding:11px 18px;font-family:var(--fb);font-size:13px;font-weight:500;
+  color:var(--ink-soft);border-radius:12px;transition:.14s}
+.tab:hover{color:var(--ink)}
+.tab.active{background:#fff;color:var(--ultra-deep);box-shadow:0 4px 14px rgba(10,19,48,.08)}
+.body{padding:28px 32px 34px}
+.pane{display:none}.pane.active{display:block}
+
+/* ---------- Person tab ---------- */
+.p-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:640px}
+.p-field{grid-column:span 2}
+.p-field.half{grid-column:span 1}
+.p-field label{display:block;font-size:12px;font-weight:500;color:var(--ink-soft);margin-bottom:7px}
+.p-field input{width:100%;padding:12px 14px;font-family:var(--fb);font-size:15px;font-weight:400;
+  background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);border-bottom:2px solid var(--rule);
+  border-radius:10px;color:var(--ink);outline:none;transition:border-color .14s}
+.p-field input:focus{border-bottom-color:var(--ultra)}
+.p-field input::placeholder{color:#9AA2BB}
+.p-field textarea{width:100%;min-height:64px;padding:12px 14px;font-family:var(--fb);font-size:15px;font-weight:400;
+  line-height:1.5;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);border-bottom:2px solid var(--rule);
+  border-radius:10px;color:var(--ink);outline:none;resize:vertical;transition:border-color .14s}
+.p-field textarea:focus{border-bottom-color:var(--ultra)}
+.p-field textarea::placeholder{color:#9AA2BB}
+
+/* ---------- Reifegrad: ascending staircase ---------- */
+.stairs{display:flex;align-items:flex-end;gap:14px;margin-bottom:26px}
+.stair{all:unset;cursor:pointer;box-sizing:border-box;width:130px;display:flex;flex-direction:column;
+  justify-content:flex-end;padding:13px 13px 15px;border-radius:14px 14px 6px 6px;
+  background:rgba(255,255,255,.65);border:1px solid var(--rule);border-bottom:3px solid var(--rule);
+  transition:.16s;text-align:left}
+.stair:hover{border-color:var(--ultra);background:#fff}
+.stair .sn{font-family:var(--fb);font-size:10px;font-weight:600;letter-spacing:.14em;color:var(--ultra);display:block;margin-bottom:5px}
+.stair .sname{font-size:12.5px;font-weight:600;line-height:1.25;color:var(--ink)}
+.stair[data-h="1"]{height:80px}
+.stair[data-h="2"]{height:108px}
+.stair[data-h="3"]{height:136px}
+.stair[data-h="4"]{height:164px}
+.stair[data-h="5"]{height:192px}
+.stair.active{background:linear-gradient(135deg, #2A3CF0 0%, var(--ultra) 55%, var(--ultra-deep) 100%);
+  border-color:var(--ultra-deep);border-bottom-color:var(--ultra-deep);
+  box-shadow:0 14px 28px rgba(30,47,219,.30);transform:translateY(-5px)}
+.stair.active .sn{color:rgba(255,255,255,.8)}
+.stair.active .sname{color:#fff}
+.stair-desc{padding:20px 22px;min-height:60px}
+.stair-desc .placeholder{color:#9AA2BB;font-size:14px;font-style:italic}
+.stair-desc p{font-size:14.5px;font-weight:300;line-height:1.58;color:var(--ink-soft);margin:0;
+  animation:descIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes descIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ---------- per-question fields (Alltag / Ziel) ---------- */
+.qfield{margin-bottom:20px}
+.qfield:last-child{margin-bottom:0}
+.qfield label{display:block;font-size:14.5px;font-weight:500;color:var(--ink);margin-bottom:9px;line-height:1.4}
+.qfield textarea{width:100%;min-height:64px;padding:12px 14px;font-family:var(--fb);font-size:14px;font-weight:300;
+  line-height:1.5;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);
+  border-bottom:2px solid var(--rule);border-radius:10px;color:var(--ink);outline:none;resize:vertical;
+  transition:border-color .14s}
+.qfield textarea:focus{border-bottom-color:var(--ultra)}
+.qfield textarea::placeholder{color:#9AA2BB}
+
+/* ---------- CTA into Session 1 ---------- */
+.cta-next{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;margin-top:34px;
+  padding:15px 26px;color:#fff;font-family:var(--fb);font-size:14px;font-weight:500;border-radius:100px;
+  background:linear-gradient(135deg, #2A3CF0 0%, var(--ultra) 50%, var(--ultra-deep) 100%);
+  box-shadow:0 10px 24px rgba(30,47,219,.24);transition:.16s}
+.cta-next:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(30,47,219,.32)}
+.cta-next .ico{stroke:#fff}
+
+/* ---------- closing popup: bridges into Session 1 ---------- */
+.closer{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;
+  padding:40px;
+  background:
+    radial-gradient(60% 54% at 24% 24%, #16226B 0%, transparent 64%),
+    radial-gradient(46% 42% at 78% 30%, #1B2A82 0%, transparent 62%),
+    radial-gradient(72% 64% at 54% 86%, #04091F 0%, transparent 70%),
+    #08102A;
+  animation:closerIn .3s ease}
+.closer.show{display:flex}
+@keyframes closerIn{from{opacity:0}to{opacity:1}}
+.closer-panel{max-width:640px;text-align:center;animation:closerPanelIn .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes closerPanelIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.closer-eyebrow{font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ice);margin-bottom:22px}
+.closer-panel h2{font-size:clamp(30px,3.8vw,44px);line-height:1.08;color:#fff;margin-bottom:20px}
+.closer-panel h2 .k{color:var(--ice)}
+.closer-panel p{font-size:16.5px;font-weight:300;line-height:1.6;color:rgba(255,255,255,.8);max-width:52ch;
+  margin:0 auto 38px}
+.closer-actions{display:flex;flex-direction:column;align-items:center;gap:16px}
+.closer-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;padding:16px 30px;
+  color:var(--ultra-deep);font-family:var(--fb);font-size:14.5px;font-weight:600;border-radius:100px;
+  background:#fff;box-shadow:0 14px 30px rgba(0,0,0,.28);transition:.16s}
+.closer-btn:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(0,0,0,.34)}
+.closer-btn .ico{stroke:var(--ultra-deep)}
+.closer-back{all:unset;cursor:pointer;font-family:var(--fb);font-size:12.5px;font-weight:300;
+  color:rgba(255,255,255,.55);transition:.14s}
+.closer-back:hover{color:#fff}
+.closer-note{font-size:11px;font-weight:300;color:rgba(255,255,255,.4);opacity:0;transition:.2s}
+.closer-note.show{opacity:1}
+
+/* ---------- export ---------- */
+.export-btn{position:fixed;bottom:20px;right:22px;z-index:90;display:inline-flex;align-items:center;gap:8px;
+  padding:9px 14px 9px 11px;font-family:var(--fb);font-size:11.5px;font-weight:500;color:var(--ink-soft);
+  background:rgba(255,255,255,.55);border:1px solid var(--rule);border-radius:100px;cursor:pointer;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);opacity:.68;transition:.16s}
+.export-btn:hover{opacity:1;color:var(--ultra-deep);border-color:var(--ultra)}
+.export-btn .ico{width:14px;height:14px;stroke:currentColor}
+.export-flash{position:fixed;bottom:58px;right:22px;z-index:90;font-family:var(--fb);font-size:11.5px;color:var(--ultra-deep);
+  background:#fff;border:1px solid var(--ultra);border-radius:8px;padding:7px 12px;opacity:0;transform:translateY(4px);
+  transition:.22s;pointer-events:none}
+.export-flash.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div id="rail"></div>
+  <div id="menu"></div>
+</nav>
+
+<div id="mark">
+  <span class="brand">AI for <em>Executives</em></span>
+  <span class="ch">Session 0 · Wo stehen wir heute?</span>
+</div>
+
+<section class="stage">
+  <h1>Wer das Ziel kennt, <span class="k">findet auch den Weg</span>.</h1>
+  <p class="lede">Jede Reise mit KI beginnt am selben Punkt: zu wissen, wo man steht.</p>
+
+  <div class="card glass-lt">
+    <div class="card-head">
+      <div class="card-eyebrow">Ihr Profil</div>
+      <div class="card-name">
+        <div class="who empty" id="whoName">Noch kein Name</div>
+        <div class="sub" id="whoSub"></div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="person">Über Sie</button>
+      <button class="tab" data-tab="reife">AI Reifegrad</button>
+      <button class="tab" data-tab="alltag">Ihr Arbeitsalltag</button>
+      <button class="tab" data-tab="ziel">Ihr Ziel mit AI</button>
+    </div>
+
+    <div class="body">
+      <div class="pane active" data-pane="person">
+        <div class="p-grid">
+          <div class="p-field half">
+            <label>Vorname</label>
+            <input type="text" id="f-name" placeholder="Vorname">
+          </div>
+          <div class="p-field half">
+            <label>Rolle / Position</label>
+            <input type="text" id="f-rolle" placeholder="z. B. Geschäftsführerin">
+          </div>
+          <div class="p-field half">
+            <label>Unternehmen</label>
+            <input type="text" id="f-firma" placeholder="z. B. Musterfirma AG">
+          </div>
+          <div class="p-field half">
+            <label>Webseite</label>
+            <input type="text" id="f-website" placeholder="z. B. musterfirma.ch">
+          </div>
+          <div class="p-field">
+            <label>Kurzbeschreibung Firma</label>
+            <textarea id="f-beschreibung" placeholder="Was macht das Unternehmen, in ein bis zwei Sätzen?"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="pane" data-pane="reife">
+        <div class="stairs" id="stairs"></div>
+        <div class="stair-desc glass-lt" id="stairDesc">
+          <span class="placeholder">Welche Stufe passt am besten zu Ihnen?</span>
+        </div>
+      </div>
+
+      <div class="pane" data-pane="alltag" id="pane-alltag"></div>
+      <div class="pane" data-pane="ziel" id="pane-ziel"></div>
+    </div>
+  </div>
+
+  <button class="cta-next" id="ctaNext">
+    Weiter zu Sitzung 1
+    <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+  </button>
+</section>
+
+<button class="export-btn" id="exportBtn">
+  <svg class="ico" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Export JSON
+</button>
+<div class="export-flash" id="exportFlash">Heruntergeladen.</div>
+
+<!-- ============ Closing popup: bridges Session 0 into Session 1 ============ -->
+<div class="closer" id="closer">
+  <div class="closer-panel">
+    <div class="closer-eyebrow">Session 0 abgeschlossen</div>
+    <h2>Das Ziel ist klar. <span class="k">Jetzt beginnt der Weg.</span></h2>
+    <p>Was Sie gerade erzählt haben, ist der Ausgangspunkt für alles, was jetzt kommt — Schritt für Schritt, an echten Aufgaben aus Ihrem Alltag.</p>
+    <div class="closer-actions">
+      <button class="closer-btn" id="closerGo">
+        Los geht's mit Sitzung 1
+        <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+      </button>
+      <button class="closer-back" id="closerBack">Zurück</button>
+      <span class="closer-note" id="closerNote">Im echten Build: Sprung zu Sitzung 1, Beat 1.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const REIFE = [
+  {n:1, name:"Installiert, nicht im Alltag", desc:"Sie haben es vielleicht kurz ausprobiert, aber es gehört noch nicht zu Ihrem Alltag. Noch kein Gefühl dafür, was es eigentlich kann."},
+  {n:2, name:"Ad-hoc-Nutzung", desc:"Sie setzen es gelegentlich für einzelne Aufgaben ein — spontan, ohne festes Vorgehen, jedes Mal wieder von vorn."},
+  {n:3, name:"Regelmäßig, aber ohne Methode", desc:"Sie nutzen es im Alltag für wiederkehrende Aufgaben, aus dem Bauch heraus — noch ohne wiederverwendbares Briefing oder feste Vorgehensweise."},
+  {n:4, name:"Bereits mit System", desc:"Sie arbeiten schon mit eigenem Kontext (Firmenwissen, Notizen wie Obsidian, „Company Brain“), eigenen Skills und Projects. Der Fokus verschiebt sich auf noch unbearbeitete Use Cases."},
+  {n:5, name:"Power-User", desc:"Sie orchestrieren mehrere Tools und Agents, denken in Workflows statt Einzel-Prompts, und könnten anderen im Haus das Thema beibringen."}
+];
+const QUESTIONS = {
+  alltag: [
+    "Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?",
+    "Welche Aufgabe wiederholt sich, ohne leichter zu werden?",
+    "Wo warten Sie am häufigsten auf andere — oder andere auf Sie?"
+  ],
+  ziel: [
+    "Was soll sich für Sie verändern?",
+    "Woran würden Sie merken, dass es sich gelohnt hat?",
+    "Was wünschen Sie sich von diesem Engagement?"
+  ]
+};
+
+const STATE = {
+  name:"", rolle:"", firma:"", website:"", beschreibung:"",
+  reifegrad: 0,
+  alltag: QUESTIONS.alltag.map(()=>""),
+  ziel: QUESTIONS.ziel.map(()=>"")
+};
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(tab=>{
+  tab.onclick = ()=>{
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(p=>p.classList.remove("active"));
+    tab.classList.add("active");
+    document.querySelector(`.pane[data-pane="${tab.dataset.tab}"]`).classList.add("active");
+  };
+});
+
+/* ---------- Person: live-bound to card header ---------- */
+function bindPerson(id, field){
+  document.getElementById(id).addEventListener("input", e=>{
+    STATE[field] = e.target.value;
+    refreshHeader();
+  });
+}
+bindPerson("f-name","name"); bindPerson("f-rolle","rolle"); bindPerson("f-firma","firma"); bindPerson("f-website","website"); bindPerson("f-beschreibung","beschreibung");
+function refreshHeader(){
+  const who = document.getElementById("whoName");
+  const sub = document.getElementById("whoSub");
+  if(STATE.name.trim()){
+    who.textContent = STATE.name; who.classList.remove("empty");
+  } else {
+    who.textContent = "Noch kein Name"; who.classList.add("empty");
+  }
+  sub.textContent = [STATE.rolle, STATE.firma].map(s=>s.trim()).filter(Boolean).join(" · ");
+}
+
+/* ---------- Reifegrad: staircase ---------- */
+const stairsHost = document.getElementById("stairs");
+REIFE.forEach(r=>{
+  const b = document.createElement("button");
+  b.className = "stair"; b.dataset.h = r.n; b.dataset.n = r.n;
+  b.innerHTML = `<span class="sn">Stufe ${r.n}</span><span class="sname">${r.name}</span>`;
+  b.onclick = ()=> selectReife(r.n);
+  stairsHost.appendChild(b);
+});
+function selectReife(n){
+  STATE.reifegrad = n;
+  document.querySelectorAll(".stair").forEach(b=>b.classList.toggle("active", +b.dataset.n===n));
+  const r = REIFE.find(x=>x.n===n);
+  document.getElementById("stairDesc").innerHTML = `<p>${r.desc}</p>`;
+}
+
+/* ---------- Alltag / Ziel: one dedicated field per question, always bulleted ---------- */
+const BULLET = "• ";
+function attachBullets(ta){
+  ta.addEventListener("focus", ()=>{
+    if(!ta.value) ta.value = BULLET;
+  });
+  ta.addEventListener("keydown", e=>{
+    if(e.key === "Enter"){
+      e.preventDefault();
+      const start = ta.selectionStart, end = ta.selectionEnd;
+      const insert = "\n" + BULLET;
+      ta.value = ta.value.slice(0,start) + insert + ta.value.slice(end);
+      const pos = start + insert.length;
+      ta.selectionStart = ta.selectionEnd = pos;
+      ta.dispatchEvent(new Event("input", {bubbles:true}));
+    }
+  });
+}
+function buildQuestions(paneId, field){
+  const host = document.getElementById(paneId);
+  QUESTIONS[field].forEach((q, i)=>{
+    const wrap = document.createElement("div");
+    wrap.className = "qfield";
+    wrap.innerHTML = `<label>${q}</label><textarea placeholder="• Antwort …"></textarea>`;
+    const ta = wrap.querySelector("textarea");
+    ta.addEventListener("input", ()=>{ STATE[field][i] = ta.value; });
+    attachBullets(ta);
+    host.appendChild(wrap);
+  });
+}
+buildQuestions("pane-alltag","alltag");
+buildQuestions("pane-ziel","ziel");
+
+/* ---------- export ---------- */
+document.getElementById("exportBtn").onclick = ()=>{
+  const r = REIFE.find(x=>x.n===STATE.reifegrad) || null;
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    person: {name: STATE.name, rolle: STATE.rolle, firma: STATE.firma, website: STATE.website, beschreibung: STATE.beschreibung},
+    reifegrad: r,
+    alltag: QUESTIONS.alltag.map((q,i)=>({frage:q, antwort: STATE.alltag[i]})),
+    ziel: QUESTIONS.ziel.map((q,i)=>({frage:q, antwort: STATE.ziel[i]}))
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  const slug = (STATE.name.trim() || "session-zero").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+  a.download = `${slug}-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  const flash = document.getElementById("exportFlash");
+  flash.classList.add("show");
+  setTimeout(()=>flash.classList.remove("show"), 1800);
+};
+
+/* ---------- left rail: same visual language as PROTOTYPE-nav-rail.html.
+   Session 0 is the current, unlocked stop; Session 1/2 are placeholders
+   here — the real chapter lists live in the actual nav-rail build. ---------- */
+const NAV = [
+  {s:"Session 0", locked:false, ch:[{t:"Wo stehen wir heute?"}]},
+  {s:"Session 1", locked:true,  ch:[{t:"Nach Session 0"}]},
+  {s:"Session 2", locked:true,  ch:[{t:"Nach Session 1"}]}
+];
+const TOTAL = NAV.reduce((a,x)=>a+x.ch.length,0);
+function drawRail(){
+  const rail = document.getElementById("rail"); rail.innerHTML="";
+  const H = window.innerHeight, top = H*0.16, span = H*0.68, gap = TOTAL>1 ? span/(TOTAL-1) : 0;
+  let i=0;
+  NAV.forEach((sess,si)=>sess.ch.forEach((ch)=>{
+    const y = top + i*gap;
+    const d = document.createElement("div");
+    d.className = "node" + (sess.locked ? " locked" : " now");
+    d.style.top = y+"px"; d.title = sess.s+" · "+ch.t;
+    rail.appendChild(d);
+    if(sess.ch.indexOf(ch)===0){
+      const l = document.createElement("div"); l.className="slabel";
+      l.style.top=(y-2)+"px"; l.textContent="S"+si; rail.appendChild(l);
+    }
+    i++;
+  }));
+}
+function drawMenu(){
+  const menu = document.getElementById("menu"); menu.innerHTML="";
+  NAV.forEach((sess,si)=>{
+    const box = document.createElement("div"); box.className = "sess"+(sess.locked?" locked":"");
+    box.innerHTML = `<div class="sesshead">${sess.s}</div>` + (sess.locked?`<span class="lockmsg">Noch nicht dran</span>`:"");
+    sess.ch.forEach((ch)=>{
+      const row = document.createElement("div");
+      row.className = "chap" + (!sess.locked ? " active" : "");
+      row.innerHTML = `<span class="cn">${String(si+1).padStart(2,"0")}</span>${ch.t}`;
+      box.appendChild(row);
+    });
+    menu.appendChild(box);
+  });
+}
+drawRail(); drawMenu();
+window.addEventListener("resize", drawRail);
+
+/* ---------- closing popup ---------- */
+const closer = document.getElementById("closer");
+document.getElementById("ctaNext").onclick = ()=> closer.classList.add("show");
+document.getElementById("closerBack").onclick = ()=> closer.classList.remove("show");
+document.getElementById("closerGo").onclick = ()=>{
+  /* Prototype only — real build would navigate to Session 1's first beat. */
+  document.getElementById("closerNote").classList.add("show");
+};
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape") closer.classList.remove("show");
+});
+</script>
+</body>
+</html>

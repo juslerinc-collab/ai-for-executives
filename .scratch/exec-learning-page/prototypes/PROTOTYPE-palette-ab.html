@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Palette A/B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&family=Syne:wght@600;700;800&family=Fraunces:opsz,wght@9..144,500..900&family=Schibsted+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+   ONE variable: the palette. Everything else identical —
+   Archivo 800 + Inter, both glass registers, icons, gradients,
+   and the rail now carrying the FOUR STEPS (ladder demoted).
+   A = Ultramarin (settled)   B = Petrol/Slate (reference)
+   ============================================================ */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb),-apple-system,system-ui,sans-serif;background:#5A5F6B;padding-bottom:74px;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--fh),var(--fb),sans-serif;font-weight:var(--hw);letter-spacing:var(--ht);line-height:var(--hl)}
+/* --- global type dial. Palette stays the only difference BETWEEN columns. --- */
+body{--fh:"Archivo";--fb:"Inter";--hw:800;--ht:-.036em;--hl:1.00}
+body[data-t="2"]{--fh:"Syne";--fb:"Inter";--hw:800;--ht:-.02em;--hl:1.04}
+body[data-t="3"]{--fh:"Fraunces";--fb:"Inter";--hw:700;--ht:-.018em;--hl:1.02}
+body[data-t="4"]{--fh:"Archivo";--fb:"Schibsted Grotesk";--hw:800;--ht:-.036em;--hl:1.00}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---------------- A · ULTRAMARIN (settled) ---------------- */
+.pal-a{
+  --ink:#0A1330; --ink-soft:#4B5573; --acc:#1E2FDB; --acc-2:#2A3CF0; --acc-deep:#1526A8;
+  --ice:#B3CCF4; --tint:#E4EBFB; --rule:#DDE0E8;
+  --paper:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.16) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.13) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.15) 0%, transparent 66%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  --dark:
+    radial-gradient(60% 54% at 24% 24%, #16226B 0%, transparent 64%),
+    radial-gradient(46% 42% at 78% 30%, #1B2A82 0%, transparent 62%),
+    radial-gradient(72% 64% at 54% 86%, #04091F 0%, transparent 70%),
+    #08102A;
+}
+/* ---------------- B · HYBRID ----------------
+   Reference ground + working accent:
+   Papier #FFFFFF→#ECF3FB · Tinte #09243D (Petrol, nicht Navy)
+   · Akzent #1E2FDB (Ultramarin, nur für Interaktion + Schlüsselwort)
+   #4F687D bleibt, aber demoted: Fließtext-Grau, nie Akzent. */
+.pal-b{
+  --ink:#09243D; --ink-soft:#4F687D; --acc:#1E2FDB; --acc-2:#2A3CF0; --acc-deep:#1526A8;
+  --ice:#B3CCF4; --tint:#E4EBFB; --rule:#D6E2EF;
+  --paper:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.13) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(9,36,61,.09) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(30,47,219,.12) 0%, transparent 66%),
+    linear-gradient(158deg, #FFFFFF 0%, #F5F9FD 46%, #ECF3FB 100%);
+  --dark:
+    radial-gradient(60% 54% at 24% 24%, #12406A 0%, transparent 64%),
+    radial-gradient(46% 42% at 78% 30%, #1D3B8C 0%, transparent 62%),
+    radial-gradient(72% 64% at 54% 86%, #04121F 0%, transparent 70%),
+    #09243D;
+}
+
+.col{position:relative}
+.tag{position:sticky;top:0;z-index:20;padding:11px 22px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#fff;background:#11161D}
+.pal-b .tag{background:#09243D}
+
+.page{position:relative;padding:52px 40px 60px 208px;min-height:88vh;overflow:hidden;background:var(--paper);color:var(--ink)}
+.page.dark{background:var(--dark);color:#fff}
+
+/* ---------- glass, both registers ---------- */
+.glass{
+  background:linear-gradient(140deg, rgba(255,255,255,.17) 0%, rgba(255,255,255,.08) 46%, rgba(255,255,255,.06) 100%);
+  -webkit-backdrop-filter:blur(30px) saturate(150%); backdrop-filter:blur(30px) saturate(150%);
+  border:1px solid rgba(255,255,255,.24); border-radius:20px;
+  box-shadow:0 1px 0 rgba(255,255,255,.28) inset, 0 22px 54px rgba(0,0,0,.18);
+}
+.glass-lt{
+  background:linear-gradient(140deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.40) 52%, rgba(255,255,255,.26) 100%);
+  -webkit-backdrop-filter:blur(22px) saturate(170%); backdrop-filter:blur(22px) saturate(170%);
+  border:1px solid rgba(255,255,255,.88); border-radius:18px;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 16px 40px rgba(9,19,48,.08);
+}
+
+.ico{width:24px;height:24px;fill:none;stroke:var(--acc);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;display:block}
+.ico.sm{width:16px;height:16px;stroke-width:1.6}
+.page.dark .ico{stroke:var(--ice)}
+
+/* ---------- rail: NOW THE FOUR STEPS ---------- */
+.rail{position:absolute;left:48px;top:60px;width:2px;height:214px;background:var(--rule)}
+.page.dark .rail{background:rgba(255,255,255,.26)}
+.rung{position:absolute;left:-5px;width:11px;height:11px;border-radius:50%;background:var(--rule)}
+.page.dark .rung{background:rgba(255,255,255,.3)}
+.rung.done{background:var(--acc);opacity:.4}
+.page.dark .rung.done{background:#fff;opacity:.55}
+.rung.now{background:var(--acc);box-shadow:0 0 0 5px var(--tint)}
+.page.dark .rung.now{background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.28)}
+.rl{position:absolute;left:22px;top:-5px;white-space:nowrap;font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--acc)}
+.page.dark .rl{color:#fff}
+
+.eyebrow{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:20px}
+.page.dark .eyebrow{color:rgba(255,255,255,.76)}
+.eyebrow .ico{stroke:currentColor}
+h1{font-size:clamp(26px,2.6vw,40px);max-width:17ch;margin-bottom:20px}
+h2{font-size:clamp(24px,2.3vw,34px);max-width:18ch;margin-bottom:18px}
+.k{color:var(--acc)}
+.page.dark .k{color:var(--ice)}
+p.lede{font-size:15px;font-weight:300;line-height:1.6;max-width:46ch;color:var(--ink-soft)}
+.page.dark p.lede{color:rgba(255,255,255,.84)}
+
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+.step{padding-top:14px;border-top:2px solid transparent;border-image:linear-gradient(90deg, var(--acc) 0%, transparent 100%) 1}
+.step .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.step .n{font-size:10px;font-weight:600;letter-spacing:.2em;color:var(--acc)}
+.step h3{font-size:18px;margin-bottom:8px}
+.step p{font-size:13px;font-weight:300;line-height:1.55;color:var(--ink-soft)}
+
+.panel{margin-top:32px;padding:22px 24px}
+.panel .lbl{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.panel p{font-size:13.5px;font-weight:300;line-height:1.62;color:var(--ink)}
+
+.capture{margin-top:34px;max-width:440px}
+.capture label{display:flex;align-items:center;gap:9px;font-size:14.5px;font-weight:400;margin-bottom:11px}
+.capture input{width:100%;padding:12px 14px;font-family:var(--fb);font-size:14px;font-weight:300;background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);border-bottom:2px solid var(--acc);border-radius:9px;color:var(--ink);outline:none}
+.btn{display:inline-flex;align-items:center;gap:9px;margin-top:16px;padding:12px 22px;color:#fff;font-family:var(--fb);font-size:13px;font-weight:500;border:none;border-radius:9px;cursor:pointer;
+  background:linear-gradient(135deg, var(--acc-2) 0%, var(--acc) 50%, var(--acc-deep) 100%);
+  box-shadow:0 8px 18px rgba(0,0,0,.16)}
+.btn .ico{stroke:#fff}
+
+.tree{display:grid;grid-template-columns:1fr;gap:12px;margin-top:30px}
+.tree .glass{padding:20px 20px}
+.tree .ico{margin-bottom:11px}
+.tree h3{font-size:17px;margin-bottom:8px;color:#fff}
+.tree p{font-size:13px;font-weight:300;line-height:1.55;color:rgba(255,255,255,.82)}
+
+.swatches{display:flex;margin-top:34px;max-width:460px;border-radius:10px;overflow:hidden;border:1px solid rgba(0,0,0,.08)}
+.sw{flex:1;height:52px;display:flex;align-items:flex-end;padding:6px;font-size:9px;font-weight:500;color:#fff;letter-spacing:.04em}
+.sw.lt{color:#333}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:99;display:flex;align-items:center;gap:14px;padding:12px 22px;background:#11161D;color:#fff;font-size:12.5px}
+.bar b{font-weight:600;letter-spacing:.14em;text-transform:uppercase;font-size:10px;opacity:.5}
+.bar a{padding:7px 14px;color:#fff;text-decoration:none;border:1px solid rgba(255,255,255,.22);border-radius:6px;font-size:12px;white-space:nowrap}
+.bar a.on{background:#fff;color:#11161D;border-color:#fff;font-weight:600}
+.bar .note{margin-left:auto;opacity:.55;font-size:11px;font-weight:300}
+</style>
+</head>
+<body>
+
+<div class="split">
+
+  <!-- ================= COLUMN A ================= -->
+  <div class="col pal-a">
+    <div class="tag">A · Ultramarin — der gesetzte Stand</div>
+
+    <section class="page">
+      <div class="rail">
+        <div class="rung done" style="top:0"></div>
+        <div class="rung done" style="top:66px"></div>
+        <div class="rung now" style="top:132px"><span class="rl">Aufbereiten</span></div>
+        <div class="rung" style="top:203px"></div>
+      </div>
+      <div class="eyebrow">
+        Grundlagen · Kapitel 2
+      </div>
+      <h1>Vier Schritte, sortiert danach, <span class="k">was Sie schon halten</span>.</h1>
+      <p class="lede">Sie stellen niemanden ein, um ihm zu erklären, wie er funktioniert. Sie stellen jemanden ein, weil Sie wissen, was Sie ihm übergeben wollen.</p>
+
+      <div class="steps">
+        <div class="step"><div class="top"><span class="n">03</span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m6.08 11-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83L17.9 11"/></svg></div>
+          <h3>Aufbereiten</h3><p>Etwas in der Hand, aber in der falschen Form: der Bericht vom Kollegen, die vierzig Seiten.</p></div>
+        <div class="step"><div class="top"><span class="n">04</span>
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 4-4"/></svg></div>
+          <h3>Hinterfragen</h3><p>Etwas Fertiges, und es muss halten. Vorstandsvorlage, Vertragsentwurf, Gutachten.</p></div>
+      </div>
+
+      <div class="panel glass-lt">
+        <div class="lbl">Grenze — Hinterfragen</div>
+        <p>Einwände <em>erzeugen</em> ja. <em>Urteil abgeben</em> nein. Das ausgesprochene Sicherheitsgefühl ist nahezu konstant, ob die Antwort stimmt oder nicht.</p>
+      </div>
+
+      <div class="capture">
+        <label>Wo hätte Ihnen das zuletzt geholfen?</label>
+        <input placeholder="Ein konkreter Fall …">
+        <button class="btn">Auf das Board legen</button>
+      </div>
+
+      <div class="swatches">
+        <div class="sw" style="background:#F3F4F8" class="lt"><span style="color:#333">#F3F4F8</span></div>
+        <div class="sw" style="background:#E4EBFB"><span style="color:#333">#E4EBFB</span></div>
+        <div class="sw" style="background:#1E2FDB">#1E2FDB</div>
+        <div class="sw" style="background:#0A1330">#0A1330</div>
+      </div>
+    </section>
+
+    <section class="page dark">
+      <div class="eyebrow">Grundlagen · Kapitel 1</div>
+      <h2>Gehört es <span class="k">überhaupt hierher?</span></h2>
+      <p class="lede">Drei Antworten, nicht zwei. Die dritte ist die ehrliche.</p>
+      <div class="tree">
+        <div class="glass"><svg class="ico" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg><h3>KI</h3><p>Sprache rein, Sprache raus. Urteil im Spiel.</p></div>
+        <div class="glass"><svg class="ico" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><h3>Automatisierung</h3><p>Immer gleich, immer korrekt, hundertmal. Kein Urteil nötig.</p></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= COLUMN B ================= -->
+  <div class="col pal-b">
+    <div class="tag">B · Hybrid — Petrol-Grund, Ultramarin-Akzent</div>
+
+    <section class="page">
+      <div class="rail">
+        <div class="rung done" style="top:0"></div>
+        <div class="rung done" style="top:66px"></div>
+        <div class="rung now" style="top:132px"><span class="rl">Aufbereiten</span></div>
+        <div class="rung" style="top:203px"></div>
+      </div>
+      <div class="eyebrow">
+        Grundlagen · Kapitel 2
+      </div>
+      <h1>Vier Schritte, sortiert danach, <span class="k">was Sie schon halten</span>.</h1>
+      <p class="lede">Sie stellen niemanden ein, um ihm zu erklären, wie er funktioniert. Sie stellen jemanden ein, weil Sie wissen, was Sie ihm übergeben wollen.</p>
+
+      <div class="steps">
+        <div class="step"><div class="top"><span class="n">03</span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m6.08 11-3.5 1.6a1 1 0 0 0 0 1.81l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9a1 1 0 0 0 0-1.83L17.9 11"/></svg></div>
+          <h3>Aufbereiten</h3><p>Etwas in der Hand, aber in der falschen Form: der Bericht vom Kollegen, die vierzig Seiten.</p></div>
+        <div class="step"><div class="top"><span class="n">04</span>
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="m8.5 11 2 2 4-4"/></svg></div>
+          <h3>Hinterfragen</h3><p>Etwas Fertiges, und es muss halten. Vorstandsvorlage, Vertragsentwurf, Gutachten.</p></div>
+      </div>
+
+      <div class="panel glass-lt">
+        <div class="lbl">Grenze — Hinterfragen</div>
+        <p>Einwände <em>erzeugen</em> ja. <em>Urteil abgeben</em> nein. Das ausgesprochene Sicherheitsgefühl ist nahezu konstant, ob die Antwort stimmt oder nicht.</p>
+      </div>
+
+      <div class="capture">
+        <label>Wo hätte Ihnen das zuletzt geholfen?</label>
+        <input placeholder="Ein konkreter Fall …">
+        <button class="btn">Auf das Board legen</button>
+      </div>
+
+      <div class="swatches">
+        <div class="sw" style="background:#FFFFFF"><span style="color:#333">#FFFFFF</span></div>
+        <div class="sw" style="background:#ECF3FB"><span style="color:#333">#ECF3FB</span></div>
+        <div class="sw" style="background:#1E2FDB">#1E2FDB</div>
+        <div class="sw" style="background:#09243D">#09243D</div>
+      </div>
+    </section>
+
+    <section class="page dark">
+      <div class="eyebrow">Grundlagen · Kapitel 1</div>
+      <h2>Gehört es <span class="k">überhaupt hierher?</span></h2>
+      <p class="lede">Drei Antworten, nicht zwei. Die dritte ist die ehrliche.</p>
+      <div class="tree">
+        <div class="glass"><svg class="ico" viewBox="0 0 24 24"><path d="M22 17a2 2 0 0 1-2 2H6l-4 4V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/></svg><h3>KI</h3><p>Sprache rein, Sprache raus. Urteil im Spiel.</p></div>
+        <div class="glass"><svg class="ico" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg><h3>Automatisierung</h3><p>Immer gleich, immer korrekt, hundertmal. Kein Urteil nötig.</p></div>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<div class="bar">
+  <b>Schrift</b>
+  <a href="?t=1" data-n="1">Archivo + Inter</a>
+  <a href="?t=2" data-n="2">Syne + Inter</a>
+  <a href="?t=3" data-n="3">Fraunces + Inter</a>
+  <a href="?t=4" data-n="4">Archivo + Schibsted</a>
+  <span class="note" id="note"></span>
+</div>
+<script>
+const N={"1":"Der gesetzte Stand. Kontrolle.",
+"2":"Syne — geometrisch, eigenwillig, Ausstellungs-Register. Deutlichster Bruch mit dem Web-Standard.",
+"3":"Fraunces — variable Serif mit Charakter. Redaktionell, wärmer, am weitesten weg von Software.",
+"4":"Nur der Fließtext gewechselt: Schibsted Grotesk statt Inter. Diagnose — liegt das Generische an der Headline oder an Inter?"};
+const t=new URLSearchParams(location.search).get("t")||"1";
+document.body.dataset.t=t;
+document.querySelectorAll(".bar a").forEach(a=>{if(a.dataset.n===t)a.classList.add("on")});
+document.getElementById("note").textContent=N[t];
+</script>
+
+</body>
+</html>

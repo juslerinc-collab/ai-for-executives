@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Navigations-Leiste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.  v4
+   Eine Fläche, eine Seite. Alles liegt transparent darauf.
+   · durchgehendes Scrollen mit scroll-snap: ein Beat = ein Bild
+   · Sprossen folgen dem Scrollstand (IntersectionObserver)
+   · keine Kopfleiste, keine Trennlinien, keine Karten
+   · oben rechts: Titel, darunter das Kapitel
+   KONFLIKT, bewusst: Ticket 12 hat „ein Beat pro Klick"
+   entschieden. Snap-Scroll ist der Kompromiss — wenn er nicht
+   trägt, muss Ticket 12 neu aufgemacht werden.
+   KAPITELTITEL SIND PLATZHALTER — Ticket 01.
+   ============================================================ */
+
+:root{
+  --ink:#0A1330; --ink-soft:#4B5573; --acc:#1E2FDB; --acc-2:#2A3CF0;
+  --tint:#E4EBFB; --rule:#D7DBE6;
+  --nav:104px; --nav-open:330px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;height:100%}
+body{font-family:"Schibsted Grotesk",-apple-system,system-ui,sans-serif;color:var(--ink);
+  -webkit-font-smoothing:antialiased;height:100%;
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.16) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.13) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.15) 0%, transparent 66%),
+    radial-gradient(40% 36% at 34% 96%, rgba(30,47,219,.10) 0%, transparent 60%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  background-attachment:fixed}
+body::-webkit-scrollbar{width:0}
+h1{font-family:Archivo,"Schibsted Grotesk",sans-serif;font-weight:800;letter-spacing:-.036em;line-height:1.00}
+
+/* ---------- oben rechts ---------- */
+#mark{position:fixed;top:44px;right:56px;z-index:70;text-align:right;pointer-events:none}
+#mark .brand{font-family:Archivo;font-weight:800;font-size:15px;letter-spacing:-.03em;display:block}
+#mark .brand em{font-style:normal;color:var(--acc)}
+#mark .ch{display:block;margin-top:5px;font-size:12.5px;font-weight:300;color:var(--ink-soft)}
+
+/* ---------- Sprossen, auf der Fläche ---------- */
+#nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav);z-index:60;
+  transition:width .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover{width:var(--nav-open)}
+#nav::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .24s ease;
+  background:linear-gradient(90deg, rgba(255,255,255,.74) 0%, rgba(255,255,255,.54) 62%, rgba(255,255,255,0) 100%)}
+#nav:hover::after{opacity:1}
+
+#rail{position:absolute;left:0;top:0;bottom:0;width:var(--nav);z-index:2}
+#rail::before{content:"";position:absolute;left:50px;top:12%;bottom:12%;width:2px;background:var(--rule)}
+.node{position:absolute;left:45px;width:12px;height:12px;border-radius:50%;background:var(--rule);
+  transition:background .2s, box-shadow .2s, transform .2s, opacity .2s;cursor:pointer}
+.node.done{background:var(--acc);opacity:.30}
+.node.now{background:var(--acc);opacity:1;box-shadow:0 0 0 5px var(--tint);transform:scale(1.14)}
+.node.locked{background:var(--rule);opacity:.42;cursor:default}
+.node:not(.locked):hover{background:var(--acc-2);opacity:1}
+.slabel{position:absolute;left:24px;font-family:Archivo;font-weight:800;font-size:9.5px;
+  letter-spacing:.1em;color:var(--ink-soft);opacity:.5}
+
+/* ---------- Menü: Text, keine Karte ---------- */
+#menu{position:absolute;left:var(--nav);top:0;bottom:0;z-index:3;
+  width:calc(var(--nav-open) - var(--nav));padding:52px 22px 52px 2px;
+  overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .2s ease .05s}
+#nav:hover #menu{opacity:1;pointer-events:auto}
+#menu::-webkit-scrollbar{width:0}
+.sess + .sess{margin-top:26px}
+.sesshead{font-family:Archivo;font-weight:800;font-size:14px;letter-spacing:-.02em;margin-bottom:9px}
+.sess.locked{opacity:.34;pointer-events:none}
+.lockmsg{font-size:10.5px;color:var(--ink-soft);margin-bottom:9px;display:block}
+.chap{display:flex;align-items:baseline;gap:9px;padding:6px 0;cursor:pointer;
+  font-size:13.5px;font-weight:400;color:var(--ink-soft);transition:color .14s}
+.chap:hover{color:var(--acc)}
+.chap.active{color:var(--ink);font-weight:600}
+.chap .cn{font-size:9.5px;font-weight:600;color:var(--acc);min-width:14px;opacity:.75}
+.subs{margin:1px 0 7px 23px}
+.sub{display:block;padding:3px 0;font-size:12px;font-weight:300;color:var(--ink-soft);cursor:pointer}
+.sub:hover{color:var(--acc)}
+.sub.now{color:var(--acc);font-weight:500}
+
+/* ---------- die Folien: eine Seite, ein Beat pro Bild ---------- */
+#slides{padding-left:var(--nav);transition:padding-left .28s cubic-bezier(.4,0,.2,1)}
+#nav:hover ~ #slides{padding-left:var(--nav-open)}
+.beat{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;
+  display:flex;flex-direction:column;justify-content:center;padding:0 72px 0 76px}
+.beat .eye{font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:20px}
+.beat h1{font-size:clamp(36px,4.4vw,60px);max-width:18ch;margin-bottom:22px}
+.k{color:var(--acc)}
+.beat p{font-size:19px;font-weight:300;line-height:1.6;max-width:54ch;color:var(--ink-soft)}
+.beat.locked{opacity:.42}
+.beat.locked h1{color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<div id="mark">
+  <span class="brand">AI for <em>Executives</em></span>
+  <span class="ch" id="markch"></span>
+</div>
+
+<nav id="nav">
+  <div id="rail"></div>
+  <div id="menu"></div>
+</nav>
+
+<div id="slides"></div>
+
+<script>
+/* Kapiteltitel sind PLATZHALTER — Ticket 01. Struktur folgt Ticket 12. */
+const NAV=[
+ {s:"Session 1", locked:false, ch:[
+  {t:"Der Assistent", sc:["Ein Kollege, kein Werkzeug","Was er kann, was er vergisst","Ihre Rolle: instruieren, nicht verstehen"]},
+  {t:"Gehört es hierher?", sc:["KI","Automatisierung","Bleibt bei Ihnen"]},
+  {t:"Die vier Schritte", sc:["Erklären","Aufsetzen","Aufbereiten","Hinterfragen"]},
+  {t:"Grenzen & Gegenmittel", sc:["Das Sicherheitsgefühl","Beurteilen: der FlipFlop","Die vier Gegenmittel"]},
+  {t:"Labor: Erklären", sc:["Die Aufgabe","Ihr Auftrag","Wo hätte Ihnen das zuletzt geholfen?"]},
+  {t:"Labor: Aufsetzen", sc:["Die Aufgabe","Ihr Auftrag","Wo hätte Ihnen das zuletzt geholfen?"]},
+  {t:"Ihr Board", sc:["Die Karten sortieren","Wer in Ihrem Haus macht genau das auch?"]},
+  {t:"Der wiederverwendbare Auftrag", sc:["Einmal schreiben, oft nutzen","Ihre Aufgabe bis nächste Woche"]}
+ ]},
+ {s:"Session 2", locked:true, ch:[
+  {t:"Rückblick", sc:["Was die Woche gebracht hat","Zwei Schritte fehlen noch"]},
+  {t:"Wenn es einknickt", sc:["Der FlipFlop-Effekt","Warum Urteil nicht geht","Was stattdessen"]},
+  {t:"Was ein Agent kann", sc:["Vorführung","Was das für Ihr Haus heißt"]},
+  {t:"Labor: Aufbereiten", sc:["Die Aufgabe","Ihr Auftrag","Wo hätte Ihnen das zuletzt geholfen?"]},
+  {t:"Labor: Hinterfragen", sc:["Die Aufgabe","Ihr Auftrag","Wo hätte Ihnen das zuletzt geholfen?"]},
+  {t:"Das vollständige Board", sc:["Clustern","Der organisatorische Blick","Mitnehmen"]}
+ ]}
+];
+
+const TOTAL=NAV.reduce((a,x)=>a+x.ch.length,0);
+const flat=(s,c)=>{let i=0;for(let k=0;k<s;k++)i+=NAV[k].ch.length;return i+c;};
+let cur={s:0,c:0,x:0};
+
+/* ---------- Folien bauen: Session 1 als Beats, Session 2 als ein gesperrtes Bild ---------- */
+const slides=document.getElementById("slides");
+NAV[0].ch.forEach((ch,ci)=>{
+  ch.sc.forEach((sub,xi)=>{
+    const sec=document.createElement("section");
+    sec.className="beat"; sec.id=`b-0-${ci}-${xi}`;
+    sec.dataset.s=0; sec.dataset.c=ci; sec.dataset.x=xi;
+    sec.innerHTML=`<div class="eye">Kapitel ${String(ci+1).padStart(2,"0")} · ${ch.t}</div>
+                   <h1>${sub.replace(/(\S+)$/,'<span class="k">$1</span>')}</h1>
+                   <p>Platzhalter-Inhalt für diesen Beat. Der Text kommt aus Ticket 01.</p>`;
+    slides.appendChild(sec);
+  });
+});
+const end=document.createElement("section");
+end.className="beat locked"; end.id="b-1-0-0";
+end.dataset.s=1; end.dataset.c=0; end.dataset.x=0;
+end.innerHTML=`<div class="eye">Session 2</div>
+               <h1>Zwei Schritte fehlen <span class="k">noch</span>.</h1>
+               <p>Nächste Woche, gleiche Zeit. Session 2 wird nach Session 1 freigeschaltet.</p>`;
+slides.appendChild(end);
+
+/* ---------- Sprossen ---------- */
+function drawRail(){
+  const rail=document.getElementById("rail"); rail.innerHTML="";
+  const H=window.innerHeight, top=H*0.12, span=H*0.76, gap=span/(TOTAL-1);
+  const cf=flat(cur.s,cur.c); let i=0;
+  NAV.forEach((sess,si)=>sess.ch.forEach((ch,ci)=>{
+    const y=top+i*gap;
+    const d=document.createElement("div");
+    d.className="node"+(sess.locked?" locked":(i<cf?" done":""))+(!sess.locked&&i===cf?" now":"");
+    d.style.top=y+"px"; d.title=sess.s+" · "+ch.t;
+    if(!sess.locked) d.onclick=()=>jump(si,ci,0);
+    rail.appendChild(d);
+    if(ci===0){
+      const l=document.createElement("div"); l.className="slabel";
+      l.style.top=(y-2)+"px"; l.textContent="S"+(si+1); rail.appendChild(l);
+    }
+    i++;
+  }));
+}
+
+function drawMenu(){
+  const menu=document.getElementById("menu"); menu.innerHTML="";
+  NAV.forEach((sess,si)=>{
+    const box=document.createElement("div"); box.className="sess"+(sess.locked?" locked":"");
+    box.innerHTML=`<div class="sesshead">${sess.s}</div>`+
+                  (sess.locked?`<span class="lockmsg">Nach Session 1</span>`:"");
+    sess.ch.forEach((ch,ci)=>{
+      const active=!sess.locked && si===cur.s && ci===cur.c;
+      const row=document.createElement("div");
+      row.className="chap"+(active?" active":"");
+      row.innerHTML=`<span class="cn">${String(ci+1).padStart(2,"0")}</span>${ch.t}`;
+      if(!sess.locked) row.onclick=()=>jump(si,ci,0);
+      box.appendChild(row);
+      if(active){
+        const subs=document.createElement("div"); subs.className="subs";
+        ch.sc.forEach((s,xi)=>{
+          const sp=document.createElement("span");
+          sp.className="sub"+(xi===cur.x?" now":""); sp.textContent=s;
+          sp.onclick=e=>{e.stopPropagation();jump(si,ci,xi);};
+          subs.appendChild(sp);
+        });
+        box.appendChild(subs);
+      }
+    });
+    menu.appendChild(box);
+  });
+}
+
+function drawMark(){
+  const sess=NAV[cur.s], ch=sess.ch[cur.c];
+  document.getElementById("markch").textContent=sess.s+" · "+ch.t;
+}
+
+function jump(s,c,x){
+  const el=document.getElementById(`b-${s}-${c}-${x}`);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function refresh(){drawRail();drawMenu();drawMark();}
+refresh();
+
+/* ---------- Sprossen folgen dem Scrollstand ----------
+   Bewusst per Scroll-Rechnung statt IntersectionObserver:
+   der Observer feuert nicht zuverlässig, wenn der Tab im
+   Hintergrund liegt, und der Zustand lief dann auseinander. */
+const BEATS=[...document.querySelectorAll(".beat")];
+let raf=null;
+
+function syncToScroll(){
+  raf=null;
+  const H=window.innerHeight;
+  if(!H || !BEATS[0].offsetHeight) return;   // Viewport (noch) ohne Höhe — nichts zu rechnen
+  const se=document.scrollingElement;
+  const mid=se.scrollTop+H/2;
+  let active=BEATS[0];
+  for(const b of BEATS){
+    if(b.offsetTop<=mid && b.offsetTop+b.offsetHeight>mid){active=b;break;}
+    if(b.offsetTop<=mid) active=b;
+  }
+  const d=active.dataset;
+  if(+d.s===cur.s && +d.c===cur.c && +d.x===cur.x) return;
+  cur={s:+d.s,c:+d.c,x:+d.x};
+  refresh();
+}
+
+window.addEventListener("scroll",()=>{if(!raf) raf=requestAnimationFrame(syncToScroll);},{passive:true});
+window.addEventListener("resize",()=>{drawRail();syncToScroll();});
+syncToScroll();
+</script>
+</body>
+</html>

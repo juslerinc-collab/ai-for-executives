@@ -1,0 +1,59 @@
+<section class="beat wide" data-session="Session 0" data-chapter="Session 0 — wo stehen wir heute?" data-locked="false">
+  <div class="beat-inner">
+    <div class="eyebrow">Session 0</div>
+    <h1>Wer das Ziel kennt, findet auch den <span class="k">Weg</span>.</h1>
+    <p class="lede">Jede Reise mit KI beginnt am selben Punkt: zu wissen, wo man steht.</p>
+
+    <div class="glass-lt profile-card" id="session0">
+      <div class="profile-head">
+        <div class="eyebrow">Ihr Profil</div>
+        <h2>Kundenkarte<span class="echo"></span></h2>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="ueber">Über Sie</button>
+        <button class="tab" data-tab="reifegrad">AI Reifegrad</button>
+        <button class="tab" data-tab="alltag">Ihr Arbeitsalltag</button>
+        <button class="tab" data-tab="ziel">Ihr Ziel mit AI</button>
+      </div>
+
+      <div class="pane active" data-pane="ueber">
+        <div class="field"><label>Vorname</label><input type="text" data-person="vorname" placeholder="Doris"></div>
+        <div class="field"><label>Rolle / Position</label><input type="text" data-person="rolle" placeholder="Beraterin"></div>
+        <div class="field"><label>Unternehmen</label><input type="text" data-person="unternehmen" placeholder="Musterfirma AG"></div>
+        <div class="field"><label>Webseite</label><input type="text" data-person="webseite" placeholder="musterfirma.ch"></div>
+        <div class="field"><label>Kurzbeschreibung Firma</label><input type="text" data-person="kurzbeschreibung" placeholder="Boutique-Beratung, berufliche Vorsorge"></div>
+      </div>
+
+      <div class="pane" data-pane="reifegrad">
+        <p class="lede" style="margin-bottom:14px">Welche Stufe passt am besten zu Ihnen?</p>
+        <div class="staircase"></div>
+        <div class="step-desc"></div>
+      </div>
+
+      <div class="pane" data-pane="alltag">
+        <div class="qwrap"></div>
+      </div>
+
+      <div class="pane" data-pane="ziel">
+        <div class="qwrap"></div>
+      </div>
+
+      <div style="padding:0 30px 30px">
+        <button class="btn open-closer">Weiter zu Sitzung 1</button>
+      </div>
+    </div>
+
+    <button class="btn ghost export-btn" title="Exportiert den aktuellen Stand als JSON — Sicherheitsnetz gegen Refresh/geschlossenen Tab">Export JSON</button>
+  </div>
+</section>
+
+<div class="closer navy-bg deep" id="closer">
+  <div class="glass closer-card">
+    <h2>Das Ziel ist klar. Jetzt beginnt der Weg.</h2>
+    <p>Sie wissen jetzt, wo Sie stehen. Als Nächstes: was das Werkzeug wirklich kann — und wie Sie es briefen.</p>
+    <div class="closer-actions">
+      <button class="btn" id="closerGo">Los geht's mit Sitzung 1</button>
+      <span class="back" id="closerBack">Zurück</span>
+    </div>
+  </div>
+</div>

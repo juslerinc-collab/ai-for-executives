@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTOTYPE — Backlog &amp; Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@300;400;500;600&family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THROWAWAY PROTOTYPE — wipe me.
+   Answers ticket 06 (backlog & matrix). Three radically different
+   variants, switchable via ?variant=A|B|C, plus ?edit=0|1 to test
+   facilitator-edit vs executive read-only rendering independently
+   of the variant. Palette/type reused verbatim from
+   PROTOTYPE-session-zero-whiteboard.html (confirmed shell, ticket 15).
+   No persistence — state resets on reload. Not the real menu content
+   (12 illustrative cards, not the brief's 20-25).
+   ============================================================ */
+:root{
+  --paper:#F4F5F7; --ink:#0A1330; --ink-soft:#4B5573;
+  --ultra:#1E2FDB; --ultra-deep:#1526A8;
+  --ice:#B3CCF4; --ice-tint:#E4EBFB; --rule:#DDE0E8;
+  --fh:"Archivo"; --fb:"Schibsted Grotesk";
+  --good:#1E9E6B; --warn:#C77A1E;
+}
+*{box-sizing:border-box}
+body{margin:0;padding-bottom:120px;font-family:var(--fb),-apple-system,system-ui,sans-serif;color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(46% 40% at 86% 6%,  rgba(30,47,219,.14) 0%, transparent 62%),
+    radial-gradient(52% 46% at 12% 52%, rgba(30,47,219,.11) 0%, transparent 64%),
+    radial-gradient(58% 50% at 78% 74%, rgba(110,134,255,.13) 0%, transparent 66%),
+    linear-gradient(158deg, #F9FAFC 0%, #F3F4F8 48%, #E7EBF4 100%);
+  background-attachment:fixed;min-height:100vh}
+h1,h2,h3{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:0}
+button{font-family:inherit}
+
+/* ---------- glass ---------- */
+.glass{
+  background:linear-gradient(140deg, rgba(255,255,255,.80) 0%, rgba(255,255,255,.42) 52%, rgba(179,204,244,.28) 100%);
+  -webkit-backdrop-filter:blur(20px) saturate(170%); backdrop-filter:blur(20px) saturate(170%);
+  border:1px solid rgba(255,255,255,.85); border-radius:16px;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset, 0 14px 34px rgba(10,19,48,.08);
+}
+
+/* ---------- page shell ---------- */
+.stage{padding:44px 48px 40px;max-width:1360px;margin:0 auto}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:6px}
+.top h1{font-size:clamp(24px,2.6vw,32px)}
+.top .k{color:var(--ultra)}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ultra);margin-bottom:8px}
+.lede{font-size:14.5px;font-weight:300;line-height:1.6;color:var(--ink-soft);max-width:70ch;margin:10px 0 28px}
+
+.modepill{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font-size:12px;font-weight:600}
+.modepill.edit{background:rgba(30,47,219,.10);color:var(--ultra-deep)}
+.modepill.view{background:rgba(75,85,115,.10);color:var(--ink-soft)}
+.modepill .dot{width:7px;height:7px;border-radius:50%}
+.modepill.edit .dot{background:var(--ultra)}
+.modepill.view .dot{background:var(--ink-soft)}
+
+/* ---------- generic card chip ---------- */
+.chip{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:11px;
+  background:rgba(255,255,255,.7);border:1px solid var(--rule);font-size:12.5px;font-weight:500;color:var(--ink);
+  cursor:grab;user-select:none}
+.chip .cat{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chip .rep{opacity:.55}
+.chip.selected{border-color:var(--ultra);box-shadow:0 0 0 2px rgba(30,47,219,.16)}
+.cat-erklaren{background:#1E2FDB}.cat-aufsetzen{background:#1E9E6B}.cat-aufbereiten{background:#C77A1E}.cat-hinterfragen{background:#B3299B}
+
+.badge-src{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:6px;opacity:.7}
+.badge-src.lab{background:rgba(30,47,219,.12);color:var(--ultra-deep)}
+.badge-src.menu{background:rgba(30,158,107,.12);color:#146B49}
+.badge-src.free{background:rgba(199,122,30,.14);color:#8F5511}
+
+/* ---------- section framing ---------- */
+.section{margin-bottom:30px}
+.section h2{font-size:15px;letter-spacing:-.01em;margin-bottom:12px}
+.section .hint{font-size:12px;font-weight:300;color:var(--ink-soft);margin:-6px 0 14px}
+
+/* =========================================================
+   VARIANT A — one stream, freeform drag matrix, lens toggle
+   ========================================================= */
+#A .tray{display:flex;flex-wrap:wrap;gap:9px;padding:16px;margin-bottom:10px}
+#A .addrow{display:flex;gap:8px;padding:14px 16px;align-items:center}
+#A .addrow input{flex:1;border:none;background:transparent;font-size:14px;font-family:inherit;outline:none;color:var(--ink)}
+#A .addrow input::placeholder{color:#9AA2BB}
+.btn{all:unset;cursor:pointer;padding:9px 16px;border-radius:10px;font-size:12.5px;font-weight:600;
+  background:var(--ultra);color:#fff;transition:.15s}
+.btn:hover{background:var(--ultra-deep)}
+.btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid var(--rule)}
+.btn.ghost:hover{background:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+
+.lenstoggle{display:inline-flex;padding:4px;border-radius:11px;background:rgba(255,255,255,.6);border:1px solid var(--rule)}
+.lenstoggle button{all:unset;cursor:pointer;padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+.lenstoggle button.active{background:var(--ultra);color:#fff}
+
+.matrixA{position:relative;height:460px;padding:20px;overflow:hidden}
+.axis-y{position:absolute;left:8px;top:16px;bottom:38px;display:flex;flex-direction:column;justify-content:space-between;
+  font-size:10px;font-weight:600;color:var(--ink-soft);writing-mode:vertical-rl;text-orientation:mixed}
+.axis-x{position:absolute;left:38px;right:16px;bottom:6px;display:flex;justify-content:space-between;font-size:10px;font-weight:600;color:var(--ink-soft)}
+.plotA{position:absolute;left:38px;right:16px;top:16px;bottom:38px;border-left:1.5px solid var(--rule);border-bottom:1.5px solid var(--rule)}
+.plotA::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--rule);opacity:.6}
+.plotA::after{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--rule);opacity:.6}
+.dotA{position:absolute;transform:translate(-50%,50%);width:15px;height:15px;border-radius:50%;cursor:grab;
+  box-shadow:0 3px 8px rgba(10,19,48,.22);border:2px solid #fff}
+.dotA.repeat{box-shadow:0 0 0 4px rgba(30,47,219,.18),0 3px 8px rgba(10,19,48,.22)}
+.dotA .tip{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;
+  font-weight:600;background:var(--ink);color:#fff;padding:4px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:.12s}
+.dotA:hover .tip{opacity:1}
+.dotA.dragging{cursor:grabbing;z-index:5}
+
+/* =========================================================
+   VARIANT B — three doors, click-to-place quadrant, split lenses
+   ========================================================= */
+#B .doors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:26px}
+#B .door{padding:16px}
+#B .door h3{font-size:12.5px;letter-spacing:.02em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+#B .doorlist{display:flex;flex-direction:column;gap:7px;max-height:170px;overflow-y:auto}
+#B .menucat{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin:8px 0 4px}
+#B .menucat:first-child{margin-top:0}
+#B .doorlist .chip{cursor:pointer;justify-content:space-between;width:100%}
+#B .freeadd{display:flex;gap:6px;margin-top:10px}
+#B .freeadd input{flex:1;min-width:0;border:1px solid var(--rule);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;outline:none}
+
+#B .lensgrids{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+#B .lensgrid h3{font-size:13px;margin-bottom:10px}
+#B .quad4{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;height:340px}
+#B .qcell{border-radius:12px;padding:10px;background:rgba(255,255,255,.5);border:1.5px dashed var(--rule);
+  display:flex;flex-direction:column;gap:6px;overflow-y:auto;transition:.14s}
+#B .qcell.droptarget{border-color:var(--ultra);background:rgba(30,47,219,.06)}
+#B .qcell .qlabel{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px}
+#B .qcell .chip{width:100%;cursor:pointer}
+#B .selected-hint{font-size:11.5px;color:var(--ultra-deep);font-weight:600;margin-bottom:10px;min-height:16px}
+
+/* =========================================================
+   VARIANT C — unified inbox, per-card sliders, flag+segment
+   ========================================================= */
+#C .addflow{display:flex;gap:10px;align-items:center;padding:14px 16px;margin-bottom:14px}
+#C .addflow select, #C .addflow input{border:1px solid var(--rule);border-radius:8px;padding:8px 10px;font-size:12.5px;font-family:inherit;outline:none;background:#fff}
+#C .addflow input{flex:1}
+
+#C .seg{display:inline-flex;padding:4px;border-radius:11px;background:rgba(255,255,255,.6);border:1px solid var(--rule);margin-bottom:16px}
+#C .seg button{all:unset;cursor:pointer;padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:600;color:var(--ink-soft)}
+#C .seg button.active{background:var(--ultra);color:#fff}
+
+#C .split{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:start}
+#C .backlog{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;padding:14px}
+#C .row{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.55);border:1px solid transparent;cursor:pointer;transition:.12s}
+#C .row:hover{background:rgba(255,255,255,.85)}
+#C .row.open{background:#fff;border-color:var(--rule)}
+#C .rowhead{display:flex;align-items:center;gap:9px;justify-content:space-between}
+#C .rowhead .rt{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
+#C .rowscore{font-size:11px;font-weight:700;color:var(--ultra-deep);background:var(--ice-tint);padding:3px 8px;border-radius:7px}
+#C .detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
+#C .row.open .detail{display:block}
+#C .sliderline{display:grid;grid-template-columns:90px 1fr 24px;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:var(--ink-soft)}
+#C .sliderline input[type=range]{width:100%;accent-color:var(--ultra)}
+#C .flagrow{display:flex;gap:8px;align-items:center;margin-top:6px}
+#C .flagbtn{all:unset;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--rule);color:var(--ink-soft)}
+#C .flagbtn.active{background:var(--ultra);color:#fff;border-color:var(--ultra)}
+#C .repbtn{all:unset;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--rule);color:var(--ink-soft)}
+#C .repbtn.active{background:#146B49;color:#fff;border-color:#146B49}
+
+.matrixC{position:relative;height:460px;padding:20px}
+.dotC{position:absolute;transform:translate(-50%,50%);border-radius:50%;box-shadow:0 3px 8px rgba(10,19,48,.22);border:2px solid #fff;transition:left .2s,bottom .2s,width .2s,height .2s}
+
+/* ---------- export preview ---------- */
+#exportOverlay{position:fixed;inset:0;background:rgba(10,19,48,.55);z-index:200;display:none;
+  align-items:flex-start;justify-content:center;padding:40px;overflow-y:auto}
+#exportOverlay.show{display:flex}
+.sheet{background:#fff;width:760px;max-width:100%;padding:48px;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.sheet h2{font-size:20px;margin-bottom:4px}
+.sheet .subtle{font-size:12px;color:var(--ink-soft);margin-bottom:24px}
+.sheet table{width:100%;border-collapse:collapse;margin-bottom:28px}
+.sheet th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+  border-bottom:1.5px solid #222;padding:6px 8px}
+.sheet td{font-size:12.5px;padding:7px 8px;border-bottom:1px solid #e4e4e8}
+.sheet-close{position:absolute;top:16px;right:20px}
+.sheetwrap{position:relative}
+.mini-matrix{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;height:200px;border:1.5px solid #222}
+.mini-matrix div{padding:6px;font-size:9px;position:relative;border:.5px solid #ddd}
+.mini-dot{width:8px;height:8px;border-radius:50%;background:var(--ultra);display:inline-block;margin:2px}
+
+/* ---------- switcher bar ---------- */
+#switcher{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:100;
+  display:flex;align-items:center;gap:14px;padding:10px 12px 10px 18px;border-radius:999px;
+  background:var(--ink);color:#fff;box-shadow:0 20px 44px rgba(10,19,48,.38)}
+#switcher .lbl{font-size:12.5px;font-weight:600;min-width:190px;text-align:center}
+#switcher .lbl small{display:block;font-weight:300;opacity:.65;font-size:10.5px;margin-top:1px}
+#switcher button.arrow{all:unset;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12)}
+#switcher button.arrow:hover{background:rgba(255,255,255,.22)}
+#switcher .divider{width:1px;height:22px;background:rgba(255,255,255,.18)}
+#switcher .toggle{all:unset;cursor:pointer;font-size:11px;font-weight:600;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.12)}
+#switcher .toggle.on{background:var(--ultra)}
+#switcher .prototag{font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:.5;position:absolute;top:-18px;left:18px}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="top">
+    <div>
+      <div class="eyebrow">Prototyp · Backlog &amp; Matrix</div>
+      <h1>Ihr <span class="k">Use-Case-Backlog</span></h1>
+    </div>
+    <div id="modepill" class="modepill"></div>
+  </div>
+  <p class="lede">Drei strukturell verschiedene Varianten der gleichen Frage: wie Erfassung (Debrief · Menü · Frei), Matrix-Platzierung und die zwei Linsen (persönlich/organisational) als <em>eine</em> Sache statt drei Mechanismen wirken. Zum Wechseln unten die Leiste oder die Pfeiltasten nutzen.</p>
+
+  <div id="A" style="display:none"></div>
+  <div id="B" style="display:none"></div>
+  <div id="C" style="display:none"></div>
+</div>
+
+<div id="exportOverlay">
+  <div class="sheetwrap">
+    <button class="btn ghost sheet-close" onclick="closeExport()">Schließen</button>
+    <div class="sheet" id="sheetContent"></div>
+  </div>
+</div>
+
+<div id="switcher">
+  <span class="prototag">Prototype switcher</span>
+  <button class="arrow" onclick="cycle(-1)">←</button>
+  <div class="lbl" id="switchLabel"></div>
+  <button class="arrow" onclick="cycle(1)">→</button>
+  <div class="divider"></div>
+  <button class="toggle" id="editToggle" onclick="toggleEdit()"></button>
+  <button class="toggle" onclick="openExport()">Export-Vorschau</button>
+</div>
+
+<script>
+/* ---------------- shared state ---------------- */
+const CATS = [
+  {key:'erklaren', label:'Erklären'},
+  {key:'aufsetzen', label:'Aufsetzen'},
+  {key:'aufbereiten', label:'Aufbereiten'},
+  {key:'hinterfragen', label:'Hinterfragen'},
+];
+const MENU = {
+  erklaren: ['Ein Fachthema für das Team aufbereiten','Eine Analogie für Kunden finden','Sich schnell in ein neues Thema einarbeiten'],
+  aufsetzen: ['Eine Auftragsbestätigung entwerfen','Eine Meeting-Agenda vorbereiten','Einen ersten Foliensatz gliedern'],
+  aufbereiten: ['Protokoll aus einer Aufnahme erstellen','Tabelle aus Rohdaten strukturieren','Angebot in eine Vorlage übertragen'],
+  hinterfragen: ['Gegenargumente zu einer Entscheidung sammeln','Eine Strategie auf Lücken prüfen','Risiken in einem Plan identifizieren'],
+};
+// note: illustrative 12, not the brief's full 20-25 — content authoring is out of scope for this prototype
+
+let uid = 0;
+function mkCard(title, cat, source, extra){
+  uid++;
+  return Object.assign({
+    id:'c'+uid, title, cat, source,
+    lens:'personal', impact:3, effort:3, repeat:false,
+    x:null, y:null, quad:null,
+  }, extra||{});
+}
+
+function seedCards(){
+  return [
+    mkCard('Claude erklären, warum unser Reporting so lange dauert','erklaren','lab',{lens:'personal',impact:4,effort:2,x:28,y:70}),
+    mkCard('Auftragsbestätigungs-E-Mail mit Kostenschätzung','aufsetzen','lab',{lens:'organizational',impact:3,effort:2,x:62,y:55}),
+    mkCard('Protokoll aus Vorstandssitzung erstellen','aufbereiten','free',{lens:'organizational',impact:5,effort:4,x:78,y:82,repeat:true}),
+    mkCard('Wöchentliches Reporting an den Vorstand','erklaren','menu',{lens:'organizational',impact:4,effort:3,x:50,y:65,repeat:true}),
+  ];
+}
+
+let state = {
+  variant: 'A',
+  edit: true,
+  cardsA: seedCards(),
+  lensA: 'personal',
+  cardsB: seedCards(),
+  lensBSelected: null, // which card id is "armed" for placement
+  cardsC: seedCards(),
+  filterC: 'all',
+  openRowC: null,
+};
+
+/* ---------------- url sync ---------------- */
+function readParams(){
+  const p = new URLSearchParams(location.search);
+  state.variant = (p.get('variant')||'A').toUpperCase();
+  if(!['A','B','C'].includes(state.variant)) state.variant='A';
+  state.edit = p.get('edit') !== '0';
+}
+function writeParams(){
+  const p = new URLSearchParams(location.search);
+  p.set('variant', state.variant);
+  p.set('edit', state.edit ? '1':'0');
+  history.replaceState(null,'','?'+p.toString());
+}
+
+const ORDER = ['A','B','C'];
+const NAMES = {A:'One-Stream-Board, freies Ziehen', B:'Drei Türen, Klick-auf-Feld', C:'Backlog-first, Slider-Platzierung'};
+function cycle(dir){
+  let i = ORDER.indexOf(state.variant);
+  i = (i + dir + ORDER.length) % ORDER.length;
+  state.variant = ORDER[i];
+  writeParams(); render();
+}
+function toggleEdit(){
+  state.edit = !state.edit;
+  writeParams(); render();
+}
+document.addEventListener('keydown', e=>{
+  const tag = (e.target.tagName||'').toLowerCase();
+  if(tag==='input'||tag==='textarea'||e.target.isContentEditable) return;
+  if(e.key==='ArrowLeft') cycle(-1);
+  if(e.key==='ArrowRight') cycle(1);
+});
+
+/* ---------------- export preview (shared) ---------------- */
+function currentCards(){
+  if(state.variant==='A') return state.cardsA;
+  if(state.variant==='B') return state.cardsB;
+  return state.cardsC;
+}
+function openExport(){
+  const cards = currentCards().slice().sort((a,b)=> (b.impact-a.impact) || (a.effort-b.effort));
+  const rows = cards.map(c=>`<tr><td>${c.title}</td><td>${CATS.find(k=>k.key===c.cat).label}</td>
+    <td>${c.lens==='organizational'?'Organisational':'Persönlich'}</td>
+    <td>${c.impact}</td><td>${c.effort}</td><td>${c.repeat?'wiederkehrend':'—'}</td></tr>`).join('');
+  const quads = {tl:[],tr:[],bl:[],br:[]};
+  cards.forEach(c=>{
+    const key = (c.impact>=3?'t':'b') + (c.effort<3?'l':'r');
+    quads[key].push(c);
+  });
+  document.getElementById('sheetContent').innerHTML = `
+    <h2>Ihr Use-Case-Backlog</h2>
+    <div class="subtle">Export-Vorschau · Druckversion · Variante ${state.variant} · ${cards.length} Karten</div>
+    <table>
+      <tr><th>Use Case</th><th>Kategorie</th><th>Linse</th><th>Impact</th><th>Aufwand</th><th>Flag</th></tr>
+      ${rows || '<tr><td colspan="6">Noch keine Karten.</td></tr>'}
+    </table>
+    <div class="subtle" style="margin-bottom:8px">Matrix-Schnappschuss</div>
+    <div class="mini-matrix">
+      <div>${quads.tl.map(()=>'<span class="mini-dot"></span>').join('')}<br><small>Schnelle Erfolge</small></div>
+      <div>${quads.tr.map(()=>'<span class="mini-dot"></span>').join('')}<br><small>Große Wetten</small></div>
+      <div>${quads.bl.map(()=>'<span class="mini-dot"></span>').join('')}<br><small>Nebenbei</small></div>
+      <div>${quads.br.map(()=>'<span class="mini-dot"></span>').join('')}<br><small>Zurückstellen</small></div>
+    </div>`;
+  document.getElementById('exportOverlay').classList.add('show');
+}
+function closeExport(){ document.getElementById('exportOverlay').classList.remove('show'); }
+
+/* =========================================================
+   VARIANT A
+   ========================================================= */
+function renderA(){
+  const el = document.getElementById('A');
+  const cards = state.cardsA.filter(c=>c.lens===state.lensA);
+  el.innerHTML = `
+    <div class="section">
+      <h2>Alles ein Strom — Debrief, Menü und Frei-Eingabe ununterscheidbar in der Ablage</h2>
+      <p class="hint">Herkunft nur als kleines Etikett sichtbar, kein separater Bereich. Klick auf „Aus Menü wählen“ öffnet die vier Kategorien.</p>
+      <div class="glass tray" id="trayA"></div>
+      ${state.edit ? `
+      <div class="glass addrow">
+        <input id="freeA" placeholder="Eigenen Fall eintippen …" onkeydown="if(event.key==='Enter')addFreeA()">
+        <button class="btn ghost" onclick="addFreeA()">Hinzufügen</button>
+        <button class="btn" onclick="toggleMenuA()">Aus Menü wählen</button>
+      </div>
+      <div class="glass" id="menuPanelA" style="display:none;padding:16px;margin-bottom:10px"></div>
+      ` : ''}
+    </div>
+    <div class="section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <h2 style="margin:0">Matrix — frei ziehen</h2>
+        <div class="lenstoggle">
+          <button data-l="personal" class="${state.lensA==='personal'?'active':''}" onclick="setLensA('personal')">Persönlich</button>
+          <button data-l="organizational" class="${state.lensA==='organizational'?'active':''}" onclick="setLensA('organizational')">Organisational</button>
+        </div>
+      </div>
+      <p class="hint">Eine Matrix, ein Umschalter oben — nicht zwei Boards. Kreis mit Ring = wiederkehrend (Abarbeiten-Flag).</p>
+      <div class="glass matrixA">
+        <div class="axis-y">IMPACT →</div>
+        <div class="axis-x"><span>AUFWAND →</span></div>
+        <div class="plotA" id="plotA"></div>
+      </div>
+    </div>`;
+  const tray = document.getElementById('trayA');
+  state.cardsA.forEach(c=>{
+    const chip = document.createElement('div');
+    chip.className='chip';
+    chip.innerHTML = `<span class="cat cat-${c.cat}"></span><span class="badge-src ${c.source}">${c.source}</span>${c.title}
+      ${state.edit ? `<span class="rep" style="cursor:pointer" title="Wiederkehrend markieren" onclick="event.stopPropagation();toggleRepeatA('${c.id}')">${c.repeat?'🔁':'↻'}</span>`:''}`;
+    tray.appendChild(chip);
+  });
+  const plot = document.getElementById('plotA');
+  cards.forEach(c=>{
+    const dot = document.createElement('div');
+    dot.className = 'dotA' + (c.repeat?' repeat':'');
+    dot.style.left = (c.x??50)+'%';
+    dot.style.bottom = (c.y??50)+'%';
+    dot.style.background = catColor(c.cat);
+    dot.innerHTML = `<span class="tip">${c.title}</span>`;
+    if(state.edit) makeDraggable(dot, c, plot);
+    plot.appendChild(dot);
+  });
+}
+function catColor(cat){
+  return {erklaren:'#1E2FDB',aufsetzen:'#1E9E6B',aufbereiten:'#C77A1E',hinterfragen:'#B3299B'}[cat];
+}
+function addFreeA(){
+  const inp = document.getElementById('freeA');
+  if(!inp.value.trim()) return;
+  state.cardsA.push(mkCard(inp.value.trim(),'erklaren','free',{lens:state.lensA,x:50,y:50}));
+  inp.value='';
+  renderA();
+}
+function toggleMenuA(){
+  const panel = document.getElementById('menuPanelA');
+  if(panel.style.display==='block'){ panel.style.display='none'; return; }
+  panel.style.display='block';
+  panel.innerHTML = CATS.map(cat=>`
+    <div class="menucat" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:8px 0 6px;color:var(--ink-soft)">${cat.label}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px">
+      ${MENU[cat.key].map(t=>`<span class="chip" style="cursor:pointer" onclick="addMenuA('${cat.key}', this.dataset.t)" data-t="${t.replace(/"/g,'&quot;')}"><span class="cat cat-${cat.key}"></span>${t}</span>`).join('')}
+    </div>`).join('');
+}
+function addMenuA(cat, title){
+  state.cardsA.push(mkCard(title, cat, 'menu', {lens:state.lensA, x:50, y:50}));
+  document.getElementById('menuPanelA').style.display='none';
+  renderA();
+}
+function setLensA(l){ state.lensA = l; renderA(); }
+function toggleRepeatA(id){
+  const c = state.cardsA.find(c=>c.id===id); c.repeat = !c.repeat; renderA();
+}
+function makeDraggable(dot, card, plot){
+  dot.onpointerdown = (e)=>{
+    e.preventDefault();
+    dot.classList.add('dragging');
+    const move = (ev)=>{
+      const r = plot.getBoundingClientRect();
+      let x = ((ev.clientX - r.left)/r.width)*100;
+      let y = (1-(ev.clientY - r.top)/r.height)*100;
+      x = Math.max(0,Math.min(100,x)); y = Math.max(0,Math.min(100,y));
+      card.x = x; card.y = y;
+      dot.style.left = x+'%'; dot.style.bottom = y+'%';
+    };
+    const up = ()=>{
+      dot.classList.remove('dragging');
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+}
+
+/* =========================================================
+   VARIANT B
+   ========================================================= */
+function renderB(){
+  const el = document.getElementById('B');
+  el.innerHTML = `
+    <div class="section">
+      <h2>Drei sichtbar getrennte Türen</h2>
+      <p class="hint">Aus dem Labor, Ideen-Menü, Eigener Fall — bewusst als drei Bewegungen, nicht verschmolzen.</p>
+      <div class="doors">
+        <div class="glass door">
+          <h3>📋 Aus dem Labor</h3>
+          <div class="doorlist" id="doorLab"></div>
+        </div>
+        <div class="glass door">
+          <h3>🗂️ Ideen-Menü</h3>
+          <div class="doorlist" id="doorMenu"></div>
+        </div>
+        <div class="glass door">
+          <h3>✎ Eigener Fall</h3>
+          <div class="doorlist" id="doorFree"></div>
+          ${state.edit ? `<div class="freeadd"><input id="freeB" placeholder="Titel …" onkeydown="if(event.key==='Enter')addFreeB()"><button class="btn" onclick="addFreeB()">+</button></div>`:''}
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <h2>Zwei getrennte Matrizen</h2>
+      <p class="hint">Karte oben antippen (wird „scharf“), dann ein Feld anklicken — kein Ziehen, trackpad-sicher.</p>
+      <div class="selected-hint" id="hintB"></div>
+      <div class="lensgrids">
+        <div class="lensgrid">
+          <h3>Persönlich</h3>
+          <div class="quad4" id="gridPersonal"></div>
+        </div>
+        <div class="lensgrid">
+          <h3>Organisational</h3>
+          <div class="quad4" id="gridOrg"></div>
+        </div>
+      </div>
+    </div>`;
+  const doorLab = document.getElementById('doorLab');
+  const doorMenu = document.getElementById('doorMenu');
+  const doorFree = document.getElementById('doorFree');
+  state.cardsB.filter(c=>c.source==='lab').forEach(c=> doorLab.appendChild(chipB(c)));
+  if(state.cardsB.filter(c=>c.source==='lab').length===0) doorLab.innerHTML='<span class="hint">Noch keine Debrief-Karten.</span>';
+  CATS.forEach(cat=>{
+    const h = document.createElement('div'); h.className='menucat'; h.textContent=cat.label;
+    doorMenu.appendChild(h);
+    MENU[cat.key].forEach(t=>{
+      const chip = document.createElement('div');
+      chip.className='chip'; chip.style.cursor='pointer';
+      chip.innerHTML = `<span class="cat cat-${cat.key}"></span>${t}`;
+      chip.onclick = ()=>{ if(!state.edit) return; state.cardsB.push(mkCard(t, cat.key, 'menu', {quad:null})); renderB(); };
+      doorMenu.appendChild(chip);
+    });
+  });
+  state.cardsB.filter(c=>c.source==='free').forEach(c=> doorFree.appendChild(chipB(c)));
+  if(state.cardsB.filter(c=>c.source==='free').length===0) doorFree.innerHTML+='<span class="hint">Noch keine eigenen Fälle.</span>';
+
+  document.getElementById('hintB').textContent = state.lensBSelected
+    ? `„${state.cardsB.find(c=>c.id===state.lensBSelected)?.title}“ ausgewählt — jetzt ein Feld anklicken.`
+    : (state.edit ? 'Erst eine Karte oben anklicken.' : '');
+
+  renderQuad('gridPersonal', 'personal');
+  renderQuad('gridOrg', 'organizational');
+}
+function chipB(c){
+  const chip = document.createElement('div');
+  chip.className='chip'+(state.lensBSelected===c.id?' selected':'');
+  chip.innerHTML = `<span class="cat cat-${c.cat}"></span><span class="badge-src ${c.source}">${c.source}</span>${c.title}`;
+  chip.onclick = ()=>{ if(!state.edit) return; state.lensBSelected = c.id; renderB(); };
+  return chip;
+}
+const QUAD_LABELS = {tl:'Schnelle Erfolge', tr:'Große Wetten', bl:'Nebenbei', br:'Zurückstellen'};
+function renderQuad(elId, lens){
+  const grid = document.getElementById(elId);
+  const order = ['tl','tr','bl','br'];
+  grid.innerHTML='';
+  order.forEach(q=>{
+    const cell = document.createElement('div');
+    cell.className='qcell';
+    cell.innerHTML = `<div class="qlabel">${QUAD_LABELS[q]}</div>`;
+    cell.onclick = ()=>{
+      if(!state.edit || !state.lensBSelected) return;
+      const c = state.cardsB.find(c=>c.id===state.lensBSelected);
+      c.lens = lens; c.quad = q;
+      state.lensBSelected = null;
+      renderB();
+    };
+    state.cardsB.filter(c=>c.lens===lens && c.quad===q).forEach(c=>{
+      const chip = document.createElement('div');
+      chip.className='chip';
+      chip.innerHTML = `<span class="cat cat-${c.cat}"></span>${c.title}${c.repeat?' 🔁':''}`;
+      cell.appendChild(chip);
+    });
+    grid.appendChild(cell);
+  });
+}
+function addFreeB(){
+  const inp = document.getElementById('freeB');
+  if(!inp.value.trim()) return;
+  state.cardsB.push(mkCard(inp.value.trim(),'erklaren','free',{quad:null}));
+  inp.value=''; renderB();
+}
+
+/* =========================================================
+   VARIANT C
+   ========================================================= */
+function renderC(){
+  const el = document.getElementById('C');
+  const filtered = state.filterC==='all' ? state.cardsC : state.cardsC.filter(c=>c.lens===state.filterC);
+  el.innerHTML = `
+    <div class="section">
+      <h2>Backlog zuerst, Matrix als zweite Ansicht</h2>
+      ${state.edit ? `
+      <div class="glass addflow">
+        <select id="srcC"><option value="lab">Aus Labor</option><option value="menu">Aus Menü</option><option value="free">Frei</option></select>
+        <select id="catC">${CATS.map(c=>`<option value="${c.key}">${c.label}</option>`).join('')}</select>
+        <input id="titleC" placeholder="Titel eintippen …" onkeydown="if(event.key==='Enter')addC()">
+        <button class="btn" onclick="addC()">Hinzufügen</button>
+      </div>` : ''}
+      <div class="seg">
+        <button class="${state.filterC==='all'?'active':''}" onclick="setFilterC('all')">Alle</button>
+        <button class="${state.filterC==='personal'?'active':''}" onclick="setFilterC('personal')">Persönlich</button>
+        <button class="${state.filterC==='organizational'?'active':''}" onclick="setFilterC('organizational')">Organisational</button>
+      </div>
+      <div class="split">
+        <div class="glass backlog" id="backlogC"></div>
+        <div class="glass matrixC" id="matrixC"></div>
+      </div>
+    </div>`;
+  const backlog = document.getElementById('backlogC');
+  filtered.slice().sort((a,b)=>(b.impact-a.impact)||(a.effort-b.effort)).forEach(c=>{
+    const row = document.createElement('div');
+    row.className='row'+(state.openRowC===c.id?' open':'');
+    row.innerHTML = `
+      <div class="rowhead">
+        <div class="rt"><span class="cat cat-${c.cat}"></span><span class="badge-src ${c.source}">${c.source}</span>${c.title}${c.repeat?' 🔁':''}</div>
+        <div class="rowscore">${c.impact}/${c.effort}</div>
+      </div>
+      <div class="detail">
+        <div class="sliderline"><span>Impact</span><input type="range" min="1" max="5" value="${c.impact}" ${!state.edit?'disabled':''} oninput="setSlider('${c.id}','impact',this.value)"><b>${c.impact}</b></div>
+        <div class="sliderline"><span>Aufwand</span><input type="range" min="1" max="5" value="${c.effort}" ${!state.edit?'disabled':''} oninput="setSlider('${c.id}','effort',this.value)"><b>${c.effort}</b></div>
+        <div class="flagrow">
+          <button class="flagbtn ${c.lens==='personal'?'active':''}" ${!state.edit?'disabled':''} onclick="event.stopPropagation();setLensC('${c.id}','personal')">Persönlich</button>
+          <button class="flagbtn ${c.lens==='organizational'?'active':''}" ${!state.edit?'disabled':''} onclick="event.stopPropagation();setLensC('${c.id}','organizational')">Organisational</button>
+          <button class="repbtn ${c.repeat?'active':''}" ${!state.edit?'disabled':''} onclick="event.stopPropagation();toggleRepeatC('${c.id}')">🔁 wiederkehrend</button>
+        </div>
+      </div>`;
+    row.querySelector('.rowhead').onclick = ()=>{ state.openRowC = state.openRowC===c.id?null:c.id; renderC(); };
+    backlog.appendChild(row);
+  });
+  const plot = document.getElementById('matrixC');
+  filtered.forEach(c=>{
+    const dot = document.createElement('div');
+    dot.className='dotC';
+    const size = c.repeat ? 22 : 14;
+    dot.style.width = size+'px'; dot.style.height = size+'px';
+    dot.style.left = ((c.effort-1)/4*90+5)+'%';
+    dot.style.bottom = ((c.impact-1)/4*90+5)+'%';
+    dot.style.background = catColor(c.cat);
+    dot.title = c.title;
+    plot.appendChild(dot);
+  });
+}
+function addC(){
+  const src = document.getElementById('srcC').value;
+  const cat = document.getElementById('catC').value;
+  const inp = document.getElementById('titleC');
+  if(!inp.value.trim()) return;
+  state.cardsC.push(mkCard(inp.value.trim(), cat, src));
+  inp.value=''; renderC();
+}
+function setFilterC(f){ state.filterC=f; renderC(); }
+function setSlider(id, field, val){
+  const c = state.cardsC.find(c=>c.id===id); c[field]=+val; renderC();
+}
+function setLensC(id, lens){ state.cardsC.find(c=>c.id===id).lens=lens; renderC(); }
+function toggleRepeatC(id){ const c=state.cardsC.find(c=>c.id===id); c.repeat=!c.repeat; renderC(); }
+
+/* ---------------- render dispatch ---------------- */
+function render(){
+  ['A','B','C'].forEach(v=> document.getElementById(v).style.display = v===state.variant ? 'block':'none');
+  if(state.variant==='A') renderA();
+  if(state.variant==='B') renderB();
+  if(state.variant==='C') renderC();
+  document.getElementById('switchLabel').innerHTML = `${state.variant} — ${NAMES[state.variant]}<small>← → zum Wechseln</small>`;
+  const pill = document.getElementById('modepill');
+  pill.className = 'modepill ' + (state.edit ? 'edit':'view');
+  pill.innerHTML = `<span class="dot"></span>${state.edit ? 'Facilitator-Modus (Bearbeiten)' : 'Executive-Ansicht (nur lesen)'}`;
+  const et = document.getElementById('editToggle');
+  et.textContent = state.edit ? 'Auf: nur lesen' : 'Auf: bearbeiten';
+  et.className = 'toggle' + (state.edit?' on':'');
+}
+
+readParams();
+render();
+</script>
+</body>
+</html>

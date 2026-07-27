@@ -1,0 +1,10 @@
+{
+  "name": "ai-for-executives",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test build/src/*.test.js",
+    "build": "node build/build.mjs"
+  }
+}

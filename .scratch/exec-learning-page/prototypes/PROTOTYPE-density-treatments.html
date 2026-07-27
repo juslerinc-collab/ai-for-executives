@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PROTOTYPE — Dichte-Varianten (Wegwerf-Code, Ticket 12)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900:#080F1E; --navy-800:#0A1628; --navy-700:#0D1B2A; --navy-600:#122236;
+  --ink:#F2F5F9; --ink-dim:#9FB0C4; --ink-faint:#5C7089;
+  --accent:#4DA3FF; --accent-hi:#6FC3FF; --accent-dim:#2B6CB0;
+  --light-bg:#F7F8FA; --light-ink:#0B1420;
+  --rail:#1B2E45;
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --text:'Inter',system-ui,sans-serif;
+  --pad:clamp(28px,5vw,88px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--navy-800); color:var(--ink);
+  font-family:var(--text); font-weight:300; -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+.stage{
+  position:fixed; inset:0 0 76px 0;
+  background:
+    radial-gradient(120% 90% at 22% 18%, #16283F 0%, var(--navy-800) 46%, var(--navy-900) 100%);
+  display:flex; overflow:hidden;
+}
+
+/* ── ladder rail — the only decorative element ─────────────── */
+.rail{ width:64px; flex:0 0 64px; position:relative; display:flex; align-items:center; justify-content:center; }
+.rail .spine{ position:absolute; top:14%; bottom:14%; width:1px; background:var(--rail); }
+.rail .rungs{ position:relative; display:flex; flex-direction:column; gap:clamp(22px,5vh,46px); }
+.rung{ width:9px;height:9px;border:1.5px solid var(--rail); border-radius:50%; background:var(--navy-800); }
+.rung.on{ border-color:var(--accent); background:var(--accent); box-shadow:0 0 0 5px rgba(77,163,255,.13); }
+
+/* ── page canvas ───────────────────────────────────────────── */
+.page{ flex:1; min-width:0; padding:clamp(30px,5.2vh,64px) var(--pad) clamp(24px,4vh,48px) 8px;
+       display:flex; flex-direction:column; overflow-y:auto; }
+.page::-webkit-scrollbar{width:8px} .page::-webkit-scrollbar-thumb{background:var(--rail);border-radius:8px}
+
+.eyebrow{ font-size:11.5px; letter-spacing:.19em; text-transform:uppercase; color:var(--accent);
+          font-weight:500; margin-bottom:clamp(14px,2.4vh,24px); }
+h1{ font-family:var(--display); font-weight:500; font-size:clamp(30px,4.1vw,58px);
+    line-height:1.04; letter-spacing:-.022em; max-width:20ch; }
+h1 em{ font-style:normal; color:var(--accent); }
+.lede{ margin-top:clamp(14px,2.2vh,22px); font-size:clamp(15px,1.28vw,19px); line-height:1.55;
+       color:var(--ink-dim); max-width:56ch; }
+
+/* ── V1 dense ──────────────────────────────────────────────── */
+.steps{ margin-top:clamp(24px,4vh,44px); display:grid; gap:clamp(12px,1.9vh,20px); }
+.step{ display:grid; grid-template-columns:auto minmax(0,1.05fr) minmax(0,1fr); gap:clamp(16px,2vw,34px);
+       align-items:start; padding-bottom:clamp(12px,1.9vh,20px); border-bottom:1px solid var(--rail); }
+.step:last-child{border-bottom:0}
+.step .ic{ width:34px;height:34px;color:var(--accent);opacity:.92; }
+.step h3{ font-family:var(--display); font-weight:500; font-size:clamp(19px,1.65vw,25px); letter-spacing:-.01em; }
+.holds{ margin-top:5px; font-size:clamp(13.5px,1.06vw,16px); line-height:1.5; color:var(--ink); }
+.holds b{ color:var(--ink-faint); font-weight:500; display:block; font-size:11px;
+          letter-spacing:.15em; text-transform:uppercase; margin-bottom:3px; }
+.guard{ display:grid; gap:9px; }
+.guard div{ font-size:clamp(12.5px,.99vw,14.6px); line-height:1.5; color:var(--ink-dim); }
+.guard span{ color:var(--ink-faint); font-weight:500; font-size:10.5px; letter-spacing:.15em;
+             text-transform:uppercase; display:block; margin-bottom:2px; }
+.guard .anti{ color:var(--accent-hi); }
+.loopline{ margin-top:clamp(20px,3.2vh,34px); padding-left:16px; border-left:2px solid var(--accent);
+           font-size:clamp(14px,1.12vw,17px); line-height:1.55; color:var(--ink-dim); max-width:62ch; font-style:italic; }
+
+/* ── V2 progressive ────────────────────────────────────────── */
+.beats{ margin-top:clamp(26px,4.4vh,52px); flex:1; display:flex; flex-direction:column; justify-content:center; }
+.beat{ display:none; } .beat.on{ display:block; animation:fade .34s ease both; }
+@keyframes fade{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.beat .ic{ width:44px;height:44px;color:var(--accent);margin-bottom:18px; }
+.beat h2{ font-family:var(--display); font-weight:500; font-size:clamp(32px,3.6vw,52px); letter-spacing:-.02em; }
+.beat .holds{ margin-top:12px; font-size:clamp(16px,1.42vw,22px); max-width:44ch; line-height:1.45; }
+.beat .guard{ margin-top:clamp(20px,3vh,32px); grid-template-columns:1fr 1fr; gap:clamp(18px,2.4vw,40px); max-width:74ch; }
+.beat .guard div{ font-size:clamp(13px,1.06vw,16px); }
+.dots{ margin-top:clamp(22px,3.6vh,40px); display:flex; gap:9px; align-items:center; }
+.dots i{ width:26px;height:2px;background:var(--rail);display:block;transition:background .25s }
+.dots i.on{ background:var(--accent) }
+.dots small{ margin-left:12px; color:var(--ink-faint); font-size:11.5px; letter-spacing:.13em; text-transform:uppercase }
+.clickhint{ margin-top:14px; color:var(--ink-faint); font-size:12.5px }
+
+/* ── V3 split ──────────────────────────────────────────────── */
+.sparse{ flex:1; display:flex; flex-direction:column; justify-content:center; }
+.fourup{ margin-top:clamp(34px,6vh,68px); display:grid; grid-template-columns:repeat(4,1fr);
+         gap:clamp(16px,2.4vw,44px); max-width:1000px; }
+.fourup .c .ic{ width:32px;height:32px;color:var(--accent);margin-bottom:14px }
+.fourup .c h3{ font-family:var(--display);font-weight:500;font-size:clamp(17px,1.5vw,23px);letter-spacing:-.01em }
+.fourup .c p{ margin-top:7px;font-size:clamp(12.5px,1vw,15px);line-height:1.45;color:var(--ink-dim) }
+/* ── V4 hybrid: click through, then the whole vocabulary ───── */
+.fourup.hub .c{ cursor:pointer; padding:clamp(14px,1.8vw,22px) clamp(12px,1.4vw,18px);
+                border:1px solid transparent; border-radius:3px; transition:border-color .2s,background .2s }
+.fourup.hub .c:hover{ border-color:var(--rail); background:rgba(255,255,255,.025) }
+.fourup.hub .c .num{ font-family:var(--display); font-size:11px; letter-spacing:.16em; color:var(--ink-faint);
+                     display:block; margin-bottom:12px }
+.ovhead{ display:flex; align-items:baseline; gap:16px; flex-wrap:wrap }
+.ovhead .sub{ color:var(--ink-faint); font-size:12.5px; letter-spacing:.13em; text-transform:uppercase }
+
+.jump{ margin-top:clamp(30px,5vh,58px); display:inline-flex; align-items:center; gap:11px; cursor:pointer;
+       color:var(--accent); font-size:14px; font-weight:500; background:none;border:0;font-family:var(--text);
+       border-bottom:1px solid rgba(77,163,255,.35); padding-bottom:5px; align-self:flex-start }
+.jump:hover{ color:var(--accent-hi) }
+
+/* lab page (light rhythm break) */
+.lab{ background:var(--light-bg); color:var(--light-ink); }
+.lab .eyebrow{ color:var(--accent-dim) }
+.lab h1{ font-size:clamp(26px,3.1vw,42px) }
+.lab h1 em{ color:var(--accent-dim) }
+.lab .lede{ color:#48586B }
+.promptbox{ margin-top:clamp(20px,3vh,32px); background:#fff; border:1px solid #DFE4EA; border-radius:3px;
+            padding:clamp(16px,2.2vw,26px); max-width:74ch; }
+.promptbox pre{ font-family:var(--text); font-size:clamp(13px,1.05vw,15.5px); line-height:1.62;
+                white-space:pre-wrap; color:#1B2836 }
+.promptbox .bar{ margin-top:16px; display:flex; gap:10px; align-items:center }
+.copybtn{ font-family:var(--text);font-size:12.5px;font-weight:500;padding:7px 15px;border-radius:3px;
+          border:1px solid var(--accent-dim); background:var(--accent-dim); color:#fff; cursor:pointer }
+.look{ margin-top:22px; font-size:clamp(13px,1.05vw,15.5px); line-height:1.55; color:#48586B; max-width:64ch }
+.look b{ color:var(--light-ink); font-weight:600 }
+.lab .rail .spine{ background:#DBE1E8 } .lab .rung{ background:var(--light-bg); border-color:#C7D0DA }
+.lab .rung.on{ background:var(--accent-dim); border-color:var(--accent-dim); box-shadow:0 0 0 5px rgba(43,108,176,.12) }
+
+/* ── switcher / state readout ──────────────────────────────── */
+.bar-fixed{ position:fixed; left:0;right:0;bottom:0; height:76px; background:#050B15;
+            border-top:1px solid #16263A; display:flex; align-items:center; gap:10px;
+            padding:0 20px; z-index:50; font-family:var(--text); }
+.bar-fixed .tag{ font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#C2410C;font-weight:600;
+                 border:1px solid #7C2D12;padding:4px 8px;border-radius:2px;margin-right:6px;white-space:nowrap }
+.vbtn{ font-family:var(--text);font-size:12.5px;font-weight:500;padding:9px 15px;border-radius:3px;
+       border:1px solid #1E3350;background:transparent;color:var(--ink-dim);cursor:pointer;white-space:nowrap }
+.vbtn:hover{ border-color:var(--accent-dim);color:var(--ink) }
+.vbtn.on{ background:var(--accent);border-color:var(--accent);color:#04101F;font-weight:600 }
+.state{ margin-left:auto; display:flex; gap:26px; align-items:center; text-align:right }
+.state div{ font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint) }
+.state div b{ display:block;font-family:var(--display);font-size:20px;letter-spacing:-.01em;
+              color:var(--accent-hi);font-weight:500;margin-top:3px;text-transform:none }
+@media(max-width:900px){ .step{grid-template-columns:1fr} .fourup{grid-template-columns:repeat(2,1fr)}
+  .beat .guard{grid-template-columns:1fr} .state{display:none} }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage"></div>
+
+<div class="bar-fixed">
+  <span class="tag">Prototyp · wegwerfen</span>
+  <button class="vbtn" data-v="1">1 · Volle Dichte</button>
+  <button class="vbtn" data-v="2">2 · Schrittweise</button>
+  <button class="vbtn" data-v="3">3 · Geteilt</button>
+  <button class="vbtn" data-v="4">4 · Durchklicken + Übersicht</button>
+  <div class="state">
+    <div>Wörter auf dem Schirm<b id="wc">–</b></div>
+    <div>Stille Lesezeit<b id="rt">–</b></div>
+    <div>Klicks bis fertig<b id="ck">–</b></div>
+  </div>
+</div>
+
+<script>
+/* ─── content: real, decided copy from ticket 02 ─────────────── */
+const IC = {
+  erk:`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 16h.01"/></svg>`,
+  auf:`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a2 2 0 0 0 2 2h4"/><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2z"/><path d="M9 14h6"/><path d="M12 11v6"/></svg>`,
+  aub:`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12.8 2.5 8.2 4.6a1 1 0 0 1 0 1.7l-8.2 4.7a1.6 1.6 0 0 1-1.6 0L3 8.8a1 1 0 0 1 0-1.7l8.2-4.6a1.6 1.6 0 0 1 1.6 0z"/><path d="m3 13 8.2 4.7a1.6 1.6 0 0 0 1.6 0L21 13"/><path d="m3 17.5 8.2 4.7a1.6 1.6 0 0 0 1.6 0l8.2-4.7"/></svg>`,
+  hin:`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-4.7-4.7"/><path d="m7.6 10.6 2.1 2.1 4-4.2"/></svg>`
+};
+const STEPS = [
+  { k:'erk', n:'Erklären',
+    hold:'nur ein Thema, das Sie nicht kennen.',
+    grenze:'Sich orientieren ja. Sich auf Zahlen verlassen, die Sie weitergeben, nein.',
+    gegen:'Alles, was Sie zitieren würden, an der Quelle prüfen. Das ausgesprochene Sicherheitsgefühl ignorieren — es ist nahezu konstant, ob die Antwort stimmt oder nicht.' },
+  { k:'auf', n:'Aufsetzen',
+    hold:'nichts. Leeres Blatt.',
+    grenze:'Erster Entwurf ja, Endfassung nein. Zwei Kollegen mit demselben Briefing bekommen denselben Text.',
+    gegen:'Die letzte Version schreiben immer Sie. Eigenes Beispiel mitgeben, sonst klingt es wie alle.' },
+  { k:'aub', n:'Aufbereiten',
+    hold:'etwas, aber in der falschen Form: der Bericht vom Kollegen, das Angebot, die 40 Seiten vor der Sitzung.',
+    grenze:'Ein begrenztes Dokument ja, zwanzig nein. Die Antwort muss im Text stehen — liegt sie zwischen zwei Quellen, die sich widersprechen, sind Sie draußen.',
+    gegen:'Stapel halbieren, zweimal fragen: tauchen neue Punkte auf, war Durchgang eins nicht vollständig. Bei Vergleichen: Reihenfolge tauschen und neu fragen.' },
+  { k:'hin', n:'Hinterfragen',
+    hold:'etwas Fertiges, und es muss halten.',
+    grenze:'Einwände erzeugen ja. Ein Urteil abgeben nein.',
+    gegen:'Nie „ist das gut?“, immer „was sind die drei stärksten Einwände?“. Prämisse umdrehen: argumentiert es die Gegenseite genauso überzeugt, hat es gespiegelt, nicht argumentiert.' }
+];
+const LOOP = 'Jeden dieser vier Schritte können Sie auch schleifen — dann wird daraus ein Prozess statt eines Gesprächs.';
+const RAIL = r => `<div class="rail"><div class="spine"></div><div class="rungs">${
+  [0,1,2,3].map(i=>`<div class="rung${i===r?' on':''}"></div>`).join('')}</div></div>`;
+const HEAD = `<div class="eyebrow">Grundlagen · Abschluss</div>
+  <h1>Vier Schritte, nach dem <em>was Sie in der Hand halten</em></h1>`;
+
+/* ─── variant 1 — full density, read in silence ──────────────── */
+function v1(){ return RAIL(1) + `<div class="page">${HEAD}
+  <p class="lede">Kein Katalog von Fähigkeiten, sondern eine Sortierhilfe für Ihre eigene Arbeit. Jeder Schritt hat eine Grenze — und einen Zug, der sie schlägt.</p>
+  <div class="steps">${STEPS.map(s=>`
+    <div class="step">${IC[s.k]}
+      <div><h3>${s.n}</h3><div class="holds"><b>Sie halten</b>${s.hold}</div></div>
+      <div class="guard">
+        <div><span>Grenze</span>${s.grenze}</div>
+        <div class="anti"><span>Gegenmittel</span>${s.gegen}</div>
+      </div>
+    </div>`).join('')}
+  </div>
+  <p class="loopline">${LOOP}</p>
+</div>`; }
+
+/* ─── variant 2 — progressive disclosure, one beat per click ─── */
+let beat = 0;
+function v2(){ return RAIL(1) + `<div class="page"><div class="eyebrow">Grundlagen · Abschluss</div>
+  <div class="beats">${STEPS.map((s,i)=>`
+    <div class="beat${i===beat?' on':''}">${IC[s.k]}
+      <h2>${s.n}</h2>
+      <div class="holds"><b>Sie halten</b>${s.hold}</div>
+      <div class="guard">
+        <div><span>Grenze</span>${s.grenze}</div>
+        <div class="anti"><span>Gegenmittel</span>${s.gegen}</div>
+      </div>
+    </div>`).join('')}
+    <div class="dots">${STEPS.map((s,i)=>`<i class="${i<=beat?'on':''}"></i>`).join('')}
+      <small>Schritt ${beat+1} von 4 — ${STEPS[beat].n}</small></div>
+    <div class="clickhint">Klicken oder → für den nächsten Schritt</div>
+  </div></div>`; }
+
+/* ─── variant 3 — sparse theory, depth lives in the lab ──────── */
+let split = 'theory';
+function v3(){
+  if(split==='theory') return RAIL(1) + `<div class="page"><div class="sparse">${HEAD}
+    <p class="lede">Vier Schritte. Wir gehen sie einzeln durch — und Sie probieren jeden aus.</p>
+    <div class="fourup">${STEPS.map(s=>`<div class="c">${IC[s.k]}<h3>${s.n}</h3>
+      <p>Sie halten ${s.hold.split(':')[0].split('.')[0]}.</p></div>`).join('')}</div>
+    <button class="jump" onclick="split='lab';render()">Weiter zu Lab 3 · Aufbereiten →</button>
+  </div></div>`;
+  return RAIL(2) + `<div class="page"><div class="eyebrow">Lab 3 · Aufbereiten</div>
+    <h1>Die 40 Seiten <em>vor der Sitzung</em></h1>
+    <p class="lede">Sie halten etwas, aber in der falschen Form. Der Bericht liegt vor — die Sitzung ist in zwanzig Minuten.</p>
+    <div class="promptbox"><pre>Hier ist ein Bericht von 40 Seiten. Ich gehe in 20 Minuten
+in eine Sitzung mit dem Vorstand.
+
+Bereiten Sie mir das so auf, dass ich mitreden kann:
+– fünf Punkte, die ich kennen muss
+– jede Entscheidung, die dieser Bericht verlangt
+– jede offene Frage, die noch niemand beantwortet hat
+
+Schreiben Sie nichts, was nicht im Text steht.</pre>
+      <div class="bar"><button class="copybtn">Prompt kopieren</button>
+        <span style="font-size:12px;color:#6B7A8C">Bericht_Q3.pdf herunterladen</span></div></div>
+    <p class="look"><b>Worauf Sie achten:</b> Halbieren Sie den Stapel und fragen Sie zweimal. Tauchen neue Punkte auf, war Durchgang eins nicht vollständig — und Sie wissen jetzt, warum zwanzig Dokumente auf einmal nicht funktionieren.</p>
+    <button class="jump" onclick="split='theory';render()">← Zurück zur Übersicht</button>
+  </div>`;
+}
+
+/* ─── variant 4 — click through, then all four together ─────── */
+let hb = 0;                                   // 0–3 = steps, 4 = overview
+function jumpTo(i){ hb = i; render(); }
+function v4(){
+  if(hb < 4){
+    const s = STEPS[hb];
+    return RAIL(1) + `<div class="page"><div class="eyebrow">Grundlagen · Abschluss</div>
+      <div class="beats"><div class="beat on">${IC[s.k]}
+        <h2>${s.n}</h2>
+        <div class="holds"><b>Sie halten</b>${s.hold}</div>
+        <div class="guard">
+          <div><span>Grenze</span>${s.grenze}</div>
+          <div class="anti"><span>Gegenmittel</span>${s.gegen}</div>
+        </div></div>
+        <div class="dots">${[0,1,2,3,4].map(i=>`<i class="${i<=hb?'on':''}"></i>`).join('')}
+          <small>Schritt ${hb+1} von 4 — ${s.n}</small></div>
+        <div class="clickhint">Klicken oder → weiter</div>
+      </div></div>`;
+  }
+  return RAIL(1) + `<div class="page"><div class="sparse">
+    <div class="ovhead"><div class="eyebrow" style="margin:0">Grundlagen · Abschluss</div>
+      <span class="sub">Alle vier zusammen</span></div>
+    <h1 style="margin-top:18px">Vier Schritte, nach dem <em>was Sie in der Hand halten</em></h1>
+    <div class="fourup hub">${STEPS.map((s,i)=>`
+      <div class="c" onclick="event.stopPropagation();jumpTo(${i})">
+        <span class="num">0${i+1}</span>${IC[s.k]}<h3>${s.n}</h3>
+        <p>Sie halten ${s.hold.replace(/[:.].*$/,'')}.</p></div>`).join('')}
+    </div>
+    <p class="loopline">${LOOP}</p>
+    <div class="dots" style="margin-top:clamp(20px,3vh,34px)">${[0,1,2,3,4].map(()=>`<i class="on"></i>`).join('')}
+      <small>Übersicht — jeder Schritt anklickbar</small></div>
+  </div></div>`;
+}
+
+/* ─── render + state readout ─────────────────────────────────── */
+let V = +(new URLSearchParams(location.search).get('v')) || 4;
+function render(){
+  const st = document.getElementById('stage');
+  st.className = 'stage' + (V===3 && split==='lab' ? ' lab' : '');
+  st.innerHTML = V===1 ? v1() : V===2 ? v2() : V===3 ? v3() : v4();
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.toggle('on', +b.dataset.v===V));
+  const words = (st.innerText.match(/\S+/g)||[]).length;
+  document.getElementById('wc').textContent = words;
+  document.getElementById('rt').textContent = Math.max(1,Math.round(words/200*60)) + ' s';
+  document.getElementById('ck').textContent = V===1 ? '0' : V===2 ? '3' : V===3 ? '1' : '4';
+  history.replaceState(null,'','?v='+V);
+}
+document.querySelectorAll('.vbtn').forEach(b=>b.onclick=()=>{ V=+b.dataset.v; beat=0; hb=0; split='theory'; render(); });
+document.addEventListener('keydown',e=>{
+  if(V===2){
+    if(e.key==='ArrowRight'||e.key===' '){ beat=Math.min(3,beat+1); render(); }
+    if(e.key==='ArrowLeft'){ beat=Math.max(0,beat-1); render(); }
+  }
+  if(V===4){
+    if(e.key==='ArrowRight'||e.key===' '){ hb=Math.min(4,hb+1); render(); }
+    if(e.key==='ArrowLeft'){ hb=Math.max(0,hb-1); render(); }
+  }
+});
+document.addEventListener('click',e=>{
+  if(e.target.closest('.bar-fixed')) return;
+  if(V===2){ beat=(beat+1)%4; render(); }
+  if(V===4 && hb<4){ hb++; render(); }
+});
+render();
+</script>
+</body>
+</html>
