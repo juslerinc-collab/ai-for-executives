@@ -1,52 +1,47 @@
-<section class="beat wide navy-bg" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Ein Protokoll, drei Empfänger" data-locked="false" data-surface="navy">
+<section class="beat wide navy-bg" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Showcase" data-sub="Ein Protokoll, drei Empfänger" data-locked="false" data-surface="navy">
   <div class="beat-inner">
-    <div class="eyebrow">Showcase</div>
     <h1>Ein Protokoll, drei <span class="k">Empfänger</span>.</h1>
-    <p class="lede">Ihre Hand geht jetzt nicht ans Artefakt — Sie schauen zu. Die einzige Stelle in beiden Sitzungen, an der das so ist.</p>
-    <ul class="bullets">
-      <li><strong>Grundlage:</strong> ein normales Sitzungsprotokoll einer Pensionskasse — neun Traktanden, drei Seiten</li>
-      <li><strong>Ablauf:</strong> ein Gespräch, drei Prompts, Ihre eigene Reihenfolge</li>
-      <li>Zuhören – Essenz erarbeiten – umsetzen</li>
-    </ul>
+    <p class="lede">Ein Dokument, vier Prompts, drei Empfänger — die einander nie zu Gesicht bekommen.</p>
 
-    <div class="outs">
-      <div class="glass out">
-        <div class="out-label">Prompt 1 · Essenz</div>
-        <p><em>„Das ist ein Sitzungsprotokoll. Fass mir in fünf Zeilen zusammen, was entschieden wurde und was
-        offen bleibt. Nicht mehr.“</em></p>
-        <ul class="bullets tight" style="margin-top:10px">
-          <li>Entschieden: Jahresrechnung, Verzinsung 1.25%, Rebalancing, Teilliquidation per 31. August</li>
-          <li>Offen: Umwandlungssatz, technischer Zinssatz, Kommunikation</li>
+    <div class="showcase-body">
+      <aside class="glass source-card">
+        <div class="source-label">Die Grundlage</div>
+        <h3>Sitzungsprotokoll einer Pensionskasse</h3>
+        <ul class="source-meta">
+          <li>neun Traktanden</li>
+          <li>drei Seiten</li>
+          <li>unbearbeitet, so wie es ankam</li>
         </ul>
-      </div>
-      <div class="glass out">
-        <div class="out-label">Prompt 2 · Mail an die Personalleiterin</div>
-        <p><em>„Schreib daraus eine kurze E-Mail an die Personalleiterin. Drei Absätze: was sie wissen muss, was
-        von ihr gebraucht wird, bis wann. Freundlich, aber ohne Umschweife.“</em></p>
-        <ul class="bullets tight" style="margin-top:10px">
-          <li>Nennt Datenliefertermin 31. Juli (Teilliquidation)</li>
-          <li>Nennt Personalorientierungen im September</li>
-          <li>So nirgends im Protokoll formuliert</li>
-        </ul>
-      </div>
-      <div class="glass out">
-        <div class="out-label">Prompt 3 · für die Versicherten</div>
-        <p><em>„Und jetzt dasselbe für die Versicherten: ein Absatz, keine Fachbegriffe. Wenn ein Begriff sein
-        muss, erklär ihn in einem Nebensatz.“</em></p>
-        <ul class="bullets tight" style="margin-top:10px">
-          <li>Derselbe Inhalt, ohne Fachbegriffe wie Deckungsgrad, BVV 2, Umwandlungssatz</li>
-          <li>Oder mit diesen Begriffen, aber erklärt</li>
-        </ul>
+        <img class="source-illu" src="{{ASSET:meeting-protocol}}" alt="">
+      </aside>
+
+      <div class="stepper prompt-flow">
+        <div class="outs">
+          <div class="glass out active" data-step="Essenz">
+            <div class="out-to">an Sie selbst</div>
+            <p><em>„Das ist ein Sitzungsprotokoll. Fass mir in fünf Zeilen zusammen, was entschieden wurde und was
+            offen bleibt. Nicht mehr.“</em></p>
+          </div>
+          <div class="glass out" data-step="Personalleiterin">
+            <div class="out-to">an die Personalleiterin</div>
+            <p><em>„Schreib daraus eine kurze E-Mail an die Personalleiterin. Drei Absätze: was sie wissen muss, was
+            von ihr gebraucht wird, bis wann. Freundlich, aber ohne Umschweife.“</em></p>
+          </div>
+          <div class="glass out" data-step="Versicherte">
+            <div class="out-to">an die Versicherten</div>
+            <p><em>„Und jetzt dasselbe für die Versicherten: ein Absatz, keine Fachbegriffe. Wenn ein Begriff sein
+            muss, erklär ihn in einem Nebensatz.“</em></p>
+          </div>
+          <div class="glass out" data-step="Kontrolle">
+            <div class="out-to">zurück an Claude</div>
+            <p><em>„Warte — im Protokoll steht 1.25%, nicht 1.5%, wie du in der Mail geschrieben hast. Bitte
+            korrigieren, bevor ich das verschicke.“</em></p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <p class="regie-say">„Das ist nicht das, was Sie abgeben. Das ist das, was Sie sonst um halb sieben abends
-    anfangen zu schreiben.“</p>
-
-    <p class="regie-say">Die Prüfung: eine Zahl nachschlagen — Deckungsgrad 108.4%, Frist 31. Juli,
-    Verzinsung 1.25%. „Bevor das rausgeht, schaue ich eine Zahl nach. Das ist die einzige Gewohnheit, die Sie
-    heute wirklich brauchen.“</p>
-
-    <img class="illu" src="{{ASSET:meeting-protocol}}" alt="">
+    <p class="showcase-note">Kein einziger Sachverhalt neu getippt — der Kontext bleibt im Gespräch liegen.
+    Der letzte Prompt ist der wichtigste: <strong>Sie</strong> haben die Zahl geprüft.</p>
   </div>
 </section>

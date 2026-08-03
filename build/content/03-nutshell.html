@@ -1,120 +1,183 @@
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Intro" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="AI in a nutshell" data-sub="Intro" data-locked="false">
   <div class="beat-inner">
-    <div class="eyebrow">AI in a nutshell</div>
     <h1>Der Assistent, den Sie sich schon immer <span class="k">gewünscht</span> haben.</h1>
-    <p class="lede">Stellen Sie sich eine Kollegin vor, die Sie gerade eingestellt haben:</p>
+    <p class="lede">Stellen Sie sich einen Assistenten vor, den Sie gerade eingestellt haben:</p>
     <ul class="bullets">
       <li>Extrem belesen, nie müde, auch spät abends verfügbar</li>
-      <li>Ohne Erinnerung an gestern — wenn Sie sie nicht erinnern</li>
+      <li>Ohne Erinnerung an gestern — wenn Sie ihn nicht erinnern</li>
       <li>Manchmal selbstsicher falsch</li>
-      <li>Ihre Aufgabe: nicht verstehen, wie sie tickt — sondern sie gut instruieren</li>
+      <li>Ihre Aufgabe: nicht verstehen, wie er tickt — sondern ihn gut instruieren</li>
     </ul>
-    <p class="lede" style="margin-top:16px">Genau das lernen Sie jetzt: vier Dinge, die diese Kollegin von jeder anderen unterscheiden.</p>
+    <p class="lede" style="margin-top:16px">Claude ist dabei kein einfaches Textfeld, sondern selbst ein
+    Agent: Ein System-Prompt gibt ihm Rolle und Leitplanken mit, er kann Werkzeuge aufrufen, Zwischenschritte
+    planen und sein Ergebnis prüfen, bevor er antwortet — genau das lernen Sie jetzt in vier Prinzipien.</p>
+    <div class="logo-row">
+      <div class="logo-chip"><img src="{{ASSET:logo-claude}}" alt="Claude"><span>Claude</span></div>
+      <div class="logo-chip"><img src="{{ASSET:logo-chatgpt}}" alt="ChatGPT"><span>ChatGPT</span></div>
+      <div class="logo-chip"><img src="{{ASSET:logo-perplexity}}" alt="Perplexity"><span>Perplexity</span></div>
+    </div>
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — KI, ML, LLM" data-locked="false">
+<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="KI · ML · LLM" data-sub="KI, ML, LLM" data-locked="false">
   <div class="beat-inner">
-    <div class="eyebrow">a · Container-Diagramm</div>
     <h1>KI ⊃ ML ⊃ <span class="k">LLM</span></h1>
-    <ul class="bullets">
-      <li><strong>Künstliche Intelligenz</strong> — der weiteste Rahmen: jedes System, das Aufgaben löst, für die man sonst menschliches Urteil bräuchte</li>
-      <li><strong>Maschinelles Lernen</strong> — die Teilmenge, die aus Daten lernt statt aus fest programmierten Regeln</li>
-      <li><strong>Large Language Model</strong> — wiederum eine Teilmenge davon: trainiert auf Text, sagt das jeweils plausibelste nächste Wort voraus</li>
-      <li>Claude ist ein LLM mit Oberfläche, Werkzeugen und Regeln obendrauf</li>
-    </ul>
+    <p class="lede">Drei ineinander verschachtelte Kreise — jeder eine Teilmenge des vorigen.</p>
+
+    <div class="nest-grid">
+      <img class="illu nest-illu" src="{{ASSET:ki-ml-llm-diagram}}" alt="Drei ineinander verschachtelte Kreise: KI umfasst ML, ML umfasst LLM">
+      <div class="nest-legend">
+        <div class="nest-row"><span class="nest-tag">KI</span><p>Jedes System, das Aufgaben löst, für die man sonst einen Menschen gebraucht hätte.</p></div>
+        <div class="nest-row"><span class="nest-tag">ML</span><p>Die Teilmenge davon, die aus Daten lernt — statt nach fest programmierten Regeln zu arbeiten.</p></div>
+        <div class="nest-row"><span class="nest-tag">LLM</span><p>Die Teilmenge davon, die auf Text trainiert ist und Wort für Wort das plausibelste nächste vorhersagt.</p></div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:18px">Kurz: Claude ist ein LLM — mit Oberfläche, Werkzeugen und Regeln obendrauf.</p>
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Context is king" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Für Ihren neuen Assistenten" data-sub="Überblick Prinzipien" data-locked="false">
   <div class="beat-inner">
-    <div class="eyebrow">b · Prinzip 1</div>
-    <h1>Context is <span class="k">king</span>.</h1>
-    <p class="lede">Das Gespräch ist wie ein Arbeitsgedächtnis:</p>
-    <ul class="bullets">
-      <li>Was auf dem Tisch liegt, kann benutzt werden</li>
-      <li>Was nicht angehängt oder gesagt wurde, existiert für das Modell schlicht nicht — auch wenn Sie es gestern besprochen haben</li>
-      <li>Je voller das Arbeitsgedächtnis, desto mehr verwässert die Aufmerksamkeit — „context rot“</li>
-      <li>Deshalb: ein neuer, aufgeräumter Chat für ein neues Thema lohnt sich öfter, als man denkt</li>
-    </ul>
-    <p class="lede" style="margin-top:16px">Der Handgriff, der bleibt: eine Zahl, die Sie zitieren würden, an der
-    Quelle nachschlagen — nicht weil das Modell besonders oft lügt, sondern weil Sie nie sehen, ob sie aus dem
-    Dokument stammt oder aus einer plausiblen Lücke.</p>
+    <h1>Vier Prinzipien für Ihren neuen <span class="k">Assistenten</span>.</h1>
+    <p class="lede">Stellen Sie sich vor, Sie hätten einen neuen, hochqualifizierten Assistenten eingestellt —
+    ein Mensch, physisch in Ihrem Büro. Die folgenden vier Grundregeln gelten für ihn genauso wie für Claude.
+    Das ist das <em>Wie</em>: wie Sie mit ihm sprechen.</p>
+    <div class="principle-grid">
+      <div class="glass-lt principle-card"><div class="principle-num">1</div>
+        <div class="principle-txt"><h3>Instruieren</h3><p>Gedanken lesen kann er nicht — sagen Sie es ihm.</p></div></div>
+      <div class="glass-lt principle-card"><div class="principle-num">2</div>
+        <div class="principle-txt"><h3>Kontext geben</h3><p>Was nicht auf dem Tisch liegt, gibt es nicht.</p></div></div>
+      <div class="glass-lt principle-card"><div class="principle-num">3</div>
+        <div class="principle-txt"><h3>Outputs prüfen</h3><p>Selbstsicher vorgetragen heisst noch lange nicht richtig.</p></div></div>
+      <div class="glass-lt principle-card"><div class="principle-num">4</div>
+        <div class="principle-txt"><h3>Erweitern</h3><p>Was Sie ihm in den Rucksack packen, kann er benutzen.</p></div></div>
+    </div>
+    <p class="regie-say" style="margin-top:18px">Vier Sätze zum Mitnehmen: sagen Sie es ihm, geben Sie ihm den
+    Tisch, glauben Sie ihm nicht blind, packen Sie ihm Werkzeug ein.</p>
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Confidently wrong" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Prinzip 1 · Instruieren" data-sub="Eine bessere Instruktion" data-locked="false">
   <div class="beat-inner">
-    <div class="eyebrow">c · Prinzip 2</div>
+    <div class="principle-tag">Prinzip 1 · Instruieren</div>
+    <h1>Instruieren Sie wie einen neuen <span class="k">Assistenten</span>.</h1>
+
+    <div class="pbody tight">
+      <div class="pcol">
+        <div class="pblock">
+          <div class="plabel">Kurz erklärt</div>
+          <p class="pshort">Das Modell rät nicht, was Sie gemeint haben — es arbeitet mit dem, was dasteht.
+          Nennen Sie Aufgabe, Zielgruppe, Form und Zweck in ganzen Sätzen, und das Ergebnis liegt näher an dem,
+          was Sie im Kopf hatten. Und wenn Sie die gute Instruktion nicht kennen: fragen Sie danach.</p>
+        </div>
+        <div class="pblock">
+          <div class="plabel">Beispiel</div>
+          <div class="analogy"><strong>Wie bei einem neuen Assistenten im Büro:</strong> Sagen Sie ihm nicht, was
+          Sie erwarten, wird er es nicht erraten — natürlich klappt es dann nicht. Je klarer die Instruktion,
+          desto näher das Ergebnis an dem, was Sie im Kopf hatten.</div>
+        </div>
+      </div>
+      <img class="pillu" src="{{ASSET:principle-instruction-note}}" alt="">
+    </div>
+
+    <p class="lede" style="margin-top:20px;font-size:14px">Eine Aufgabe, vier Durchläufe:
+    <em>„eine Einladung zu einem internen Workshop schreiben.“</em></p>
+    <div class="stepper">
+      <div class="outs">
+        <div class="glass-lt out active" data-step="Faul"><p><em>„Schreib eine Einladung zu einem Workshop.“</em></p></div>
+        <div class="glass-lt out" data-step="Mit Kontext"><p><em>„Schreiben Sie eine Einladung zu einem internen Workshop zum Thema [X] für [Zielgruppe], am [Datum], Dauer [Y] Stunden — Ziel ist [Z].“</em></p></div>
+        <div class="glass-lt out" data-step="Mit Beispiel"><p><em>Wie 2, plus: „Hier ist eine frühere Einladung, die gut ankam: [Beispieltext] — orientieren Sie sich am Ton.“</em></p></div>
+        <div class="glass-lt out" data-step="Claude fragen"><p><em>„Ich möchte eine Einladung zu einem internen Workshop schreiben. Wie sollte ich Sie am besten instruieren, damit das Ergebnis gut wird?“</em></p></div>
+      </div>
+    </div>
+    <p class="regie-say">Kurz gesagt: Sie müssen die perfekte Anfrage nicht selbst kennen — fragen Sie danach.</p>
+  </div>
+</section>
+
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Prinzip 2 · Kontext geben" data-sub="Kontext geben" data-locked="false">
+  <div class="beat-inner">
+    <div class="principle-tag">Prinzip 2 · Kontext geben</div>
+    <h1>Kontext ist <span class="k">alles</span>.</h1>
+
+    <div class="pbody">
+      <div class="pcol">
+        <div class="pblock">
+          <div class="plabel">Kurz erklärt</div>
+          <p class="pshort">Das Gespräch ist das Arbeitsgedächtnis: Was auf dem Tisch liegt, kann benutzt werden.
+          Was Sie nicht angehängt oder gesagt haben, existiert für das Modell schlicht nicht — auch wenn Sie es
+          gestern besprochen haben. Und je voller der Tisch, desto mehr verwässert die Aufmerksamkeit
+          („context rot“).</p>
+        </div>
+        <div class="pblock">
+          <div class="plabel">Beispiel</div>
+          <div class="analogy"><strong>Wie bei einem neuen Assistenten im Büro:</strong> Er weiss, dass eine
+          E-Mail raus muss — aber nicht an wen, mit welchem Ton, mit welchem Anhang. Ohne diesen Kontext bleibt
+          ihm nur zu raten. Geben Sie ihn mit, und die Mail schreibt sich fast von selbst.</div>
+        </div>
+      </div>
+      <img class="pillu" src="{{ASSET:principle-context-table}}" alt="">
+    </div>
+
+    <p class="regie-say">Der Handgriff, der bleibt: alles mitgeben, was zur Aufgabe gehört — und für ein neues
+    Thema einen neuen, aufgeräumten Chat aufmachen. Das lohnt sich öfter, als man denkt.</p>
+  </div>
+</section>
+
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Prinzip 3 · Outputs prüfen" data-sub="Outputs prüfen" data-locked="false">
+  <div class="beat-inner">
+    <div class="principle-tag">Prinzip 3 · Outputs prüfen</div>
     <h1>Selbstsicher falsch ist ein <span class="k">Mechanismus</span>, kein Charakterfehler.</h1>
-    <ul class="bullets">
-      <li>Das Modell sagt in jedem Schritt nur das wahrscheinlichste nächste Wort voraus</li>
-      <li>Im Training wurde eine überzeugend klingende, aber falsche Antwort im Zweifel besser bewertet als ein ehrliches „ich weiss es nicht“</li>
-      <li>Deshalb klingt eine falsche Antwort fast identisch zu einer richtigen — der Tonfall ist kein verlässliches Signal</li>
-      <li>Das ausgesprochene Sicherheitsgefühl ignorieren: es ist nahezu konstant, ob die Antwort stimmt oder nicht</li>
-      <li>Prüfen bleibt Ihre Aufgabe, nicht ein Zeichen von Misstrauen</li>
-    </ul>
-  </div>
-</section>
 
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Eine bessere Instruktion" data-locked="false">
-  <div class="beat-inner">
-    <div class="eyebrow">d · Prinzip 3</div>
-    <h1>Instruieren Sie wie eine neue <span class="k">Kollegin</span>.</h1>
-    <p class="lede">Eine Aufgabe, vier Durchläufe: <em>„eine Einladung zu einem internen Workshop schreiben.“</em></p>
-    <div class="outs">
-      <div class="glass out"><div class="out-label">1 · Faul</div><p><em>„Schreib eine Einladung zu einem Workshop.“</em></p></div>
-      <div class="glass out"><div class="out-label">2 · Mit Kontext</div><p><em>„Schreiben Sie eine Einladung zu einem internen Workshop zum Thema [X] für [Zielgruppe], am [Datum], Dauer [Y] Stunden — Ziel ist [Z].“</em></p></div>
-      <div class="glass out"><div class="out-label">3 · Mit Beispiel</div><p><em>Wie 2, plus: „Hier ist eine frühere Einladung, die gut ankam: [Beispieltext] — orientieren Sie sich am Ton.“</em></p></div>
-      <div class="glass out"><div class="out-label">4 · Claude instruieren lassen</div><p><em>„Ich möchte eine Einladung zu einem internen Workshop schreiben. Wie sollte ich Sie am besten instruieren, damit das Ergebnis gut wird?“</em></p></div>
+    <div class="pbody">
+      <div class="pcol">
+        <div class="pblock">
+          <div class="plabel">Kurz erklärt</div>
+          <p class="pshort">Das Modell sagt in jedem Schritt nur das wahrscheinlichste nächste Wort voraus — und
+          im Training wurde eine überzeugend klingende falsche Antwort im Zweifel besser bewertet als ein
+          ehrliches „ich weiss es nicht“. Deshalb klingt Falsches fast genau wie Richtiges: Der Tonfall ist kein
+          Signal, das Sicherheitsgefühl bleibt nahezu konstant. Prüfen bleibt Ihre Aufgabe — kein Zeichen von
+          Misstrauen.</p>
+        </div>
+        <div class="pblock">
+          <div class="plabel">Beispiel</div>
+          <div class="analogy"><strong>Wie bei einem neuen Assistenten im Büro:</strong> Manche widersprechen
+          ungern und sagen lieber selbstbewusst irgendetwas, als zuzugeben, dass sie es nicht wissen. Genau davor
+          sind auch Sie hier nicht sicher — deshalb prüfen Sie, statt dem Tonfall zu vertrauen.</div>
+        </div>
+      </div>
+      <img class="pillu" src="{{ASSET:principle-check-magnifier}}" alt="">
     </div>
-    <p class="regie-say">„Sie müssen die perfekte Anfrage nicht selbst kennen — fragen Sie danach.“</p>
+
+    <p class="regie-say">Der Handgriff, der bleibt: eine Zahl, die Sie zitieren würden, an der Quelle
+    nachschlagen — nicht weil das Modell besonders oft lügt, sondern weil Sie nie sehen, ob sie aus dem Dokument
+    stammt oder aus einer plausiblen Lücke.</p>
   </div>
 </section>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Schichten" data-locked="false">
+<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Prinzip 4 · Erweitern" data-sub="Erweitern" data-locked="false">
   <div class="beat-inner">
-    <div class="eyebrow">e · Prinzip 4</div>
-    <h1>Ein <span class="k">Produkt</span>, gebaut auf einem Modell — nicht das Modell selbst.</h1>
-    <p class="lede">Zwischen dem rohen Modell und dem, was Sie tippen, liegen mehrere Schichten:</p>
-    <ul class="bullets">
-      <li>Das Grundmodell</li>
-      <li>Ein Feintuning für bestimmtes Verhalten</li>
-      <li>Ein System-Prompt mit festen Regeln</li>
-      <li>Eine Oberfläche</li>
-      <li>Werkzeuge, die das Modell aufrufen kann (Websuche, Dateien, Rechnen)</li>
-    </ul>
-    <ul class="bullets" style="margin-top:16px">
-      <li>Offene oder geschlossene Modellgewichte — sagt nichts über Qualität, nur über Zugang</li>
-      <li>Dieselbe Firma tritt oft mit mehreren Oberflächen an — ein Chat-Fenster ist nur eine davon</li>
-    </ul>
-  </div>
-</section>
+    <div class="principle-tag">Prinzip 4 · Erweitern</div>
+    <h1>Ihr Assistent lässt sich mit praktisch jedem <span class="k">Werkzeug</span> verbinden.</h1>
 
-<section class="beat" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Nutshell — Projekte in Claude" data-locked="false">
-  <div class="beat-inner">
-    <div class="eyebrow">f · Projekte</div>
-    <h1>Ein Arbeitsbereich mit eigenem <span class="k">Gedächtnis</span>.</h1>
-    <ul class="bullets">
-      <li>Für ein wiederkehrendes Thema — Mandat, Kunde, Projekt — legen Sie ein „Projekt“ an</li>
-      <li>Dokumente und Kontext bleiben dort liegen, ohne dass Sie sie jedes Mal neu anhängen müssen</li>
-      <li>Mehr dazu (eigene wiederverwendbare Skills) gehört in Sitzung 2</li>
-    </ul>
-  </div>
-</section>
-
-<section class="beat wide" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-sub="Gehört das überhaupt hierher?" data-locked="false">
-  <div class="beat-inner">
-    <div class="eyebrow">g · Die Grenze vor der Grenze</div>
-    <h1>Gehört das überhaupt <span class="k">hierher</span>?</h1>
-    <p class="lede">Drei Fragen, bevor Sie überhaupt an KI denken:</p>
-    <div class="outs">
-      <div class="glass out"><div class="out-label">KI</div><p>Sprache rein, Sprache raus, Urteil im Spiel — „gut genug, und ich schaue drüber“ ist akzeptabel.</p></div>
-      <div class="glass out"><div class="out-label">Automatisierung</div><p>Die Regel steht, das Ergebnis muss jedes Mal exakt stimmen.</p></div>
-      <div class="glass out"><div class="out-label">Bleibt bei Ihnen</div><p>Entscheidung, Verantwortung, Beziehung — oder die Antwort steht zwischen zwei Quellen, die sich widersprechen.</p></div>
+    <div class="pbody">
+      <div class="pcol">
+        <div class="pblock">
+          <div class="plabel">Kurz erklärt</div>
+          <p class="pshort">Das Gespräch ist nur die Oberfläche — dahinter docken Werkzeuge an. E-Mail, Kalender,
+          Dateien, Datenbanken, interne Tools: alles, wofür es eine Schnittstelle gibt (technisch: MCP), dazu
+          Websuche für Aktuelles und Rechnen für Präzision. Mit jedem Werkzeug wächst, was Ihr Assistent
+          erledigen kann — instruiert wird trotzdem gleich.</p>
+        </div>
+        <div class="pblock">
+          <div class="plabel">Beispiel</div>
+          <div class="analogy"><strong>Wie bei einem neuen Assistenten im Büro:</strong> Sie packen ihm Zugang zu
+          Ihrem CRM oder zur Websuche einfach in den Rucksack — plötzlich kann er Dinge erledigen, für die er
+          vorher zu Ihnen gekommen wäre.</div>
+        </div>
+      </div>
+      <img class="pillu" src="{{ASSET:principle-tools-hub}}" alt="">
     </div>
-    <p class="regie-say" style="margin-top:20px">Beispiel: Rechnungen gegen Bestellungen abgleichen — das ist
-    <strong>kein</strong> KI-Fall, das ERP macht den Drei-Wege-Abgleich exakt. KI kommt erst danach ins Spiel: bei
-    der Klärungsmail an den Lieferanten, wenn etwas nicht passt.</p>
+
+    <p class="regie-say">Die Frage ist also selten „kann das?“ — meistens „ist das schon angebunden?“.</p>
   </div>
 </section>

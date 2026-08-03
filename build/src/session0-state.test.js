@@ -63,23 +63,20 @@ test("selectReifegrad rejects an out-of-range level", () => {
   assert.throws(() => selectReifegrad(state, 0));
 });
 
-test("setAnswer updates a single question field by index, leaving others untouched", () => {
+test("setAnswer updates a single question field by index", () => {
   let state = createSession0State();
   state = setAnswer(state, "alltag", 0, "• Wochenberichte");
-  state = setAnswer(state, "alltag", 2, "• Delegieren");
 
   const payload = exportSession0(state);
   assert.equal(payload.alltag[0].answer, "• Wochenberichte");
-  assert.equal(payload.alltag[1].answer, "");
-  assert.equal(payload.alltag[2].answer, "• Delegieren");
   assert.equal(payload.alltag[0].question, ARBEITSALLTAG_QUESTIONS[0]);
 });
 
 test("setAnswer works for the ziel field group independently of alltag", () => {
   let state = createSession0State();
-  state = setAnswer(state, "ziel", 1, "• Weniger Abendarbeit");
+  state = setAnswer(state, "ziel", 0, "• Weniger Abendarbeit");
   const payload = exportSession0(state);
-  assert.equal(payload.ziel[1].answer, "• Weniger Abendarbeit");
+  assert.equal(payload.ziel[0].answer, "• Weniger Abendarbeit");
   assert.equal(payload.alltag.every((a) => a.answer === ""), true);
 });
 

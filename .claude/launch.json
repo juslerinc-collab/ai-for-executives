@@ -1,12 +1,6 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "prototypes",
-      "runtimeExecutable": "node",
-      "runtimeArgs": [".claude/static-server.mjs"],
-      "port": 4173,
-      "autoPort": true
-    }
+    { "name": "deck", "runtimeExecutable": "node", "runtimeArgs": [".claude/serve.mjs"], "port": 4173 }
   ]
 }

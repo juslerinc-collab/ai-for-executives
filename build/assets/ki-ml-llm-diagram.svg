@@ -1,0 +1,8 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Drei ineinander verschachtelte Kreise: KI, ML, LLM">
+  <circle cx="320" cy="340" r="300" fill="#7E97AC"/>
+  <circle cx="320" cy="360" r="220" fill="#3E5E7E"/>
+  <circle cx="320" cy="400" r="140" fill="#16324F"/>
+  <text x="320" y="95" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="30" font-weight="700" fill="#fff">KI</text>
+  <text x="320" y="205" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="26" font-weight="700" fill="#fff">Machine Learning</text>
+  <text x="320" y="410" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="24" font-weight="700" fill="#fff">LLM</text>
+</svg>

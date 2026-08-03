@@ -28,12 +28,11 @@ const jsFileOrder = [
   "seed-config.js",
   "download-helper.js",
   "session0-state.js",
-  "backlog-state.js",
   "rail-position.js",
   "shell-client.js",
+  "reveal-client.js",
   "session0-client.js",
   "lab-client.js",
-  "backlog-client.js",
   "handout-client.js",
 ];
 const js = jsFileOrder
@@ -102,10 +101,7 @@ ${css}
   </div>
 </div>
 
-<div id="nav">
-  <div id="rail"></div>
-  <div id="menu"></div>
-</div>
+<nav id="navtop" aria-label="Folien"></nav>
 <div id="mark"></div>
 
 <div id="slides">

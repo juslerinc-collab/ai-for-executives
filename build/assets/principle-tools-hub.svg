@@ -1,0 +1,35 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ein zentrales Gespräch, an das vier Werkzeuge angebunden sind: E-Mail, Kalender, Dateien, Suche">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- cables -->
+    <path d="M258 268 C 200 240, 168 200, 152 150"/>
+    <path d="M382 268 C 440 240, 472 200, 488 150"/>
+    <path d="M258 372 C 200 400, 168 440, 152 490"/>
+    <path d="M382 372 C 440 400, 472 440, 488 490"/>
+
+    <!-- hub: the conversation -->
+    <rect x="238" y="248" width="164" height="144" rx="28" fill="#D3E2F8"/>
+    <path d="M282 296 L358 296"/>
+    <path d="M282 330 L334 330"/>
+    <path d="M282 364 L358 364"/>
+
+    <!-- top left: envelope -->
+    <rect x="72" y="72" width="150" height="104" rx="12" fill="#EDF3FC"/>
+    <path d="M72 88 L147 138 L222 88"/>
+
+    <!-- top right: calendar -->
+    <rect x="418" y="76" width="146" height="126" rx="12" fill="#EDF3FC"/>
+    <path d="M418 118 L564 118"/>
+    <path d="M456 60 L456 92"/>
+    <path d="M526 60 L526 92"/>
+    <path d="M466 152 L466 154"/>
+    <path d="M516 152 L516 154"/>
+
+    <!-- bottom left: files -->
+    <path d="M72 490 L140 490 L158 512 L226 512 L226 580 L72 580 Z" fill="#EDF3FC"/>
+    <path d="M72 534 L226 534"/>
+
+    <!-- bottom right: search -->
+    <circle cx="492" cy="512" r="60" fill="#EDF3FC"/>
+    <path d="M536 556 L578 598" stroke-width="18"/>
+  </g>
+</svg>

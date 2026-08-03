@@ -1,0 +1,20 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Eine Lupe über einem Dokument, eine Zeile ist markiert">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- document -->
+    <path d="M120 120 L420 120 L420 520 L120 520 Z" fill="#EDF3FC"/>
+    <path d="M162 180 L378 180"/>
+    <path d="M162 226 L318 226"/>
+    <path d="M162 272 L378 272"/>
+    <path d="M162 318 L288 318"/>
+    <path d="M162 364 L378 364"/>
+    <path d="M162 410 L306 410"/>
+    <path d="M162 456 L252 456"/>
+
+    <!-- magnifier handle -->
+    <path d="M452 396 L546 490" stroke-width="26"/>
+    <path d="M452 396 L546 490" stroke="#D3E2F8" stroke-width="12"/>
+    <!-- magnifier lens -->
+    <circle cx="358" cy="302" r="132" fill="#D3E2F8" fill-opacity=".55"/>
+    <circle cx="358" cy="302" r="112"/>
+  </g>
+</svg>

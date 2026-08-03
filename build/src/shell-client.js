@@ -1,5 +1,5 @@
 /* ============================================================
-   Shell client: rail rendering, keyboard nav, gates, closer popup.
+   Shell client: top nav bar, keyboard nav, gates, closer popup.
    DOM-only — not unit tested (see spec.md's testing section: this
    is exactly the "manual verification" category). Uses the pure
    functions from rail-position.js, concatenated into the same
@@ -19,71 +19,67 @@
     document.body.classList.toggle("navy-section", !!(active && active.dataset.surface === "navy"));
   }
 
-  function drawRail() {
-    const rail = document.getElementById("rail");
-    rail.innerHTML = "";
-    const top = 0.12,
-      span = 0.76;
+  /* Persistent top-centre navigator: one dot per beat, threaded on a single
+     line that runs straight through them — no grouping, no session labels.
+     Hover or focus a dot for its slide label; click to jump.
+
+     Built once and then only re-styled (updateNav) rather than redrawn on
+     every scroll tick: rebuilding the DOM would restart the dot transitions
+     and yank the tooltip out from under the pointer mid-hover. Only a change
+     in structure — the Session 2 unlock — calls buildNav again. */
+  const navBar = document.getElementById("navtop");
+  let navNodes = [];
+  let navProg = null;
+
+  function buildNav() {
+    navBar.innerHTML = '<span class="nav-line"></span>';
+    navNodes = [];
+
     BEATS.forEach((b, i) => {
-      const el = document.createElement("div");
       const locked = b.dataset.locked === "true";
-      let cls = "railDot";
-      if (locked) cls += " locked";
-      else if (i < cur) cls += " done";
-      else if (i === cur) cls += " now";
-      el.className = cls;
-      const y = window.innerHeight * top + (BEATS.length > 1 ? (window.innerHeight * span * i) / (BEATS.length - 1) : 0);
-      el.style.top = y + "px";
-      el.innerHTML = `<span class="dot"></span>`;
-      el.title = b.dataset.sub || b.dataset.chapter;
-      if (!locked) el.onclick = () => jump(i);
-      rail.appendChild(el);
+      const label = b.dataset.topic || b.dataset.sub || b.dataset.chapter;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "nav-node" + (locked ? " locked" : "");
+      btn.setAttribute("aria-label", `${label}${locked ? " (bald verfügbar)" : ""}`);
+      if (locked) btn.disabled = true;
+      btn.innerHTML = `<span class="nav-dot"></span><span class="nav-tip">${label}</span>`;
+      if (!locked) btn.onclick = () => jump(i);
+      navBar.appendChild(btn);
+      navNodes[i] = btn;
     });
+
+    navProg = document.createElement("span");
+    navProg.className = "nav-prog";
+    navBar.appendChild(navProg);
   }
 
-  function drawMenu() {
-    const menu = document.getElementById("menu");
-    menu.innerHTML = "";
-    const bySession = [];
-    BEATS.forEach((b, i) => {
-      const label = b.dataset.session;
-      let group = bySession.find((g) => g.label === label);
-      if (!group) {
-        group = { label, chapter: b.dataset.chapter, locked: b.dataset.locked === "true", items: [] };
-        bySession.push(group);
-      }
-      group.items.push({ index: i, sub: b.dataset.sub });
+  function updateNav() {
+    navNodes.forEach((btn, i) => {
+      if (!btn) return;
+      btn.classList.toggle("active", i === cur);
+      if (i === cur) btn.setAttribute("aria-current", "true");
+      else btn.removeAttribute("aria-current");
     });
-    bySession.forEach((group) => {
-      const chapEl = document.createElement("div");
-      chapEl.className = "menuChapter" + (group.locked ? " locked session2" : "");
-      chapEl.innerHTML = `<span class="num">${group.label}</span><span class="title">${group.chapter}</span>`;
-      menu.appendChild(chapEl);
-      const isActiveGroup = group.items.some((it) => it.index === cur);
-      if (isActiveGroup && !group.locked) {
-        group.items.forEach((it) => {
-          if (!it.sub) return;
-          const sub = document.createElement("div");
-          sub.className = "menuSub" + (it.index === cur ? " active" : "");
-          sub.textContent = it.sub;
-          sub.onclick = () => jump(it.index);
-          menu.appendChild(sub);
-        });
-      }
-    });
+    if (navProg) {
+      const p = BEATS.length > 1 ? cur / (BEATS.length - 1) : 1;
+      navProg.style.transform = `translateY(-50%) scaleX(${p})`;
+    }
   }
 
   function refreshMark() {
     const mark = document.getElementById("mark");
     const active = BEATS[cur];
     if (mark && active) {
-      mark.innerHTML = `<span class="brand">AI for Executives</span><br>${active.dataset.chapter}`;
+      const topic = active.dataset.topic || active.dataset.sub || active.dataset.chapter;
+      mark.innerHTML =
+        `<span class="mk-brand">AI for Executives</span>` +
+        `<span class="mk-topic">${topic}<span class="mk-count">${cur + 1}/${BEATS.length}</span></span>`;
     }
   }
 
   function refresh() {
-    drawRail();
-    drawMenu();
+    updateNav();
     refreshMark();
     applyNavySection();
   }
@@ -109,10 +105,7 @@
     },
     { passive: true },
   );
-  window.addEventListener("resize", () => {
-    drawRail();
-    syncToScroll();
-  });
+  window.addEventListener("resize", syncToScroll);
 
   window.addEventListener("keydown", (e) => {
     const t = document.activeElement,
@@ -128,12 +121,17 @@
     }
   });
 
+  buildNav();
   refresh();
 
   /* ---------------- front-door gate ---------------- */
   const frontGate = document.getElementById("frontGate");
   const frontInput = document.getElementById("frontGateInput");
   const frontErr = document.getElementById("frontGateErr");
+  const GATE_KEY = "aife_gate_unlocked";
+  if (localStorage.getItem(GATE_KEY) === "1") {
+    frontGate.classList.add("hidden");
+  }
   document.getElementById("frontGateGo").onclick = tryFrontGate;
   frontInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") tryFrontGate();
@@ -141,6 +139,10 @@
   function tryFrontGate() {
     if (frontInput.value.trim().toLowerCase() === SEED.gatePassword.toLowerCase()) {
       frontGate.classList.add("hidden");
+      localStorage.setItem(GATE_KEY, "1");
+      // The title slide's entrance played behind the gate card; run it again
+      // now that there is someone to watch it.
+      if (window.replayReveal) window.replayReveal(BEATS[cur]);
     } else {
       frontErr.textContent = "Nicht ganz. Nochmal?";
       frontInput.value = "";
@@ -149,23 +151,67 @@
   }
   frontInput.focus();
 
-  /* ---------------- session 2 unlock ---------------- */
-  const s2unlock = document.getElementById("s2Unlock");
-  if (s2unlock) {
-    s2unlock.querySelector(".go").onclick = () => {
-      const input = s2unlock.querySelector("input");
-      const err = s2unlock.querySelector(".err");
-      if (input.value.trim().toLowerCase() === "askclaude") {
-        document.querySelectorAll(".session2").forEach((el) => el.classList.remove("locked", "session2"));
-        document.querySelectorAll(".beat[data-locked='true']").forEach((el) => (el.dataset.locked = "false"));
-        s2unlock.querySelector(".prompt-row").innerHTML =
-          '<span style="font-size:12px;color:var(--good);font-weight:600">Entsperrt.</span>';
-        refresh();
-      } else {
-        err.textContent = 'Falsch. Ein Tipp: fragen Sie Claude, was Sie tun, wenn Sie etwas nicht wissen.';
-      }
-    };
-  }
+  /* ---------------- prompt steppers: click through cards one at a time ----------------
+     Cards that carry data-step get a labelled tab strip above the stack (you can
+     see where you are and jump straight to a step); otherwise they fall back to
+     plain dots. Either way a prev/next pair drives the guided walk-through. */
+  document.querySelectorAll(".stepper").forEach((stepper) => {
+    const cards = Array.from(stepper.querySelectorAll(".out"));
+    if (!cards.length) return;
+    const stack = cards[0].parentElement;
+    const labels = cards.map((c) => c.dataset.step);
+    const useTabs = labels.every(Boolean);
+
+    const nav = document.createElement("div");
+    nav.className = useTabs ? "step-tabs" : "step-nav";
+    let pick;
+    if (useTabs) {
+      pick = labels.map((label, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "step-tab";
+        b.innerHTML = `<span class="st-num">${i + 1}</span><span class="st-label">${label}</span>`;
+        b.onclick = () => show(i);
+        nav.appendChild(b);
+        return b;
+      });
+      stack.parentElement.insertBefore(nav, stack);
+    } else {
+      nav.innerHTML = '<div class="step-dots"></div>';
+      pick = labels.map((_, i) => {
+        const d = document.createElement("span");
+        d.className = "step-dot";
+        d.onclick = () => show(i);
+        nav.querySelector(".step-dots").appendChild(d);
+        return d;
+      });
+      stepper.appendChild(nav);
+    }
+
+    const walk = document.createElement("div");
+    walk.className = "step-walk";
+    walk.innerHTML =
+      '<button type="button" class="step-btn step-prev" aria-label="Zurück">‹</button>' +
+      '<span class="step-count"></span>' +
+      '<button type="button" class="step-btn step-next" aria-label="Weiter">›</button>';
+    stepper.appendChild(walk);
+    const countEl = walk.querySelector(".step-count");
+    const prevBtn = walk.querySelector(".step-prev");
+    const nextBtn = walk.querySelector(".step-next");
+
+    let idx = 0;
+    function show(i) {
+      idx = Math.max(0, Math.min(cards.length - 1, i));
+      cards.forEach((c, j) => c.classList.toggle("active", j === idx));
+      pick.forEach((p, j) => p.classList.toggle("active", j === idx));
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === cards.length - 1;
+      countEl.textContent = `${idx + 1} / ${cards.length}`;
+    }
+    prevBtn.onclick = () => show(idx - 1);
+    nextBtn.onclick = () => show(idx + 1);
+    show(0);
+  });
 
   /* ---------------- closer / bridge popup ---------------- */
   window.showCloser = function () {

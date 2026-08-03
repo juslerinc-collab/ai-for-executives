@@ -24,11 +24,17 @@
 
     const md = `# Take-home — nach Sitzung 1${vorname ? ` für ${vorname}` : ""}
 
+## So benutzen Sie dieses Dokument
+
+Fügen Sie den ganzen Text unten in einen neuen Chat mit Claude ein und stellen Sie Ihre Fragen direkt dagegen —
+zum Beispiel „Teste mich zu Frage 3" oder „Passe Übung 1 an mein eigenes Thema an". Das Dokument ist der
+Kontext, nicht die Antwort.
+
 ## Kurz zusammengefasst
 
 Sie haben heute zwei der vier Schritte geübt: **Erklären** (Sie halten nur ein Thema, das Sie nicht kennen)
-und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie eine neue
-Kollegin — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
+und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie einen neuen
+Assistenten — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
 weitergeben.
 
 ## Testen Sie sich
@@ -52,7 +58,6 @@ noch einmal selbst: dieselbe Sache für eine andere Zielgruppe umschreiben.
 
 Sitzung 2 bringt **Aufbereiten** (ein bestehendes Dokument in die richtige Form bringen) und
 **Hinterfragen** (etwas Fertiges auf Einwände prüfen) — beide wurden heute nur benannt, nicht geübt.
-Ihr Use-Case-Backlog aus heute bleibt bestehen und wird in Sitzung 2 vervollständigt.
 
 ---
 Generiert am ${new Date().toISOString().slice(0, 10)}.

@@ -11,11 +11,13 @@
   --ice:#B3CCF4; --ice-tint:#E4EBFB; --rule:#DDE0E8;
   --navy:#08102A; --navy-1:#16226B; --navy-2:#1B2A82;
   --fh:"Archivo"; --fb:"Inter";
-  --nav:104px; --nav-open:330px;
   --good:#1E9E6B; --warn:#C77A1E;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+/* No `zoom` here on purpose: it does not divide vh units or scrollIntoView
+   offsets, so a 100vh scroll-snap deck ends up taller than the viewport and
+   every jump drifts further off. Type is sized directly instead. */
 html{scroll-snap-type:y mandatory}
 body{
   font-family:var(--fb),-apple-system,system-ui,sans-serif;color:var(--ink);
@@ -66,54 +68,86 @@ a{color:inherit}
 .ico{width:22px;height:22px;fill:none;stroke:var(--ultra);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .navy-bg .ico{stroke:var(--ice)}
 
-/* ---------- shell: rail + slides ---------- */
-#nav{
-  position:fixed;top:0;left:0;bottom:0;width:var(--nav);z-index:50;
-  transition:width .28s cubic-bezier(.2,.7,.3,1);
-  overflow:hidden;
-}
-#nav:hover, #nav.pinned{width:var(--nav-open)}
-#nav:hover ~ #slides, #nav.pinned ~ #slides{padding-left:var(--nav-open)}
-#slides{padding-left:var(--nav);transition:padding-left .28s cubic-bezier(.2,.7,.3,1)}
+/* ---------- shell: top nav bar + slides ---------- */
+#slides{padding-left:0}
 
-#rail{position:absolute;inset:0;left:0;width:var(--nav);transition:opacity .15s}
-#nav:hover #rail, #nav.pinned #rail{opacity:0;pointer-events:none}
-.railDot{
-  position:absolute;left:0;width:var(--nav);display:flex;align-items:center;gap:14px;
-  padding-left:38px;cursor:pointer;
-}
-.railDot .dot{width:8px;height:8px;border-radius:50%;background:var(--rule);flex-shrink:0;transition:.15s}
-.railDot.done .dot{background:var(--ultra);opacity:.55}
-.railDot.now .dot{background:var(--ultra);width:11px;height:11px;box-shadow:0 0 0 4px rgba(30,47,219,.18)}
-.railDot.locked .dot{background:var(--rule);opacity:.4}
-.railDot.locked{cursor:default;pointer-events:none}
+/* Persistent top-centre navigator: one dot per slide, threaded on a single
+   hairline that runs straight through them — no container, no chrome, no
+   session labels. It should read as a thread across the top of the deck,
+   not as a menu bar. The travelled part of the line is tinted to show
+   progress; the per-slide label opens downwards on hover/focus. Nodes are
+   real <button>s so the deck stays fully keyboard-navigable, and both the
+   line and the dots re-tint on navy slides via body.navy-section. */
+#navtop{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:60;
+  display:flex;align-items:center;max-width:94vw}
 
-#menu{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .2s}
-#nav:hover #menu, #nav.pinned #menu{opacity:1;pointer-events:auto}
-.menuChapter{padding:10px 0 10px 38px}
-.menuChapter .num{font-size:11px;font-weight:700;color:var(--ultra);margin-right:8px}
-.menuChapter .title{font-size:13px;font-weight:600;color:var(--ink)}
-.menuChapter.locked .title{opacity:.34}
-.menuSub{padding:4px 0 4px 62px;font-size:12px;color:var(--ink-soft);cursor:pointer}
-.menuSub:hover{color:var(--ultra)}
-.menuSub.active{color:var(--ultra);font-weight:600}
+/* Track and progress share the same geometry so the tinted part sits exactly
+   on the hairline; both inset by half a node so the line starts and ends at
+   the centre of the first and last dot rather than floating past them. */
+.nav-line,.nav-prog{position:absolute;left:12px;right:12px;top:50%;height:1px;
+  transform:translateY(-50%)}
+.nav-line{background:rgba(10,19,48,.16)}
+body.navy-section .nav-line{background:rgba(255,255,255,.20)}
+.nav-prog{background:var(--ultra);opacity:.4;transform-origin:left center;
+  transform:translateY(-50%) scaleX(0);
+  transition:transform .5s cubic-bezier(.22,.68,.32,1)}
+body.navy-section .nav-prog{background:var(--ice);opacity:.5}
 
-#mark{position:fixed;top:22px;right:32px;z-index:40;font-size:12px;font-weight:600;color:var(--ink-soft);
-  text-align:right;pointer-events:none}
-.navy-section #mark{color:rgba(255,255,255,.7)}
-#mark .brand{color:var(--ultra)}
-.navy-section #mark .brand{color:var(--ice)}
+.nav-node{all:unset;position:relative;z-index:1;cursor:pointer;width:24px;height:30px;
+  display:flex;align-items:center;justify-content:center}
+.nav-node:focus-visible{outline:2px solid var(--ultra);outline-offset:-4px;border-radius:10px}
+body.navy-section .nav-node:focus-visible{outline-color:var(--ice)}
+/* Alpha is set by contrast, not taste: at .46 on paper and .40 on navy the
+   idle dots clear the 3:1 non-text minimum for an interactive control. Any
+   lighter reads better but stops being a usable target. */
+.nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(10,19,48,.46);
+  transition:transform .28s cubic-bezier(.34,1.56,.64,1),background .2s ease}
+body.navy-section .nav-dot{background:rgba(255,255,255,.40)}
+.nav-node:hover .nav-dot{background:var(--ultra);transform:scale(1.4)}
+body.navy-section .nav-node:hover .nav-dot{background:var(--ice)}
+.nav-node.active .nav-dot{background:var(--ultra);transform:scale(1.8)}
+body.navy-section .nav-node.active .nav-dot{background:var(--ice)}
+.nav-node.locked{cursor:default}
+.nav-node.locked .nav-dot,.nav-node.locked:hover .nav-dot{background:rgba(10,19,48,.13);transform:none}
+body.navy-section .nav-node.locked .nav-dot,
+body.navy-section .nav-node.locked:hover .nav-dot{background:rgba(255,255,255,.15)}
 
-.beat{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;align-items:flex-start;
-  padding:80px 64px;overflow-y:auto}
-.beat-inner{max-width:820px;margin:0 auto;width:100%}
-.beat.wide .beat-inner{max-width:1100px}
+.nav-tip{position:absolute;top:calc(100% + 4px);left:50%;
+  transform:translateX(-50%) translateY(-4px);
+  white-space:nowrap;font-size:12.5px;font-weight:600;color:#fff;background:var(--ink);
+  padding:7px 13px;border-radius:9px;opacity:0;pointer-events:none;
+  transition:opacity .15s ease,transform .15s ease;box-shadow:0 10px 26px rgba(10,19,48,.22)}
+.nav-node:hover .nav-tip,.nav-node:focus-visible .nav-tip{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:1040px){.nav-node{width:20px}}
+
+#mark{position:fixed;top:24px;right:32px;z-index:40;text-align:right;pointer-events:none;max-width:30vw}
+.mk-brand{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ultra)}
+.navy-section .mk-brand{color:var(--ice)}
+.mk-topic{display:block;margin-top:2px;font-family:var(--fh);font-size:14px;font-weight:600;color:var(--ink)}
+.navy-section .mk-topic{color:#fff}
+/* Page position rides on the title line rather than a third line of its own. */
+.mk-count{margin-left:8px;font-family:var(--fb);font-size:11px;font-weight:400;color:var(--ink-soft)}
+.navy-section .mk-count{color:rgba(255,255,255,.55)}
+
+/* `safe center` vertically centres slides that fit, but falls back to
+   flex-start when a slide is taller than the viewport — plain `center`
+   would push the top of an overflowing slide out of reach. */
+/* Top padding clears the fixed nav thread (20px offset + 30px tall = 50px)
+   so an overflowing slide never starts underneath it — with enough margin to
+   breathe, but no more: the two lab slides are already the tallest in the
+   deck and every extra pixel here pushes them further into scrolling. */
+.beat{height:100vh;scroll-snap-align:start;scroll-snap-stop:always;display:flex;
+  align-items:safe center;padding:76px 74px 56px;overflow-y:auto;position:relative}
+.beat-inner{max-width:940px;margin:0 auto;width:100%}
+.beat.wide .beat-inner{max-width:1260px}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ultra);margin-bottom:10px}
 .navy-section .eyebrow{color:var(--ice)}
-.beat h1{font-size:clamp(28px,3.4vw,44px);margin-bottom:18px}
+.beat h1{font-size:clamp(32px,3.5vw,50px);margin-bottom:18px}
 .beat h1 .k{color:var(--ultra)}
 .navy-section .beat h1 .k{color:var(--ice)}
-.lede{font-size:16px;font-weight:400;line-height:1.65;color:var(--ink-soft);max-width:64ch}
+.lede{font-size:18px;font-weight:400;line-height:1.65;color:var(--ink-soft);max-width:64ch}
 .navy-section .lede{color:rgba(255,255,255,.78)}
 .wdth-88{font-variation-settings:"wdth" 88}
 
@@ -136,10 +170,6 @@ a{color:inherit}
 .btn.ghost:hover{background:#fff}
 .navy-bg .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.24)}
 
-/* ---------- session 2 locked entry ---------- */
-.railDot.session2{opacity:.34;pointer-events:none}
-.menuChapter.session2{opacity:.34;pointer-events:none}
-
 /* ---------- closer / bridge popup ---------- */
 .closer{position:fixed;inset:0;z-index:250;display:none;align-items:center;justify-content:center;
   padding:40px}
@@ -155,11 +185,19 @@ a{color:inherit}
 
 /* ---------- opening hero (title screen) ---------- */
 .hero-title{align-items:center}
+.head-split{display:flex;align-items:center;gap:28px;margin:0 auto 16px;max-width:640px}
+.head-split-copy{flex:1 1 auto;min-width:0}
+.head-split-illu{flex:0 0 108px;width:108px;max-width:16vw;display:block}
+@media (max-width:760px){.head-split{flex-direction:column;align-items:flex-start}.head-split-illu{display:none}}
+
 .hero-grid{display:flex;align-items:center;gap:64px}
 .hero-copy{flex:1 1 480px;min-width:0}
-.hero-h1{font-size:clamp(34px,4.6vw,58px);margin-bottom:22px}
+.hero-h1{font-size:clamp(42px,5.2vw,72px);margin-bottom:22px}
+.hero-copy .lede{font-size:20px}
 .hero-illu{flex:0 0 380px;width:380px;max-width:38vw;display:block}
-.hero-kicker{margin-top:34px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ice)}
+.hero-kicker{margin-top:34px;font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ice);display:flex;align-items:center;gap:10px}
+.hero-kicker .dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.4)}
+.hero-kicker .date{color:rgba(255,255,255,.55);letter-spacing:.14em}
 @media (max-width:860px){
   .hero-grid{flex-direction:column-reverse;gap:36px;text-align:left}
   .hero-illu{width:220px;max-width:60vw;flex-basis:auto}
@@ -168,5 +206,5 @@ a{color:inherit}
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
-  #nav,#slides,.dot{transition:none !important}
+  .nav-dot,.nav-tip,.nav-prog{transition:none !important}
 }

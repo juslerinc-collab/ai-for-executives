@@ -30,20 +30,11 @@ export const REIFEGRAD_LEVELS = [
   },
 ];
 
-// Q1 is the exact ticket-18-round-16 replacement. Q2/Q3 are authored here
-// (not sourced from a ticket — the originals were never reprinted) to
-// continue the same register: daily friction, then delegation.
 export const ARBEITSALLTAG_QUESTIONS = [
   "Welche Aufgabe kostet Sie am meisten Zeit, ohne dass es das wert wäre?",
-  "Was schreiben Sie am häufigsten — und wie oft ist es eine Wiederholung von etwas, das Sie schon einmal geschrieben haben?",
-  "Wo verlassen Sie sich heute auf jemand anderen, weil Sie selbst nicht die Zeit finden?",
 ];
 
-export const ZIEL_QUESTIONS = [
-  "Was soll sich für Sie verändern?",
-  "Woran würden Sie merken, dass es sich gelohnt hat?",
-  "Was wünschen Sie sich von diesem Engagement?",
-];
+export const ZIEL_QUESTIONS = ["Was soll sich für Sie verändern?"];
 
 const PERSON_FIELDS = ["vorname", "rolle", "unternehmen", "webseite", "kurzbeschreibung"];
 

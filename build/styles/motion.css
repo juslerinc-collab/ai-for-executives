@@ -1,0 +1,64 @@
+/* ============================================================
+   Slide reveal motion.
+   Every rule here is gated behind html.anim, which reveal-client.js only
+   sets when the browser reports no reduced-motion preference. If the
+   script never runs (error, old browser) nothing is ever hidden, so the
+   deck degrades to the plain, fully visible page.
+   Only opacity and transform are animated — no width/height/top/left —
+   so a reveal can never reflow the slide it is revealing.
+   ============================================================ */
+
+/* Shared rhythm: one duration and one easing curve for the whole deck. */
+:root{--m-dur:.6s; --m-ease:cubic-bezier(.22,.68,.32,1)}
+
+/* ---------- base: everything the reveal engine tagged rises in ---------- */
+html.anim [data-r]{
+  opacity:0;transform:translateY(20px);
+  transition:opacity var(--m-dur) var(--m-ease) var(--d,0ms),
+             transform var(--m-dur) var(--m-ease) var(--d,0ms);
+}
+html.anim .beat.revealed [data-r]{opacity:1;transform:none}
+
+/* ---------- per-element entrance flavours ---------- */
+/* Illustrations settle in from slightly further out and scale up, so the
+   picture reads as the slide's anchor rather than one more line of text. */
+html.anim img[data-r],
+html.anim .illu[data-r],
+html.anim .nest-illu[data-r]{transform:translateY(26px) scale(.94)}
+
+/* Cards lift as a group: a shorter travel plus a hair of scale keeps a
+   4-across grid from looking like four separate slides arriving. */
+html.anim .stepcard[data-r],
+html.anim .principle-card[data-r],
+html.anim .out[data-r],
+html.anim .source-card[data-r],
+html.anim .logo-chip[data-r],
+html.anim .next-steps li[data-r]{transform:translateY(16px) scale(.985)}
+
+/* The lab badge pops rather than slides — it is the one "you are on stage
+   now" signal on a hands-on slide. */
+html.anim .lab-badge[data-r]{transform:scale(.82);
+  transition:opacity .45s var(--m-ease) var(--d,0ms),
+             transform .45s cubic-bezier(.34,1.56,.64,1) var(--d,0ms)}
+
+/* The agenda staircase climbs to its resting offset instead of overriding
+   it (see --sy in components.css). */
+html.anim .stair-step[data-r]{transform:translateY(calc(var(--sy,0px) + 42px))}
+html.anim .beat.revealed .stair-step[data-r]{transform:translateY(var(--sy,0px))}
+
+/* ---------- accent word: underline sweeps in under the headline ---------- */
+html.anim .beat h1 .k{position:relative}
+html.anim .beat h1 .k::after{content:"";position:absolute;left:0;right:0;bottom:-.08em;
+  height:.07em;border-radius:2px;background:currentColor;opacity:.32;
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .75s var(--m-ease) .4s}
+html.anim .beat.revealed h1 .k::after{transform:scaleX(1)}
+
+/* ---------- ambient: a soft focus glow behind the active slide ---------- */
+html.anim .beat::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  opacity:0;transition:opacity .9s ease;
+  background:radial-gradient(58% 52% at 50% 46%, rgba(30,47,219,.055), transparent 72%)}
+html.anim .beat[data-surface="navy"]::before{
+  background:radial-gradient(58% 52% at 50% 46%, rgba(179,204,244,.07), transparent 72%)}
+html.anim .beat.revealed::before{opacity:1}
+html.anim .beat-inner{position:relative;z-index:1}

@@ -5,49 +5,78 @@
    ============================================================ */
 
 /* ---------- Session 0: "Ihr Profil" card ---------- */
-.profile-card{max-width:760px;margin:0 auto;padding:0;overflow:hidden}
-.profile-head{padding:26px 30px 0}
-.profile-head .eyebrow{margin-bottom:4px}
-.profile-head h2{font-size:22px}
+.profile-card{max-width:640px;margin:0 auto;padding:0;overflow:hidden}
+.profile-head{padding:14px 26px 0}
+.profile-head h2{font-size:18px}
 .profile-head h2 .echo{color:var(--ultra)}
-.tabs{display:flex;gap:4px;padding:20px 30px 0;border-bottom:1px solid var(--rule)}
-.tab{all:unset;cursor:pointer;padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink-soft);
+.tabs{display:flex;gap:4px;padding:10px 26px 0;border-bottom:1px solid var(--rule)}
+.tab{all:unset;cursor:pointer;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--ink-soft);
   border-bottom:2px solid transparent;margin-bottom:-1px}
 .tab.active{color:var(--ultra);border-bottom-color:var(--ultra)}
-.pane{display:none;padding:26px 30px 30px}
+.pane{display:none;padding:14px 26px 16px}
 .pane.active{display:block}
-.field{margin-bottom:16px}
-.field label{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:6px}
-.field input{width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;font-size:14px;
+.field{margin-bottom:8px}
+.field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-soft);margin-bottom:3px}
+.field input{width:100%;padding:7px 12px;border:1px solid var(--rule);border-radius:9px;font-size:13.5px;
   outline:none;background:#fff}
 .field input:focus{border-color:var(--ultra)}
 
-.staircase{display:flex;align-items:flex-end;gap:10px;margin:8px 0 20px}
+.staircase{display:flex;align-items:flex-end;gap:10px;margin:4px 0 10px}
 .step{all:unset;cursor:pointer;flex:1;background:var(--ice-tint);border:1px solid var(--rule);
   border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;
   padding-top:8px;font-size:11px;font-weight:600;color:var(--ink-soft);transition:.15s;text-align:center}
 .step.active{background:var(--ultra);color:#fff;border-color:var(--ultra)}
-.step-desc{font-size:13.5px;line-height:1.6;color:var(--ink-soft);min-height:44px;animation:descIn .25s ease}
+.step-desc{font-size:13px;line-height:1.5;color:var(--ink-soft);min-height:34px;animation:descIn .25s ease}
 @keyframes descIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
-.qfield textarea{width:100%;min-height:88px;padding:10px 12px;border:1px solid var(--rule);border-radius:9px;
-  font-size:13.5px;line-height:1.6;outline:none;resize:vertical;background:#fff;font-family:inherit}
+/* ---------- Session 0 beat: compact so the card fits without scrolling ---------- */
+.beat.compact{padding-top:62px;padding-bottom:20px}
+.beat.compact .head-split{margin-bottom:10px}
+.beat.compact .head-split-illu{flex:0 0 68px;width:68px}
+.beat.compact .head-split-copy h1{font-size:clamp(24px,2.6vw,34px);margin-bottom:8px}
+.beat.compact .head-split-copy .lede{font-size:13.5px}
+
+.qfield textarea{width:100%;min-height:64px;padding:8px 12px;border:1px solid var(--rule);border-radius:9px;
+  font-size:13px;line-height:1.5;outline:none;resize:vertical;background:#fff;font-family:inherit}
 .qfield textarea:focus{border-color:var(--ultra)}
-.qfield{margin-bottom:16px}
-.qfield label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.qfield{margin-bottom:10px}
+.qfield label{display:block;font-size:12.5px;font-weight:600;margin-bottom:4px}
 
 .export-btn{position:fixed;right:22px;bottom:20px;z-index:30;font-size:11px;padding:8px 14px;opacity:.8}
 .export-btn:hover{opacity:1}
 
-/* ---------- lab beat: prompt card, drawers, debrief ---------- */
-.lab-card{padding:22px 24px}
-.lab-task{font-size:14px;font-weight:600;margin-bottom:10px}
-.prompt{background:var(--ice-tint);border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.55;
-  position:relative;margin-bottom:14px}
-.prompt .copybtn{all:unset;cursor:pointer;position:absolute;top:10px;right:10px;font-size:11px;font-weight:600;
+/* ---------- lab badge: marks a hands-on session ---------- */
+.lab-badge{display:inline-flex;align-items:center;gap:9px;padding:7px 16px 7px 12px;border-radius:999px;
+  background:rgba(199,122,30,.16);border:1px solid rgba(199,122,30,.45);
+  font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#E8A959;margin-bottom:14px}
+.lab-badge .pulse{width:7px;height:7px;border-radius:50%;background:#E8A959;flex-shrink:0;
+  box-shadow:0 0 0 0 rgba(232,169,89,.6);animation:labpulse 2s infinite}
+@keyframes labpulse{
+  0%{box-shadow:0 0 0 0 rgba(232,169,89,.55)}
+  70%{box-shadow:0 0 0 9px rgba(232,169,89,0)}
+  100%{box-shadow:0 0 0 0 rgba(232,169,89,0)}
+}
+
+/* ---------- lab beat: illustration rail beside the interactive card ---------- */
+.lab-body{display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:start;margin-top:22px}
+.lab-rail{display:flex;flex-direction:column;align-items:flex-start;padding-top:4px}
+.lab-rail .illu{width:100%;max-width:200px;margin:0 0 16px;display:block}
+@media (max-width:900px){
+  .lab-body{grid-template-columns:1fr}
+  .lab-rail{flex-direction:row;align-items:center;gap:16px}
+  .lab-rail .illu{width:88px;max-width:88px;margin:0;flex-shrink:0}
+}
+
+/* ---------- lab beat: prompt card, drawers ---------- */
+.lab-card{padding:18px 22px}
+.lab-task{font-size:14px;font-weight:600;margin-bottom:8px}
+.prompt{background:var(--ice-tint);border-radius:10px;padding:12px 15px;font-size:13.5px;line-height:1.55;
+  display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.prompt .prompt-text{flex:1 1 auto;min-width:0}
+.prompt .copybtn{all:unset;cursor:pointer;flex:0 0 auto;font-size:11px;font-weight:600;
   color:var(--ultra-deep);padding:4px 8px;border-radius:6px}
 .prompt .copybtn:hover{background:rgba(30,47,219,.1)}
-.worauf{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px}
+.worauf{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px}
 
 .drawerbtn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ultra-deep);
   padding:8px 0;display:flex;align-items:center;gap:6px}
@@ -64,12 +93,27 @@
 .leverrow b{color:var(--ink)}
 .leverrow .lp{color:var(--ink-soft);margin-top:2px}
 
-.debrief{margin-top:18px}
-.debrief label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
-.debrief input{width:100%;padding:11px 13px;border:1px solid var(--rule);border-radius:9px;font-size:13.5px;
-  outline:none;background:#fff}
-.debrief input:focus{border-color:var(--ultra)}
-.debrief .saved{font-size:11.5px;color:var(--good);margin-top:6px;min-height:14px}
+.hint{color:var(--ink-soft)}
+
+/* ---------- lab card on navy surface ---------- */
+.navy-bg .prompt{color:var(--ink)}
+.navy-bg .worauf{color:rgba(255,255,255,.68)}
+.navy-bg .drawerbtn{color:var(--ice)}
+.navy-bg .altrow{border-bottom-color:rgba(255,255,255,.16)}
+.navy-bg .altrow .hint{color:rgba(255,255,255,.6)}
+.navy-bg .altrow .use{color:#fff;background:rgba(255,255,255,.14)}
+.navy-bg .leverrow{border-bottom-color:rgba(255,255,255,.16)}
+.navy-bg .leverrow b{color:#fff}
+.navy-bg .leverrow .lp{color:rgba(255,255,255,.65)}
+
+/* ---------- four steps: intro row with sequence illustration ---------- */
+.steps-intro{display:flex;align-items:center;gap:44px}
+.steps-intro-copy{flex:1 1 auto;min-width:0}
+.steps-intro-illu{flex:0 0 190px;width:190px;max-width:24vw;display:block}
+@media (max-width:900px){
+  .steps-intro{flex-direction:column-reverse;align-items:flex-start;gap:20px}
+  .steps-intro-illu{width:140px;flex-basis:auto}
+}
 
 /* ---------- four steps table ---------- */
 .steptable{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
@@ -82,99 +126,179 @@
 .stepcard.dim{opacity:.5}
 @media (max-width:900px){.steptable{grid-template-columns:1fr 1fr}}
 
-/* ---------- backlog & matrix board ---------- */
-.board-section{margin-bottom:30px}
-.board-section h2{font-size:16px;margin-bottom:10px}
-.board-hint{font-size:12px;color:var(--ink-soft);margin:-4px 0 12px}
-.inv{padding:6px 0}
-.inv-group-label{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-soft);
-  padding:10px 16px 4px}
-.srcrow{display:grid;grid-template-columns:12px 1fr auto;align-items:center;gap:10px;
-  padding:6px 16px;font-size:12.5px;line-height:1.3;cursor:grab;border-radius:6px}
-.srcrow:hover{background:rgba(30,47,219,.06)}
-.srcrow.dragging{opacity:.35}
-.inv-empty{padding:6px 16px 10px;font-size:11px;color:var(--ink-soft);font-weight:300}
-.inv-add{display:flex;gap:6px;padding:8px 16px 14px}
-.inv-add input{flex:1;min-width:0;border:1px solid var(--rule);border-radius:8px;padding:7px 9px;font-size:12px;
-  font-family:inherit;outline:none;background:#fff}
-.catdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
-.cat-erklaren{background:#1E2FDB}.cat-aufsetzen{background:#1E9E6B}.cat-aufbereiten{background:#C77A1E}.cat-hinterfragen{background:#B3299B}
-.use-btn{all:unset;cursor:pointer;font-size:10.5px;font-weight:700;color:var(--ultra-deep);
-  padding:4px 8px;border-radius:6px;background:rgba(30,47,219,.08)}
-
-.split{display:grid;grid-template-columns:1.05fr 1fr;gap:24px;align-items:start}
-@media (max-width:960px){.split{grid-template-columns:1fr}}
-.backlog{display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;padding:14px;transition:background .15s}
-.backlog.dropready{background:rgba(30,47,219,.07)}
-.backlog-empty{font-size:12px;color:var(--ink-soft);font-weight:300;padding:10px 4px}
-.row{padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.55);border:1px solid transparent;cursor:pointer;transition:.12s}
-.row:hover{background:rgba(255,255,255,.85)}
-.row.open{background:#fff;border-color:var(--rule)}
-.rowhead{display:flex;align-items:center;gap:8px;justify-content:space-between}
-.rowhead .rt{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;min-width:0;flex:1}
-.rownum{flex-shrink:0;width:19px;height:19px;border-radius:50%;background:var(--ink);color:#fff;
-  font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.rowhead .ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-.rowscore{font-size:11px;font-weight:700;color:var(--ultra-deep);background:var(--ice-tint);padding:3px 8px;border-radius:7px;flex-shrink:0}
-.detail{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
-.row.open .detail{display:block}
-.sliderline{display:grid;grid-template-columns:74px 1fr 22px;align-items:center;gap:10px;margin-bottom:10px;font-size:12px;color:var(--ink-soft)}
-.sliderline input[type=range]{width:100%;accent-color:var(--ultra)}
-.flagrow{display:flex;gap:8px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.flagbtn,.repbtn{all:unset;cursor:pointer;padding:6px 11px;border-radius:8px;font-size:11.5px;font-weight:600;border:1px solid var(--rule);color:var(--ink-soft)}
-.flagbtn.active{background:var(--ultra);color:#fff;border-color:var(--ultra)}
-.repbtn.active{background:#146B49;color:#fff;border-color:#146B49}
-.delbtn{all:unset;cursor:pointer;padding:6px 9px;border-radius:8px;font-size:11.5px;font-weight:600;color:var(--warn);margin-left:auto}
-
-.matrixwrap{position:relative;height:460px;padding:20px}
-.axis-y{position:absolute;left:6px;top:16px;bottom:38px;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:var(--ink-soft);writing-mode:vertical-rl;text-orientation:mixed}
-.axis-x{position:absolute;left:38px;right:16px;bottom:4px;text-align:center;font-size:12px;font-weight:700;color:var(--ink-soft)}
-.plot{position:absolute;left:38px;right:16px;top:16px;bottom:38px;border-left:1.5px solid var(--rule);border-bottom:1.5px solid var(--rule)}
-.qtag{position:absolute;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);opacity:.55}
-.qtag.tl{top:8px;left:10px}.qtag.tr{top:8px;right:10px;text-align:right}
-.qtag.bl{bottom:8px;left:10px}.qtag.br{bottom:8px;right:10px;text-align:right}
-.dot{position:absolute;transform:translate(-50%,50%);border-radius:50%;touch-action:none;
-  box-shadow:0 3px 8px rgba(10,19,48,.22);border:2px solid #fff;cursor:grab;
-  display:flex;align-items:center;justify-content:center}
-.dot.dragging{cursor:grabbing;z-index:5}
-.dotnum{font-size:10px;font-weight:700;color:#fff;pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.dot .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;
-  font-weight:600;background:var(--ink);color:#fff;padding:4px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:.12s}
-.dot:hover .tip{opacity:1}
-
-.exportbar{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:100;display:flex;gap:10px}
-#exportOverlay{position:fixed;inset:0;background:rgba(10,19,48,.55);z-index:200;display:none;
-  align-items:flex-start;justify-content:center;padding:40px;overflow-y:auto}
-#exportOverlay.show{display:flex}
-.sheet{background:#fff;width:940px;max-width:100%;padding:48px;border-radius:6px;box-shadow:0 30px 80px rgba(0,0,0,.3);position:relative}
-.sheet h2{font-size:20px;margin-bottom:4px}
-.sheet .subtle{font-size:12px;color:var(--ink-soft);margin-bottom:24px}
-.sheet table{width:100%;border-collapse:collapse;margin-bottom:28px}
-.sheet th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
-  border-bottom:1.5px solid #222;padding:6px 8px}
-.sheet td{font-size:12.5px;padding:7px 8px;border-bottom:1px solid #e4e4e8}
-.sheet td.num{font-weight:700;width:26px}
-.sheet-close{position:absolute;top:16px;right:20px}
-.exp-split{display:grid;grid-template-columns:1fr 340px;gap:30px;align-items:start}
-.exp-matrix{position:relative;height:300px;border:1.5px solid #222}
-.em-num{position:absolute;transform:translate(-50%,50%);width:19px;height:19px;border-radius:50%;
-  background:#fff;border:1.5px solid #222;color:#222;font-size:10px;font-weight:700;
-  display:flex;align-items:center;justify-content:center}
+/* ---------- next steps ---------- */
+.next-steps{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;max-width:60ch}
+.next-steps li{display:flex;gap:14px;align-items:flex-start;padding:14px 16px;border-radius:12px;
+  background:rgba(255,255,255,.55)}
+.next-steps .ns-num{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.next-steps .ns-body{font-size:14.5px;line-height:1.5;color:var(--ink-soft)}
+.next-steps .ns-body strong{color:var(--ink);font-weight:700}
 
 /* ---------- content bullets ---------- */
 .bullets{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;max-width:64ch}
-.bullets li{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.55;color:var(--ink-soft)}
-.bullets li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ultra);margin-top:7px;flex-shrink:0}
+/* Block (not flex) so inline <strong> stays in the text flow — as a flex item
+   it became its own column and wrapped lines hung indented beside it. */
+.bullets li{position:relative;padding-left:19px;font-size:16.5px;line-height:1.55;color:var(--ink-soft)}
+.bullets li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;
+  background:var(--ultra)}
 .bullets li strong{color:var(--ink);font-weight:700}
 .navy-bg .bullets li{color:rgba(255,255,255,.82)}
 .navy-bg .bullets li strong{color:#fff}
 .navy-bg .bullets li::before{background:var(--ice)}
 .bullets.tight{gap:8px}
 
+.logo-row{display:flex;gap:14px;margin-top:22px;flex-wrap:wrap}
+.logo-chip{display:flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:99px;
+  background:#fff;border:1px solid var(--rule);box-shadow:0 2px 8px rgba(10,19,48,.06)}
+.logo-chip img{width:28px;height:28px;border-radius:8px;display:block}
+.logo-chip span{font-size:13.5px;font-weight:600;color:var(--ink)}
+
+/* ---------- agenda: three sessions as an ascending staircase ---------- */
+.stairflow{display:flex;align-items:flex-end;gap:16px;margin-top:48px}
+.stair-step{flex:1;min-width:0;padding:20px 22px;border-top:3px solid var(--ultra)}
+.stair-label{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ultra)}
+.stair-step p{font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:8px 0 0}
+.stair-step p strong{color:var(--ink)}
+/* The staircase offset lives in --sy rather than in `transform` directly, so
+   the reveal animation in motion.css can compose its entrance offset on top
+   of the step's resting position instead of fighting it. */
+.stair-step{transform:translateY(var(--sy,0px))}
+.stair-0{--sy:76px}
+.stair-1{--sy:38px}
+.stair-2{--sy:0px}
+@media (max-width:820px){
+  .stairflow{flex-direction:column;gap:14px}
+  .stair-0,.stair-1,.stair-2{--sy:0px}
+}
+
 /* ---------- showcase beat ---------- */
 .outs{display:flex;gap:16px;flex-wrap:wrap;margin-top:22px}
 .out{flex:1;min-width:220px;padding:18px}
+
+/* ---------- stepper: click through a stack of cards one at a time ---------- */
+.stepper .outs{display:block;position:relative}
+.stepper .out{display:none;min-width:0}
+.stepper .out.active{display:block;animation:stepIn .2s ease}
+.stepper{max-width:900px}
+.showcase-body .stepper{max-width:none}
+.stepper .out{padding:22px 24px;min-height:120px}
+.stepper .out p{font-size:15px;line-height:1.6}
+@keyframes stepIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* labelled tab strip (cards with data-step) */
+.step-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.step-tab{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--ink-soft);
+  border:1px solid var(--rule);transition:.15s}
+.step-tab .st-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  border-radius:50%;background:var(--rule);color:var(--ink);font-size:10.5px;font-weight:700}
+.step-tab:hover{color:var(--ink);border-color:var(--ultra)}
+.step-tab.active{background:var(--ultra);border-color:var(--ultra);color:#fff}
+.step-tab.active .st-num{background:rgba(255,255,255,.25);color:#fff}
+.navy-bg .step-tab{color:rgba(255,255,255,.66);border-color:rgba(255,255,255,.2)}
+.navy-bg .step-tab .st-num{background:rgba(255,255,255,.14);color:#fff}
+.navy-bg .step-tab:hover{color:#fff;border-color:var(--ice)}
+.navy-bg .step-tab.active{background:var(--ice);border-color:var(--ice);color:var(--navy)}
+.navy-bg .step-tab.active .st-num{background:rgba(8,16,42,.22);color:var(--navy)}
+
+/* plain-dot fallback */
+.step-nav{display:flex;align-items:center;gap:16px;margin-top:14px}
+.step-dots{display:flex;gap:7px}
+.step-dot{width:7px;height:7px;border-radius:50%;background:var(--rule);cursor:pointer}
+.step-dot.active{background:var(--ultra)}
+.navy-bg .step-dot{background:rgba(255,255,255,.24)}
+.navy-bg .step-dot.active{background:var(--ice)}
+
+/* prev / next walk-through */
+.step-walk{display:flex;align-items:center;gap:12px;margin-top:14px}
+.step-btn{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;background:rgba(30,47,219,.08);color:var(--ultra-deep);font-size:17px;font-weight:700;
+  transition:background .15s}
+.step-btn:hover{background:rgba(30,47,219,.16)}
+.step-btn[disabled]{opacity:.3;pointer-events:none}
+.navy-bg .step-btn{background:rgba(255,255,255,.12);color:#fff}
+.navy-bg .step-btn:hover{background:rgba(255,255,255,.2)}
+.step-count{font-size:12px;color:var(--ink-soft);font-weight:600;min-width:34px;text-align:center}
+.navy-bg .step-count{color:rgba(255,255,255,.6)}
+
+/* ---------- showcase: source document beside the prompt flow ---------- */
+.showcase-body{display:grid;grid-template-columns:270px 1fr;gap:30px;margin-top:20px;align-items:start}
+@media (max-width:960px){.showcase-body{grid-template-columns:1fr}}
+.source-card{padding:20px 22px;display:flex;flex-direction:column;min-height:230px}
+.source-label{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ice);margin-bottom:10px}
+.source-card h3{font-size:18px;line-height:1.15;margin-bottom:12px;color:#fff}
+.source-meta{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.source-meta li{font-size:12.5px;color:rgba(255,255,255,.62);padding-left:14px;position:relative}
+.source-meta li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:1px;
+  background:rgba(255,255,255,.45)}
+.source-illu{width:100px;margin:auto auto 0;display:block;opacity:.9}
+
+.prompt-flow .out{padding:20px 22px;min-height:168px}
+.prompt-flow .out-to{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ice);margin-bottom:10px}
+.prompt-flow .out p{font-size:15px;line-height:1.6}
+.showcase-note{margin-top:20px;padding:14px 18px;font-size:14.5px;font-style:normal;line-height:1.55;
+  color:rgba(255,255,255,.78);border-left:3px solid var(--ice);background:rgba(255,255,255,.06);
+  border-radius:0 10px 10px 0;max-width:64ch}
+.navy-bg .showcase-note strong{color:#fff}
+
+/* ---------- four-principles overview ---------- */
+.principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}
+.principle-card{padding:24px 28px;display:flex;align-items:flex-start;gap:18px}
+.principle-num{flex:0 0 auto;font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:28px;
+  color:var(--ultra);opacity:.5;line-height:1.1}
+.principle-txt{min-width:0}
+.principle-card h3{font-size:20px;margin:0;text-align:left}
+.principle-card p{margin:5px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-soft);text-align:left}
+@media (max-width:760px){.principle-grid{grid-template-columns:1fr}}
+
+/* ---------- recurring badge restating which principle a slide belongs to ---------- */
+.principle-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ultra);background:rgba(30,47,219,.08);padding:5px 12px;border-radius:999px;margin-bottom:14px}
+.navy-bg .principle-tag{color:var(--ice);background:rgba(255,255,255,.1)}
+
+/* ---------- principle beat: quick explanation, then example, then illustration ----------
+   All four principle slides share this shape so the deck teaches the same way
+   four times: what it means in a breath, what it looks like in the office,
+   one picture to hang it on. */
+.pbody{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:46px;align-items:center;margin-top:20px}
+/* Prinzip 1 also carries the four-run stepper below, so its illustration
+   stays smaller to keep the whole beat inside one viewport. */
+.pbody.tight{grid-template-columns:minmax(0,1fr) 210px}
+.pbody.tight .pillu{max-width:210px}
+.pcol{min-width:0}
+.pblock + .pblock{margin-top:22px}
+.plabel{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:8px}
+.navy-bg .plabel{color:rgba(255,255,255,.6)}
+.pshort{font-size:16px;line-height:1.65;margin:0;max-width:62ch}
+.pblock .analogy{margin-top:0}
+.pillu{width:100%;max-width:300px;display:block;justify-self:center}
+@media (max-width:900px){
+  .pbody{grid-template-columns:1fr;gap:22px}
+  .pillu{max-width:140px;justify-self:start;order:-1}
+}
+
+/* ---------- "new hire in the office" analogy callout ---------- */
+.analogy{margin-top:18px;padding:14px 18px;border-left:3px solid var(--ultra);
+  background:rgba(30,47,219,.05);border-radius:0 10px 10px 0;font-size:13px;line-height:1.6;color:var(--ink-soft);
+  max-width:64ch}
+.analogy strong{color:var(--ink)}
+.navy-bg .analogy{border-left-color:var(--ice);background:rgba(255,255,255,.06)}
+.navy-bg .analogy strong{color:#fff}
+
+/* ---------- KI/ML/LLM nested-circles legend ---------- */
+.nest-grid{display:flex;align-items:center;gap:40px;margin-top:24px}
+.nest-illu{flex:0 0 220px;width:220px;max-width:32vw;margin:0}
+.nest-legend{flex:1 1 auto;display:flex;flex-direction:column;gap:16px;min-width:0}
+.nest-row{display:flex;align-items:baseline;gap:14px}
+.nest-row p{margin:0;font-size:14px;line-height:1.55;color:var(--ink-soft)}
+.nest-tag{flex:0 0 auto;font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:13px;
+  letter-spacing:.02em;color:#fff;background:var(--ultra);padding:5px 11px;border-radius:99px;min-width:42px;text-align:center}
+@media (max-width:760px){.nest-grid{flex-direction:column;align-items:flex-start;gap:20px}.nest-illu{width:160px}}
+
 .out .out-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ultra-deep);margin-bottom:8px}
 .navy-bg .out .out-label{color:var(--ice)}
 .out p{font-size:12.5px;line-height:1.55;margin:0}

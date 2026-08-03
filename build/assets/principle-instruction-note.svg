@@ -1,0 +1,18 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ein Briefing-Zettel mit klar geschriebenen Zeilen und ein Stift darüber">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- sheet behind, for depth -->
+    <path d="M100 298 L390 203 L520 338 L230 433 Z" opacity=".3"/>
+    <!-- main sheet -->
+    <path d="M110 310 L400 215 L530 350 L240 445 Z" fill="#D3E2F8"/>
+    <!-- written lines -->
+    <path d="M167 330 L394 256"/>
+    <path d="M191 355 L342 305"/>
+    <path d="M214 379 L441 305"/>
+    <path d="M238 403 L339 384"/>
+    <!-- pen -->
+    <path d="M570 113 L465 243 L438 262 L445 227 L550 97 Z" fill="#D3E2F8"/>
+    <path d="M550 97 L570 113"/>
+    <path d="M537 130 L557 146"/>
+    <path d="M465 243 L445 227"/>
+  </g>
+</svg>

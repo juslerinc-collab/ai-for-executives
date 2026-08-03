@@ -1,0 +1,31 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ein Tisch, auf dem ein aufgeschlagenes Buch, ein Dokument und ein Diagramm nebeneinander ausgebreitet liegen">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <!-- table edge / thickness -->
+    <path d="M40 330 L320 470 L600 330 L600 358 L320 498 L40 358 Z" fill="#BCD3F2"/>
+    <!-- table top -->
+    <path d="M320 190 L600 330 L320 470 L40 330 Z" fill="#EDF3FC"/>
+
+    <!-- open book, back left -->
+    <path d="M230 263 L280 238 L358 277 L308 302 Z" fill="#D3E2F8"/>
+    <path d="M230 263 L180 288 L258 327 L308 302 Z" fill="#D3E2F8"/>
+    <path d="M230 263 L308 302" stroke-width="5" opacity=".8"/>
+    <path d="M266 269 L296 254"/>
+    <path d="M285 278 L310 266"/>
+    <path d="M305 288 L335 273"/>
+    <path d="M241 281 L211 296"/>
+    <path d="M260 291 L235 303"/>
+    <path d="M280 300 L250 315"/>
+
+    <!-- document with lines, front left -->
+    <path d="M197 313 L281 355 L197 397 L113 355 Z" fill="#D3E2F8"/>
+    <path d="M185 334 L239 361"/>
+    <path d="M166 344 L201 361"/>
+    <path d="M147 354 L199 380"/>
+
+    <!-- chart sheet, right -->
+    <path d="M393 310 L477 352 L393 394 L309 352 Z" fill="#D3E2F8"/>
+    <path d="M370 345 L370 300" stroke-width="10"/>
+    <path d="M395 350 L395 285" stroke-width="10"/>
+    <path d="M420 354 L420 309" stroke-width="10"/>
+  </g>
+</svg>
