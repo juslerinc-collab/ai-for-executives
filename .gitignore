@@ -1,2 +1,5 @@
 .DS_Store
 node_modules/
+
+# Build output — the Pages workflow runs `npm run build` and publishes dist/.
+dist/
