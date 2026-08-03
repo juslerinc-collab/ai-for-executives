@@ -1,47 +1,123 @@
 <section class="beat wide navy-bg" data-session="Session 1" data-chapter="Was kann das, und wie instruiere ich es?" data-topic="Showcase" data-sub="Ein Protokoll, drei Empfänger" data-locked="false" data-surface="navy">
   <div class="beat-inner">
     <h1>Ein Protokoll, drei <span class="k">Empfänger</span>.</h1>
-    <p class="lede">Ein Dokument, vier Prompts, drei Empfänger — die einander nie zu Gesicht bekommen.</p>
+    <p class="lede">Dasselbe Dokument, viermal instruiert — und der vierte Schritt gehört ganz Ihnen.</p>
 
-    <div class="showcase-body">
+    <div class="showcase-body" data-step-sync data-at="1">
       <aside class="glass source-card">
         <div class="source-label">Die Grundlage</div>
         <h3>Sitzungsprotokoll einer Pensionskasse</h3>
-        <ul class="source-meta">
-          <li>neun Traktanden</li>
-          <li>drei Seiten</li>
-          <li>unbearbeitet, so wie es ankam</li>
-        </ul>
-        <img class="source-illu" src="{{ASSET:meeting-protocol}}" alt="">
+        <div class="doc">
+          <div class="doc-head">Neun Traktanden · drei Seiten</div>
+          <ol class="doc-lines">
+            <li>Begrüssung und Präsenz</li>
+            <li>Protokoll der letzten Sitzung</li>
+            <li>Jahresrechnung 2025</li>
+            <li>Deckungsgrad per 31.12.</li>
+            <li>Sanierungsbeitrag</li>
+            <li class="key">Verzinsung Altersguthaben <b>1.25%</b></li>
+            <li>Wahl in den Stiftungsrat</li>
+            <li>Mandat Vermögensverwaltung</li>
+            <li>Verschiedenes</li>
+          </ol>
+        </div>
+        <div class="doc-foot">unbearbeitet, so wie es ankam</div>
       </aside>
 
       <div class="stepper prompt-flow">
         <div class="outs">
           <div class="glass out active" data-step="Essenz">
             <div class="out-to">an Sie selbst</div>
-            <p><em>„Das ist ein Sitzungsprotokoll. Fass mir in fünf Zeilen zusammen, was entschieden wurde und was
-            offen bleibt. Nicht mehr.“</em></p>
+            <div class="pair">
+              <div class="say">
+                <div class="pair-label">Sie sagen</div>
+                <p><em>„Das ist ein Sitzungsprotokoll. Fass mir in fünf Zeilen zusammen, was entschieden
+                wurde und was offen bleibt. Nicht mehr.“</em></p>
+              </div>
+              <div class="pair-arrow" aria-hidden="true"></div>
+              <div class="got" data-reveal="Antwort zeigen">
+                <div class="pair-label">Zurück kommt <span class="tally">3 Seiten → 5 Zeilen</span></div>
+                <div class="got-body">
+                  <ul class="got-lines">
+                    <li>Verzinsung Altersguthaben 2026: 1.25% beschlossen.</li>
+                    <li>Sanierungsbeitrag entfällt per 1. Januar.</li>
+                    <li>Wahl in den Stiftungsrat: vertagt.</li>
+                    <li>Offen: Mandat Vermögensverwaltung.</li>
+                    <li>Offen: Reglement Teilliquidation, Entwurf bis Monatsende.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="glass out" data-step="Personalleiterin">
             <div class="out-to">an die Personalleiterin</div>
-            <p><em>„Schreib daraus eine kurze E-Mail an die Personalleiterin. Drei Absätze: was sie wissen muss, was
-            von ihr gebraucht wird, bis wann. Freundlich, aber ohne Umschweife.“</em></p>
+            <div class="pair">
+              <div class="say">
+                <div class="pair-label">Sie sagen</div>
+                <p><em>„Schreib daraus eine kurze E-Mail an die Personalleiterin. Drei Absätze: was sie
+                wissen muss, was von ihr gebraucht wird, bis wann. Freundlich, aber ohne Umschweife.“</em></p>
+              </div>
+              <div class="pair-arrow" aria-hidden="true"></div>
+              <div class="got" data-reveal="Antwort zeigen">
+                <div class="pair-label">Zurück kommt <span class="tally">3 Absätze</span></div>
+                <div class="got-body">
+                  <div class="got-mail">
+                    <div class="mail-subject">Beschlüsse der Sitzung vom 14. Juli</div>
+                    <p>Der Stiftungsrat hat die Verzinsung der Altersguthaben für 2026 auf
+                    <span class="num">1.5%</span> festgelegt und den Sanierungsbeitrag per 1. Januar aufgehoben.</p>
+                    <p>Von Ihnen gebraucht: die Information an die Mitarbeitenden und die Anpassung der
+                    Lohnabrechnung.</p>
+                    <p>Bis 31. August, damit der Januar sauber startet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="glass out" data-step="Versicherte">
             <div class="out-to">an die Versicherten</div>
-            <p><em>„Und jetzt dasselbe für die Versicherten: ein Absatz, keine Fachbegriffe. Wenn ein Begriff sein
-            muss, erklär ihn in einem Nebensatz.“</em></p>
+            <div class="pair">
+              <div class="say">
+                <div class="pair-label">Sie sagen</div>
+                <p><em>„Und jetzt dasselbe für die Versicherten: ein Absatz, keine Fachbegriffe. Wenn ein
+                Begriff sein muss, erklär ihn in einem Nebensatz.“</em></p>
+              </div>
+              <div class="pair-arrow" aria-hidden="true"></div>
+              <div class="got" data-reveal="Antwort zeigen">
+                <div class="pair-label">Zurück kommt <span class="tally">1 Absatz, keine Fachbegriffe</span></div>
+                <div class="got-body">
+                  <p class="got-plain">Ihr Altersguthaben — das Geld, das für Ihre Pension angespart wird —
+                  wird 2026 mit <span class="num">1.5%</span> verzinst. Der Sanierungsbeitrag, der Ihnen bisher
+                  vom Lohn abgezogen wurde, entfällt ab Januar. Sie selbst müssen dafür nichts tun.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="glass out" data-step="Kontrolle">
+
+          <div class="glass out is-catch" data-step="Kontrolle">
             <div class="out-to">zurück an Claude</div>
-            <p><em>„Warte — im Protokoll steht 1.25%, nicht 1.5%, wie du in der Mail geschrieben hast. Bitte
-            korrigieren, bevor ich das verschicke.“</em></p>
+            <div class="pair">
+              <div class="say">
+                <div class="pair-label">Sie sagen</div>
+                <p><em>„Warte — im Protokoll steht 1.25%, nicht 1.5%, wie du in beiden Texten geschrieben
+                hast. Bitte korrigieren, bevor ich das verschicke.“</em></p>
+              </div>
+              <div class="pair-arrow" aria-hidden="true"></div>
+              <div class="got" data-reveal="Korrektur zeigen">
+                <div class="pair-label">Zurück kommt <span class="tally">1 Zahl — von Ihnen gefunden</span></div>
+                <div class="got-body">
+                  <div class="fixline"><span class="was">1.5%</span><span class="fixarrow">→</span><span class="now">1.25%</span></div>
+                  <p class="got-plain">Sie haben recht, im Protokoll steht 1.25%. Beide Texte sind korrigiert.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <p class="showcase-note">Kein einziger Sachverhalt neu getippt — der Kontext bleibt im Gespräch liegen.
-    Der letzte Prompt ist der wichtigste: <strong>Sie</strong> haben die Zahl geprüft.</p>
+    Der vierte Schritt ist der wichtigste: <strong>Sie</strong> haben die Zahl geprüft.</p>
   </div>
 </section>

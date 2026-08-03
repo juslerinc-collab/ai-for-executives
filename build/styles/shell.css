@@ -147,7 +147,10 @@ body.navy-section .nav-node.locked:hover .nav-dot{background:rgba(255,255,255,.1
 .beat h1{font-size:clamp(32px,3.5vw,50px);margin-bottom:18px}
 .beat h1 .k{color:var(--ultra)}
 .navy-section .beat h1 .k{color:var(--ice)}
-.lede{font-size:18px;font-weight:400;line-height:1.65;color:var(--ink-soft);max-width:64ch}
+/* Body copy is sized for a projected slide read from the back of a room, not
+   for a laptop at arm's length: 19px is the floor for a lede, and the measure
+   is cut to ~56ch so a lede is two lines, never four. */
+.lede{font-size:19px;font-weight:400;line-height:1.6;color:var(--ink-soft);max-width:56ch}
 .navy-section .lede{color:rgba(255,255,255,.78)}
 .wdth-88{font-variation-settings:"wdth" 88}
 

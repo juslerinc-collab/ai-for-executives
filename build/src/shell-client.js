@@ -160,6 +160,10 @@
     if (!cards.length) return;
     const stack = cards[0].parentElement;
     const labels = cards.map((c) => c.dataset.step);
+    // A stepper can publish which step it is on to an ancestor marked
+    // data-step-sync, so siblings outside the card stack can react in CSS —
+    // the showcase beat uses it to light up the source line step 4 audits.
+    const sync = stepper.closest("[data-step-sync]");
     const useTabs = labels.every(Boolean);
 
     const nav = document.createElement("div");
@@ -207,10 +211,34 @@
       prevBtn.disabled = idx === 0;
       nextBtn.disabled = idx === cards.length - 1;
       countEl.textContent = `${idx + 1} / ${cards.length}`;
+      if (sync) sync.dataset.at = String(idx + 1);
     }
     prevBtn.onclick = () => show(idx - 1);
     nextBtn.onclick = () => show(idx + 1);
     show(0);
+  });
+
+  /* ---------------- click-to-reveal: a result that waits to be asked for ----
+     The showcase is walked instruction-first — this is what I said, and only
+     then, on a click, this is what came back. A [data-reveal] block is only
+     ever covered by this script, so if it never runs the answer is simply
+     there: the content is the point, the suspense is not. Same fail-open
+     stance as the reveal engine.
+
+     A revealed block stays revealed. Re-covering on the way back would mean
+     the presenter has to click twice for something the room has already
+     seen, and a reload resets the whole slide anyway. */
+  document.querySelectorAll("[data-reveal]").forEach((el) => {
+    el.classList.add("covered");
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "reveal-btn";
+    btn.innerHTML = `<span>${el.dataset.reveal || "Antwort zeigen"}</span><span class="rv-ico"></span>`;
+    btn.onclick = () => {
+      el.classList.remove("covered");
+      btn.remove();
+    };
+    el.appendChild(btn);
   });
 
   /* ---------------- closer / bridge popup ---------------- */

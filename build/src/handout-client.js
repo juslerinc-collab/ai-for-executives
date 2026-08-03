@@ -33,8 +33,8 @@ Kontext, nicht die Antwort.
 ## Kurz zusammengefasst
 
 Sie haben heute zwei der vier Schritte geübt: **Erklären** (Sie halten nur ein Thema, das Sie nicht kennen)
-und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie einen neuen
-Assistenten — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
+und **Aufsetzen** (Sie halten nichts, ein leeres Blatt). Beide funktionieren, weil Sie instruieren wie eine neue
+Assistenz — mit Zielgruppe, Tiefe, einem Beispiel, und der Gewohnheit, das Ergebnis zu prüfen, bevor Sie es
 weitergeben.
 
 ## Testen Sie sich

@@ -57,41 +57,61 @@
   100%{box-shadow:0 0 0 0 rgba(232,169,89,0)}
 }
 
-/* ---------- lab beat: illustration rail beside the interactive card ---------- */
-.lab-body{display:grid;grid-template-columns:200px 1fr;gap:32px;align-items:start;margin-top:22px}
-.lab-rail{display:flex;flex-direction:column;align-items:flex-start;padding-top:4px}
-.lab-rail .illu{width:100%;max-width:200px;margin:0 0 16px;display:block}
-@media (max-width:900px){
-  .lab-body{grid-template-columns:1fr}
-  .lab-rail{flex-direction:row;align-items:center;gap:16px}
-  .lab-rail .illu{width:88px;max-width:88px;margin:0;flex-shrink:0}
+/* ---------- lab beat: the task on the left, the levers on the right ----------
+   A lab slide has exactly two jobs on screen: the prompt people are about to
+   run, and the handful of levers that make a second run better. Both are the
+   lesson, so both stay visible — only the "if you have no topic of your own"
+   examples fold away into a drawer. The illustration rides small above the
+   task card rather than holding its own column, which is what left the old
+   layout with a card floating in the top third of an empty slide. */
+/* Lab beats are the tallest in the deck and grow again when the suggestions
+   drawer opens, so they run on tighter frame padding than a theory slide. */
+.beat:has(.lab-badge){padding:62px 74px 34px}
+.beat:has(.lab-badge) h1{margin-bottom:10px}
+
+.lab-body{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:34px;align-items:start;margin-top:12px}
+@media (max-width:1100px){
+  .lab-body{grid-template-columns:1fr;gap:22px}
 }
 
-/* ---------- lab beat: prompt card, drawers ---------- */
-.lab-card{padding:18px 22px}
-.lab-task{font-size:14px;font-weight:600;margin-bottom:8px}
-.prompt{background:var(--ice-tint);border-radius:10px;padding:12px 15px;font-size:13.5px;line-height:1.55;
-  display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
-.prompt .prompt-text{flex:1 1 auto;min-width:0}
-.prompt .copybtn{all:unset;cursor:pointer;flex:0 0 auto;font-size:11px;font-weight:600;
-  color:var(--ultra-deep);padding:4px 8px;border-radius:6px}
-.prompt .copybtn:hover{background:rgba(30,47,219,.1)}
-.worauf{font-size:12.5px;color:var(--ink-soft);margin-bottom:10px}
+.lab-rail{display:flex;align-items:center;gap:18px;margin-bottom:14px}
+.lab-rail .illu{width:76px;max-width:76px;margin:0;flex-shrink:0}
+.lab-task{font-size:16px;font-weight:600;line-height:1.45;margin:0}
 
-.drawerbtn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ultra-deep);
-  padding:8px 0;display:flex;align-items:center;gap:6px}
+/* ---------- lab beat: prompt card, levers, drawer ---------- */
+.lab-card{padding:22px 26px}
+.prompt{background:var(--ice-tint);border-radius:12px;padding:16px 18px;font-size:17.5px;line-height:1.5;
+  display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.prompt .prompt-text{flex:1 1 auto;min-width:0}
+.prompt .copybtn{all:unset;cursor:pointer;flex:0 0 auto;font-size:13px;font-weight:600;
+  color:var(--ultra-deep);padding:5px 9px;border-radius:6px}
+.prompt .copybtn:hover{background:rgba(30,47,219,.1)}
+.worauf{font-size:15.5px;line-height:1.5;color:var(--ink-soft);margin-bottom:6px}
+
+.lever-card{padding:18px 24px}
+.lever-head{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ultra);margin-bottom:4px}
+.navy-bg .lever-head{color:var(--ice)}
+
+.drawerbtn{all:unset;cursor:pointer;font-size:15px;font-weight:600;color:var(--ultra-deep);
+  padding:8px 0;display:flex;align-items:center;gap:7px}
 .drawerbtn .chev{transition:transform .15s}
 .drawerbtn.open .chev{transform:rotate(90deg)}
 .drawer{max-height:0;overflow:hidden;transition:max-height .25s ease}
 .drawer.open{max-height:900px}
-.drawer-inner{padding:6px 0 14px}
+/* Two columns so opening the suggestions costs the beat two rows of height,
+   not four — an open drawer still has to fit inside the slide. */
+.drawer-inner{padding:4px 0 6px;display:grid;grid-template-columns:1fr 1fr;column-gap:22px}
+@media (max-width:1100px){.drawer-inner{grid-template-columns:1fr}}
 .altrow{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 0;
-  border-bottom:1px solid var(--rule);font-size:13px}
-.altrow .use{all:unset;cursor:pointer;font-size:11.5px;font-weight:600;color:var(--ultra-deep);
+  border-bottom:1px solid var(--rule);font-size:15px;line-height:1.4}
+.drawer-inner .altrow:nth-last-child(-n+2){border-bottom:0}
+.altrow .use{all:unset;cursor:pointer;font-size:13px;font-weight:600;color:var(--ultra-deep);
   padding:5px 10px;border-radius:7px;background:rgba(30,47,219,.08)}
-.leverrow{padding:8px 0;border-bottom:1px solid var(--rule);font-size:12.5px}
+.leverrow{padding:8px 0;border-bottom:1px solid var(--rule);font-size:15.5px;line-height:1.4}
+.leverrow:last-child{border-bottom:0}
 .leverrow b{color:var(--ink)}
-.leverrow .lp{color:var(--ink-soft);margin-top:2px}
+.leverrow .lp{color:var(--ink-soft);margin-top:3px}
 
 .hint{color:var(--ink-soft)}
 
@@ -117,12 +137,12 @@
 
 /* ---------- four steps table ---------- */
 .steptable{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
-.stepcard{padding:18px 16px}
-.stepcard h3{font-size:14px;margin-bottom:8px;color:var(--ultra)}
-.stepcard .holding{font-size:12px;color:var(--ink-soft);margin-bottom:10px;font-style:italic}
-.stepcard .boundary{font-size:12px;line-height:1.5;margin-bottom:8px}
-.stepcard .gegen{font-size:11.5px;line-height:1.5;color:var(--ink-soft);border-top:1px solid var(--rule);
-  padding-top:8px}
+.stepcard{padding:20px 20px}
+.stepcard h3{font-size:18px;margin-bottom:10px;color:var(--ultra)}
+.stepcard .holding{font-size:14.5px;line-height:1.45;color:var(--ink-soft);margin-bottom:12px;font-style:italic}
+.stepcard .boundary{font-size:15px;line-height:1.5;margin-bottom:12px}
+.stepcard .gegen{font-size:14px;line-height:1.5;color:var(--ink-soft);border-top:1px solid var(--rule);
+  padding-top:10px}
 .stepcard.dim{opacity:.5}
 @media (max-width:900px){.steptable{grid-template-columns:1fr 1fr}}
 
@@ -132,15 +152,15 @@
   background:rgba(255,255,255,.55)}
 .next-steps .ns-num{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;
   font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.next-steps .ns-body{font-size:14.5px;line-height:1.5;color:var(--ink-soft)}
+.next-steps .ns-body{font-size:16.5px;line-height:1.5;color:var(--ink-soft)}
 .next-steps .ns-body strong{color:var(--ink);font-weight:700}
 
 /* ---------- content bullets ---------- */
 .bullets{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;max-width:64ch}
 /* Block (not flex) so inline <strong> stays in the text flow — as a flex item
    it became its own column and wrapped lines hung indented beside it. */
-.bullets li{position:relative;padding-left:19px;font-size:16.5px;line-height:1.55;color:var(--ink-soft)}
-.bullets li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;border-radius:50%;
+.bullets li{position:relative;padding-left:21px;font-size:18.5px;line-height:1.5;color:var(--ink-soft)}
+.bullets li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;border-radius:50%;
   background:var(--ultra)}
 .bullets li strong{color:var(--ink);font-weight:700}
 .navy-bg .bullets li{color:rgba(255,255,255,.82)}
@@ -152,13 +172,13 @@
 .logo-chip{display:flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:99px;
   background:#fff;border:1px solid var(--rule);box-shadow:0 2px 8px rgba(10,19,48,.06)}
 .logo-chip img{width:28px;height:28px;border-radius:8px;display:block}
-.logo-chip span{font-size:13.5px;font-weight:600;color:var(--ink)}
+.logo-chip span{font-size:14.5px;font-weight:600;color:var(--ink)}
 
 /* ---------- agenda: three sessions as an ascending staircase ---------- */
 .stairflow{display:flex;align-items:flex-end;gap:16px;margin-top:48px}
 .stair-step{flex:1;min-width:0;padding:20px 22px;border-top:3px solid var(--ultra)}
 .stair-label{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ultra)}
-.stair-step p{font-size:13.5px;line-height:1.55;color:var(--ink-soft);margin:8px 0 0}
+.stair-step p{font-size:15.5px;line-height:1.55;color:var(--ink-soft);margin:8px 0 0}
 .stair-step p strong{color:var(--ink)}
 /* The staircase offset lives in --sy rather than in `transform` directly, so
    the reveal animation in motion.css can compose its entrance offset on top
@@ -183,13 +203,13 @@
 .stepper{max-width:900px}
 .showcase-body .stepper{max-width:none}
 .stepper .out{padding:22px 24px;min-height:120px}
-.stepper .out p{font-size:15px;line-height:1.6}
+.stepper .out p{font-size:16.5px;line-height:1.55}
 @keyframes stepIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* labelled tab strip (cards with data-step) */
 .step-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .step-tab{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
-  padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--ink-soft);
+  padding:8px 15px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-soft);
   border:1px solid var(--rule);transition:.15s}
 .step-tab .st-num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
   border-radius:50%;background:var(--rule);color:var(--ink);font-size:10.5px;font-weight:700}
@@ -222,26 +242,103 @@
 .step-count{font-size:12px;color:var(--ink-soft);font-weight:600;min-width:34px;text-align:center}
 .navy-bg .step-count{color:rgba(255,255,255,.6)}
 
-/* ---------- showcase: source document beside the prompt flow ---------- */
-.showcase-body{display:grid;grid-template-columns:270px 1fr;gap:30px;margin-top:20px;align-items:start}
+/* ---------- showcase: source document beside the prompt flow ----------
+   The point of this beat is the transformation, so every step shows both
+   halves of it: the instruction on the left, what actually came back on the
+   right. The source document is set as a readable artefact rather than a
+   picture of one — the executive has to be able to find "1.25%" in it with
+   their own eyes, because step 4 is them catching the machine using 1.5%.
+   That mis-set number is deliberately planted in the outputs of steps 2 and
+   3 and only corrected in step 4; it is the payoff of the whole slide. */
+.showcase-body{display:grid;grid-template-columns:262px 1fr;gap:26px;margin-top:16px;align-items:stretch}
 @media (max-width:960px){.showcase-body{grid-template-columns:1fr}}
-.source-card{padding:20px 22px;display:flex;flex-direction:column;min-height:230px}
+.source-card{padding:18px 20px;display:flex;flex-direction:column;min-height:0}
 .source-label{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--ice);margin-bottom:10px}
-.source-card h3{font-size:18px;line-height:1.15;margin-bottom:12px;color:#fff}
-.source-meta{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
-.source-meta li{font-size:12.5px;color:rgba(255,255,255,.62);padding-left:14px;position:relative}
-.source-meta li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:1px;
-  background:rgba(255,255,255,.45)}
-.source-illu{width:100px;margin:auto auto 0;display:block;opacity:.9}
+  color:var(--ice);margin-bottom:8px}
+.source-card h3{font-size:16.5px;line-height:1.2;margin-bottom:12px;color:#fff}
 
-.prompt-flow .out{padding:20px 22px;min-height:168px}
-.prompt-flow .out-to{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+/* The document itself: nine real traktanden, set small and quiet so the card
+   reads as paper at a distance and as text up close. */
+.doc{border-top:1px solid rgba(255,255,255,.16);padding-top:10px}
+.doc-head{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:8px}
+.doc-lines{list-style:none;margin:0;padding:0;counter-reset:trakt}
+.doc-lines li{counter-increment:trakt;position:relative;padding:2px 6px 2px 20px;border-radius:5px;
+  font-size:11.5px;line-height:1.45;color:rgba(255,255,255,.52);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:.35s var(--m-ease,ease)}
+.doc-lines li::before{content:counter(trakt);position:absolute;left:4px;top:2px;
+  font-size:9.5px;font-weight:700;color:rgba(255,255,255,.3)}
+.doc-lines li.key{color:rgba(255,255,255,.8)}
+.doc-lines li.key b{color:#fff;font-weight:700}
+.doc-foot{margin-top:auto;padding-top:12px;font-size:11.5px;color:rgba(255,255,255,.4)}
+
+/* Step 4 is the audit step, so the source line being audited against lights
+   up on the document — but only once the correction itself is revealed, so
+   the document does not point at the answer before it is asked for. */
+.showcase-body[data-at="4"]:has(.out.is-catch .got:not(.covered)) .doc-lines li.key{
+  background:rgba(30,158,107,.22);box-shadow:inset 0 0 0 1px rgba(30,158,107,.5);color:#fff}
+
+/* ---------- one step: instruction → result ---------- */
+.prompt-flow{display:flex;flex-direction:column}
+.prompt-flow .outs{flex:1 1 auto}
+.prompt-flow .out{padding:16px 20px;min-height:0;height:100%}
+.prompt-flow .out-to{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ice);margin-bottom:10px}
-.prompt-flow .out p{font-size:15px;line-height:1.6}
-.showcase-note{margin-top:20px;padding:14px 18px;font-size:14.5px;font-style:normal;line-height:1.55;
+.pair{display:grid;grid-template-columns:minmax(0,.92fr) 22px minmax(0,1.08fr);gap:0 12px;align-items:start}
+@media (max-width:900px){.pair{grid-template-columns:1fr;gap:14px}.pair-arrow{display:none}}
+.pair-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.42);margin-bottom:7px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tally{letter-spacing:.02em;text-transform:none;font-size:11px;font-weight:600;color:var(--ice)}
+.prompt-flow .say p{font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.9);margin:0}
+/* The arrow is drawn from a border, not a glyph, so it carries no font. */
+.pair-arrow{align-self:center;justify-self:center;width:9px;height:9px;
+  border-top:1.5px solid rgba(179,204,244,.55);border-right:1.5px solid rgba(179,204,244,.55);
+  transform:rotate(45deg);margin-top:14px}
+.got{border-left:1px solid rgba(255,255,255,.14);padding-left:16px}
+
+/* ---------- the result waits to be asked for ----------
+   Covered by shell-client.js, never in the markup, so the answer is simply
+   present if the script never runs. The tally is hidden along with the body:
+   "3 Seiten → 5 Zeilen" gives away the punchline on its own. */
+.got.covered .tally,
+.got.covered .got-body{display:none}
+.got-body{animation:stepIn .22s ease}
+.reveal-btn{all:unset;cursor:pointer;box-sizing:border-box;display:flex;align-items:center;
+  justify-content:center;gap:10px;width:100%;min-height:104px;padding:12px 16px;border-radius:12px;
+  border:1px dashed rgba(179,204,244,.3);background:rgba(255,255,255,.035);
+  font-size:12.5px;font-weight:600;color:var(--ice);text-align:center;
+  transition:background .18s ease,border-color .18s ease}
+.reveal-btn:hover{background:rgba(255,255,255,.09);border-color:rgba(179,204,244,.55)}
+.reveal-btn:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+.rv-ico{width:7px;height:7px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;
+  transform:rotate(45deg);margin-left:-2px}
+
+.got-lines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px}
+.prompt-flow .got-lines li{font-size:13px;line-height:1.4;color:rgba(255,255,255,.76);padding-left:13px;position:relative}
+.got-lines li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:1px;
+  background:rgba(179,204,244,.6)}
+.prompt-flow p.got-plain{font-size:13px;line-height:1.5;color:rgba(255,255,255,.76);margin:0}
+.got-mail{font-size:12.5px;line-height:1.45}
+.mail-subject{font-weight:700;color:#fff;margin-bottom:6px;font-size:12.5px}
+.prompt-flow .got-mail p{font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.72);margin:0 0 6px}
+.got-mail p:last-child{margin-bottom:0}
+/* The wrong number is never shouted before it is caught — it sits in the
+   text looking exactly as trustworthy as everything around it, and only
+   step 4 marks it in hindsight. */
+.num{color:#fff;font-weight:600;border-bottom:1px dotted rgba(255,255,255,.35)}
+.is-catch .fixline{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.fixline .was{font-size:15px;font-weight:700;color:var(--warn);text-decoration:line-through;
+  text-decoration-thickness:1.5px}
+.fixline .fixarrow{font-size:12px;color:rgba(255,255,255,.4)}
+.fixline .now{font-size:15px;font-weight:700;color:#fff;background:rgba(30,158,107,.22);
+  box-shadow:inset 0 0 0 1px rgba(30,158,107,.5);padding:2px 9px;border-radius:6px}
+.is-catch .out-to{color:#7FD8B0}
+.is-catch{box-shadow:0 1px 0 rgba(255,255,255,.28) inset, 0 24px 60px rgba(5,11,46,.18),
+  0 0 0 1px rgba(30,158,107,.35)}
+
+.showcase-note{margin-top:14px;padding:11px 16px;font-size:14.5px;font-style:normal;line-height:1.5;
   color:rgba(255,255,255,.78);border-left:3px solid var(--ice);background:rgba(255,255,255,.06);
-  border-radius:0 10px 10px 0;max-width:64ch}
+  border-radius:0 10px 10px 0;max-width:78ch}
 .navy-bg .showcase-note strong{color:#fff}
 
 /* ---------- four-principles overview ---------- */
@@ -250,8 +347,8 @@
 .principle-num{flex:0 0 auto;font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:28px;
   color:var(--ultra);opacity:.5;line-height:1.1}
 .principle-txt{min-width:0}
-.principle-card h3{font-size:20px;margin:0;text-align:left}
-.principle-card p{margin:5px 0 0;font-size:13.5px;line-height:1.5;color:var(--ink-soft);text-align:left}
+.principle-card h3{font-size:21px;margin:0;text-align:left}
+.principle-card p{margin:6px 0 0;font-size:16px;line-height:1.5;color:var(--ink-soft);text-align:left}
 @media (max-width:760px){.principle-grid{grid-template-columns:1fr}}
 
 /* ---------- recurring badge restating which principle a slide belongs to ---------- */
@@ -261,19 +358,34 @@
 
 /* ---------- principle beat: quick explanation, then example, then illustration ----------
    All four principle slides share this shape so the deck teaches the same way
-   four times: what it means in a breath, what it looks like in the office,
-   one picture to hang it on. */
+   four times: what it means in a breath, what to actually do about it, what it
+   looks like in the office, one picture to hang it on. */
 .pbody{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:46px;align-items:center;margin-top:20px}
-/* Prinzip 1 also carries the four-run stepper below, so its illustration
-   stays smaller to keep the whole beat inside one viewport. */
-.pbody.tight{grid-template-columns:minmax(0,1fr) 210px}
-.pbody.tight .pillu{max-width:210px}
+/* Prinzip 1 also carries the four-run stepper below, so its illustration stays
+   smaller than the other three to keep the whole beat inside one viewport. The
+   text column next to it runs ~175px tall, so anything up to that is free. */
+.pbody.tight{grid-template-columns:minmax(0,1fr) 190px;gap:36px;margin-top:14px}
+.pbody.tight .pillu{max-width:190px}
+/* Everything below is that same budget: this beat stacks explanation, Umsetzung
+   and the stepper, so its Beispiel block runs tighter than the default. The
+   cards hold one short prompt each — a taller floor would only add air. */
+.pbody.tight + .pblock{margin-top:14px}
+.pbody.tight + .pblock .pexample{padding:14px 20px}
+.pbody.tight + .pblock .lede{max-width:none;margin-bottom:12px}
+.pbody.tight ~ .pblock .stepper .outs{margin-top:12px}
+.pbody.tight ~ .pblock .stepper .out{min-height:72px;padding:14px 22px}
 .pcol{min-width:0}
-.pblock + .pblock{margin-top:22px}
+.pblock + .pblock{margin-top:18px}
+/* A "Beispiel" block that sits below the illustration row rather than beside it. */
+.pbody + .pblock{margin-top:20px}
 .plabel{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:var(--ink-soft);margin-bottom:8px}
 .navy-bg .plabel{color:rgba(255,255,255,.6)}
-.pshort{font-size:16px;line-height:1.65;margin:0;max-width:62ch}
+/* "Umsetzung" sits at the same level as "Kurz erklärt" — same label, accented
+   so the do-this block reads as the actionable one of the three. */
+.plabel-do{color:var(--ultra)}
+.navy-bg .plabel-do{color:var(--ice)}
+.pshort{font-size:18px;line-height:1.6;margin:0;max-width:54ch}
 .pblock .analogy{margin-top:0}
 .pillu{width:100%;max-width:300px;display:block;justify-self:center}
 @media (max-width:900px){
@@ -281,11 +393,17 @@
   .pillu{max-width:140px;justify-self:start;order:-1}
 }
 
-/* ---------- "new hire in the office" analogy callout ---------- */
-.analogy{margin-top:18px;padding:14px 18px;border-left:3px solid var(--ultra);
-  background:rgba(30,47,219,.05);border-radius:0 10px 10px 0;font-size:13px;line-height:1.6;color:var(--ink-soft);
-  max-width:64ch}
+/* ---------- "Beispiel" callout box ----------
+   Shared by the office-analogy text and by Prinzip 1, whose example is the
+   four-run stepper — same accent bar so all four principles read alike. */
+.analogy,.pexample{border-left:3px solid var(--ultra);background:rgba(30,47,219,.05);
+  border-radius:0 10px 10px 0}
+.analogy{margin-top:18px;padding:16px 20px;font-size:16.5px;line-height:1.55;
+  color:var(--ink-soft);max-width:54ch}
 .analogy strong{color:var(--ink)}
+.pexample{padding:16px 20px}
+.pexample > .lede:first-child{margin-top:0}
+.navy-bg .pexample{border-left-color:var(--ice);background:rgba(255,255,255,.06)}
 .navy-bg .analogy{border-left-color:var(--ice);background:rgba(255,255,255,.06)}
 .navy-bg .analogy strong{color:#fff}
 
@@ -294,13 +412,14 @@
 .nest-illu{flex:0 0 220px;width:220px;max-width:32vw;margin:0}
 .nest-legend{flex:1 1 auto;display:flex;flex-direction:column;gap:16px;min-width:0}
 .nest-row{display:flex;align-items:baseline;gap:14px}
-.nest-row p{margin:0;font-size:14px;line-height:1.55;color:var(--ink-soft)}
+.nest-row p{margin:0;font-size:16.5px;line-height:1.55;color:var(--ink-soft)}
 .nest-tag{flex:0 0 auto;font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:13px;
   letter-spacing:.02em;color:#fff;background:var(--ultra);padding:5px 11px;border-radius:99px;min-width:42px;text-align:center}
 @media (max-width:760px){.nest-grid{flex-direction:column;align-items:flex-start;gap:20px}.nest-illu{width:160px}}
 
-.out .out-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ultra-deep);margin-bottom:8px}
+.out .out-label{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ultra-deep);margin-bottom:8px}
 .navy-bg .out .out-label{color:var(--ice)}
-.out p{font-size:12.5px;line-height:1.55;margin:0}
-.regie-say{font-size:13px;font-style:italic;color:var(--ink-soft);margin-top:16px}
+.out p{font-size:15.5px;line-height:1.55;margin:0}
+/* The closing line of a slide: one sentence, never a second paragraph. */
+.regie-say{font-size:15px;font-style:italic;color:var(--ink-soft);margin-top:16px;max-width:70ch}
 .navy-bg .regie-say{color:rgba(255,255,255,.7)}
