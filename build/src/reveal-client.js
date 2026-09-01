@@ -29,6 +29,12 @@
     ".nest-grid",
     ".nest-legend",
     ".showcase-body",
+    ".term-grid",
+    ".compare",
+    ".anatomy",
+    ".anatomy-parts",
+    ".mythrow",
+    ".levers",
   ].join(",");
 
   const STEP_MS = 55;

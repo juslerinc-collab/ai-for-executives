@@ -1,0 +1,18 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Eine führende Assistenz verteilt Arbeit an drei spezialisierte Assistenzen">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M320 262 L320 316 M320 316 L120 316 L120 382 M320 316 L320 382 M320 316 L520 316 L520 382"/>
+    <rect x="222" y="96" width="196" height="166" rx="30" fill="#D3E2F8"/>
+    <circle cx="320" cy="156" r="30"/>
+    <path d="M262 232 C 268 192, 292 174, 320 174 C 348 174, 372 192, 378 232"/>
+    <g fill="#EDF3FC">
+      <rect x="40" y="382" width="160" height="162" rx="24"/>
+      <rect x="240" y="382" width="160" height="162" rx="24"/>
+      <rect x="440" y="382" width="160" height="162" rx="24"/>
+    </g>
+    <g stroke-width="6">
+      <circle cx="120" cy="440" r="22"/><path d="M82 512 C 86 482, 100 470, 120 470 C 140 470, 154 482, 158 512"/>
+      <circle cx="320" cy="440" r="22"/><path d="M282 512 C 286 482, 300 470, 320 470 C 340 470, 354 482, 358 512"/>
+      <circle cx="520" cy="440" r="22"/><path d="M482 512 C 486 482, 500 470, 520 470 C 540 470, 554 482, 558 512"/>
+    </g>
+  </g>
+</svg>

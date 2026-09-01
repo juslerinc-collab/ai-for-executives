@@ -1,0 +1,14 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fünf ineinander verschachtelte Kreise: KI, Machine Learning, LLM, Generative KI, Agent">
+  <circle cx="320" cy="320" r="310" fill="#A9BCCB"/>
+  <circle cx="320" cy="376" r="248" fill="#7E97AC"/>
+  <circle cx="320" cy="430" r="190" fill="#3E5E7E"/>
+  <circle cx="320" cy="482" r="134" fill="#16324F"/>
+  <circle cx="320" cy="528" r="82" fill="#1E2FDB"/>
+  <g text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-weight="700" fill="#fff">
+    <text x="320" y="82" font-size="30">KI</text>
+    <text x="320" y="196" font-size="26">Machine Learning</text>
+    <text x="320" y="306" font-size="26">LLM</text>
+    <text x="320" y="414" font-size="23">Generative KI</text>
+    <text x="320" y="540" font-size="23">Agent</text>
+  </g>
+</svg>

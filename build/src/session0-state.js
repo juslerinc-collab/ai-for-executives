@@ -15,7 +15,7 @@ export const REIFEGRAD_LEVELS = [
   },
   {
     n: 3,
-    name: "Regelmäßig, aber ohne Methode",
+    name: "Regelmässig, aber ohne Methode",
     desc: "Sie nutzen es im Alltag für wiederkehrende Aufgaben, intuitiv — keine wiederverwendbare Instruktion, keine bewusste Unterscheidung der vier Schritte.",
   },
   {

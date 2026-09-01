@@ -1,0 +1,15 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Eine Schleife aus vier Stationen: planen, handeln, nachschauen, wiederholen">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="320" cy="320" r="190" stroke-dasharray="26 22" opacity=".55"/>
+    <circle cx="320" cy="130" r="62" fill="#D3E2F8"/>
+    <path d="M296 130 L344 130 M320 106 L320 154"/>
+    <circle cx="510" cy="320" r="62" fill="#EDF3FC"/>
+    <path d="M486 320 L534 320 M516 302 L534 320 L516 338"/>
+    <circle cx="320" cy="510" r="62" fill="#EDF3FC"/>
+    <circle cx="316" cy="506" r="22"/><path d="M332 522 L346 536"/>
+    <circle cx="130" cy="320" r="62" fill="#EDF3FC"/>
+    <path d="M106 306 C 118 288, 142 288, 154 306 M106 334 C 118 352, 142 352, 154 334"/>
+    <path d="M398 176 C 430 196, 452 224, 466 258" stroke-width="6"/>
+    <path d="M452 262 L466 258 L470 272" stroke-width="6"/>
+  </g>
+</svg>

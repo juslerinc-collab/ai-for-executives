@@ -1,0 +1,17 @@
+<svg viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ein Stapel Unterlagen läuft durch einen Trichter und wird zu einem einzigen sauberen Blatt">
+  <g fill="none" stroke="#2A3BC4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <g opacity=".45">
+      <rect x="44" y="42" width="112" height="86" rx="10"/>
+      <rect x="184" y="66" width="112" height="86" rx="10"/>
+      <rect x="330" y="38" width="112" height="86" rx="10"/>
+      <rect x="470" y="72" width="112" height="86" rx="10"/>
+      <rect x="116" y="164" width="112" height="86" rx="10"/>
+      <rect x="264" y="188" width="112" height="86" rx="10"/>
+      <rect x="410" y="176" width="112" height="86" rx="10"/>
+    </g>
+    <path d="M118 306 L522 306 L392 452 L248 452 Z" fill="#D3E2F8"/>
+    <path d="M320 452 L320 512 M300 490 L320 514 L340 490"/>
+    <rect x="236" y="524" width="168" height="92" rx="14" fill="#EDF3FC"/>
+    <path d="M272 556 L368 556 M272 584 L336 584"/>
+  </g>
+</svg>
