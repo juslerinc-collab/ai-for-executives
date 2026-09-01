@@ -64,8 +64,6 @@ html.anim .beat.revealed::before{opacity:1}
 html.anim .beat-inner{position:relative;z-index:1}
 
 /* ---------- Session 2: grouped cards and the ranking bars ---------- */
-html.anim .an-node[data-r],
-html.anim .an-part[data-r],
 html.anim .cmp-col[data-r],
 html.anim .mythpill[data-r],
 html.anim .leverbar[data-r]{transform:translateY(16px) scale(.985)}

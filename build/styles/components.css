@@ -499,39 +499,54 @@
 .navy-bg .flowsteps li::after{background:rgba(255,255,255,.16)}
 .navy-bg .flowsteps li strong{color:#fff}
 
-/* ---------- agent anatomy: goal → assistant → effect, then the three parts ---------- */
-.anatomy{display:flex;align-items:stretch;gap:14px;margin-top:24px}
-.an-node{flex:1 1 0;min-width:0;padding:16px 20px;border-radius:16px;border:1px solid var(--rule);
-  background:rgba(255,255,255,.55);display:flex;flex-direction:column;justify-content:center}
-.an-node b{display:block;font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:17px;
-  letter-spacing:-.02em;color:var(--ink)}
-.an-node span{display:block;margin-top:4px;font-size:13.5px;line-height:1.4;color:var(--ink-soft)}
-.an-node.an-core{flex:1.25 1 0;border-color:var(--ultra);background:rgba(30,47,219,.07)}
-.an-node.an-core b{color:var(--ultra)}
-.an-arrow{flex:0 0 20px;align-self:center;width:11px;height:11px;
-  border-top:1.5px solid var(--ultra);border-right:1.5px solid var(--ultra);transform:rotate(45deg)}
-@media (max-width:820px){.anatomy{flex-direction:column}.an-arrow{transform:rotate(135deg)}}
-.navy-bg .an-node{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.07)}
-.navy-bg .an-node b{color:#fff}
-.navy-bg .an-node span{color:rgba(255,255,255,.7)}
-.navy-bg .an-node.an-core{border-color:var(--ice);background:rgba(179,204,244,.14)}
-.navy-bg .an-node.an-core b{color:var(--ice)}
-.navy-bg .an-arrow{border-color:var(--ice)}
+/* ---------- agent anatomy: an SVG fan-out tree ----------
+   Ziel → Assistenz → Wirkung across the top, then one bracket down to the
+   three parts the agent is actually made of. Colour carries no meaning
+   here: the hierarchy is tonal, so the whole figure stays on the single
+   accent. Every branch is a .arc-node that shell-client.js can dim and
+   light one at a time; without that script the diagram is simply whole. */
+.agent-arc{display:block;width:100%;max-width:1120px;margin:26px auto 0}
+.agent-arc text{font-family:var(--fb),sans-serif}
+.arc-box{fill:rgba(255,255,255,.62);stroke:var(--rule);stroke-width:1.4}
+.arc-part{fill:rgba(255,255,255,.72)}
+.arc-core{fill:rgba(30,47,219,.08);stroke:var(--ultra);stroke-width:2.2}
+.arc-skeleton,.arc-drop{fill:none;stroke:var(--ultra);stroke-width:1.6;opacity:.45}
+.arc-skeleton{stroke-dasharray:5 4}
+.arc-line{stroke:var(--ultra);stroke-width:1.8;opacity:.65}
+.arc-head{fill:var(--ultra);opacity:.7}
+.arc-t{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:15px;
+  letter-spacing:-.012em;fill:var(--ink)}
+.arc-key{fill:var(--ultra)}
+.arc-core-t{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:19px;
+  letter-spacing:-.018em;fill:var(--ultra)}
+.arc-sub{font-size:11.5px;fill:var(--ink-soft)}
+.arc-on-core{font-size:10.5px}
+.arc-b{font-size:11px;fill:var(--ink-soft)}
+.arc-tag{font-size:9px;font-weight:700;letter-spacing:.08em;fill:var(--ink-soft);opacity:.8}
+.arc-formula{font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:12.5px;
+  letter-spacing:.09em;text-transform:uppercase;fill:var(--ultra-deep)}
 
-.anatomy-parts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
-@media (max-width:820px){.anatomy-parts{grid-template-columns:1fr}}
-.an-part{padding:18px 20px}
-.an-part h3{font-size:17px;margin-bottom:7px;color:var(--ultra)}
-.an-part p{margin:0;font-size:14.5px;line-height:1.5;color:var(--ink-soft)}
-.an-tie{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--ink-soft);opacity:.75}
-.navy-bg .an-part h3{color:var(--ice)}
-.navy-bg .an-part p,.navy-bg .an-tie{color:rgba(255,255,255,.72)}
+/* Armed only by script, so a failure leaves the figure fully lit rather
+   than uniformly grey — same fail-open stance as the reveal engine. */
+.agent-arc.armed .arc-node{opacity:.2;cursor:pointer;
+  transition:opacity .42s var(--m-ease,ease)}
+.agent-arc.armed .arc-node:hover{opacity:.45}
+.agent-arc.armed .arc-node.active{opacity:1}
+.agent-arc.armed .arc-node:focus-visible{outline:2px solid var(--ultra);outline-offset:2px}
+.arc-hint{display:none;margin:12px 0 0;text-align:center;font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);opacity:.7}
+.agent-arc.armed + .arc-hint{display:block}
 
-.formula{margin-top:18px;padding:12px 18px;border-radius:12px;background:var(--ice-tint);
-  font-family:var(--fh),var(--fb),sans-serif;font-weight:800;font-size:15px;letter-spacing:.04em;
-  text-transform:uppercase;color:var(--ultra-deep);text-align:center}
-.navy-bg .formula{background:rgba(255,255,255,.09);color:var(--ice)}
+.navy-bg .arc-box{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.2)}
+.navy-bg .arc-part{fill:rgba(255,255,255,.09)}
+.navy-bg .arc-core{fill:rgba(179,204,244,.14);stroke:var(--ice)}
+.navy-bg .arc-skeleton,.navy-bg .arc-drop,.navy-bg .arc-line{stroke:var(--ice)}
+.navy-bg .arc-head{fill:var(--ice)}
+.navy-bg .arc-t{fill:#fff}
+.navy-bg .arc-key,.navy-bg .arc-core-t,.navy-bg .arc-formula{fill:var(--ice)}
+.navy-bg .arc-sub,.navy-bg .arc-b,.navy-bg .arc-tag{fill:rgba(255,255,255,.72)}
+.navy-bg .agent-arc.armed .arc-node:focus-visible{outline-color:var(--ice)}
+.navy-section .arc-hint{color:rgba(255,255,255,.6)}
 
 /* ---------- myths ---------- */
 .principle-tag.warn{color:var(--warn);background:rgba(199,122,30,.1)}

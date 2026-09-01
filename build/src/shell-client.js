@@ -241,6 +241,34 @@
     el.appendChild(btn);
   });
 
+  /* ---------------- agent anatomy: one branch at a time ----------------
+     The diagram ships as a plain, fully lit SVG. This script arms it —
+     dimming every branch so the presenter can light them one click at a
+     time — which means a script failure leaves a complete figure rather
+     than a uniformly grey one. Same fail-open stance as [data-reveal].
+
+     A branch stays lit once lit; re-dimming on the way back would make
+     the presenter click twice for something the room has already seen. */
+  document.querySelectorAll(".agent-arc").forEach((svg) => {
+    const nodes = Array.from(svg.querySelectorAll(".arc-node"));
+    if (!nodes.length) return;
+    svg.classList.add("armed");
+    for (const node of nodes) {
+      node.setAttribute("tabindex", "0");
+      node.setAttribute("role", "button");
+      const label = node.dataset.arc;
+      if (label) node.setAttribute("aria-label", label + " aufdecken");
+      const light = () => node.classList.toggle("active");
+      node.addEventListener("click", light);
+      node.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          light();
+        }
+      });
+    }
+  });
+
   /* ---------------- closer / bridge popup ---------------- */
   window.showCloser = function () {
     document.getElementById("closer").classList.add("show");

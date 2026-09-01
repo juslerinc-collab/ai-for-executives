@@ -31,8 +31,6 @@
     ".showcase-body",
     ".term-grid",
     ".compare",
-    ".anatomy",
-    ".anatomy-parts",
     ".mythrow",
     ".levers",
   ].join(",");
