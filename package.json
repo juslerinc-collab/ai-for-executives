@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --test build/src/*.test.js",
-    "build": "node build/build.mjs"
+    "build": "node build/build.mjs",
+    "build:sap": "node workshops/sap-hands-on/build.mjs"
   }
 }

@@ -1,0 +1,6 @@
+/* Deck-local additions: inline chips for commands and shortcuts. */
+.chip{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;
+  font-style:normal;padding:1px 7px;border-radius:6px;background:var(--ice-tint);color:var(--ultra-deep);
+  border:1px solid var(--rule);white-space:nowrap;line-height:1.5}
+.pshort .chip{white-space:normal;word-break:break-word}
+.pshort a{color:var(--ultra);font-weight:600}
