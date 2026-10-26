@@ -1,9 +1,10 @@
-# Hands-on Session SAP — Claude Code Einstieg
+# Hands-on Session: Applied AI (SAP)
 
-Kurzer Einstieg (~15 Min.) vor dem Hands-on-Teil: vier Prinzipien in Claude Code,
-der Engpass «geteiltes Verständnis», der Grill-Me-Skill, der Ablauf.
+Short opener (~15 min) before the hands-on part: title, four principles
+(brain, context, tools, prompt), the Grill Me skill. Deliberately light —
+the rest is shown live in Claude Code.
 
-Eigenständig vom Hauptdeck: eigene Inhalte unter `content/`, Styles, Assets und
-Navigations-Skripte werden aus `build/` wiederverwendet.
+Separate from the main deck: own content under `content/`; styles, assets
+and the navigation shell are reused from `build/`.
 
     npm run build:sap   # → workshops/sap-hands-on/dist/index.html

@@ -44,7 +44,7 @@ for (const f of readdirSync(assetDir)) {
 }
 
 const html = `<!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -61,7 +61,7 @@ ${css}
 <!-- shell-client.js expects the gate elements; it stays hidden in this deck. -->
 <div id="frontGate" class="gate hidden"><input id="frontGateInput"><div id="frontGateErr"></div><button id="frontGateGo"></button></div>
 
-<nav id="navtop" aria-label="Folien"></nav>
+<nav id="navtop" aria-label="Slides"></nav>
 <div id="mark"></div>
 
 <div id="slides">
